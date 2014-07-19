@@ -1,5 +1,6 @@
 package net.year4000.serverlist.messages;
 
+import com.ewized.utilities.core.util.cache.QuickCache;
 import lombok.Data;
 import net.year4000.serverlist.Settings;
 
@@ -8,7 +9,8 @@ import java.util.*;
 @Data
 public class MessageFactory {
     /** When the instance is created set the following vars. */
-    private final Settings config;
+    private static QuickCache<MessageFactory> inst = QuickCache.builder(MessageFactory.class).build();
+    private static Settings config = Settings.get();
     private final Random rand = new Random();
     private final Date date;
 
@@ -21,7 +23,6 @@ public class MessageFactory {
      */
     public MessageFactory() {
         date = new Date();
-        config = new Settings();
         parse();
     }
 
@@ -30,6 +31,10 @@ public class MessageFactory {
         this.date = date;
         config = new Settings(true);
         parse();
+    }
+
+    public static MessageFactory get() {
+        return inst.get();
     }
 
     private void parse() {

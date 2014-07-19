@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.serverlist.messages.Message;
+import net.year4000.serverlist.messages.MessageFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +31,7 @@ public class ListListener implements Listener {
                    String motd = replaceColors(config.getPrefix());
                    InetSocketAddress ip = pingServer.getConnection().getAddress();
                    Message locale = new Message(pingServer.getLocale(ip));
-                   String message = PingServer.factory.getUnchecked("ServerList").getMessage();
+                   String message = MessageFactory.get().getMessage();
 
                    // Load the random messages top layer.
                    ServerList.debug("Server List Message: " + message);

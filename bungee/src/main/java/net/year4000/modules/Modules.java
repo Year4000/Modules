@@ -4,6 +4,7 @@ import com.ewized.utilities.bungee.BungeePlugin;
 import net.year4000.announcer.Announcer;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.ducktape.core.loader.ClassModuleLoader;
+import net.year4000.infractions.Infractions;
 import net.year4000.ramtweaks.RamTweaks;
 import net.year4000.serverlist.ServerList;
 
@@ -19,6 +20,7 @@ public class Modules extends BungeePlugin {
             .add(Announcer.class)
             .add(ServerList.class)
             .add(RamTweaks.class)
+            .add(Infractions.class)
             .getClasses();
 
         for (Class<?> cl : clazz) {

@@ -1,5 +1,6 @@
 package net.year4000.serverlist;
 
+import com.ewized.utilities.core.util.cache.QuickCache;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.cubespace.Yamler.Config.Comment;
@@ -14,6 +15,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Settings extends Config {
+    private static QuickCache<Settings> inst = QuickCache.builder(Settings.class).build();
+
     public Settings() {
         try {
             CONFIG_HEADER = new String[]{"ServerList Configuration"};
@@ -27,13 +30,15 @@ public class Settings extends Config {
 
     public Settings(boolean unitTest) {}
 
+    public static Settings get() {
+        return inst.get();
+    }
+
     @Comment("The cache time in sec")
     private int cache = 5;
 
     @Comment("The locales that have been added")
-    private List<String> locales = new ArrayList<String>() {{
-        add("en_US");
-    }};
+    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/serverlist/locales/";
 
     @Comment("The prefix for the to line.")
     private String prefix = "&3[&bY4K&3]&r ";

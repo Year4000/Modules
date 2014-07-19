@@ -5,11 +5,8 @@ import com.sk89q.bungee.util.BungeeWrappedCommandSender;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.year4000.serverlist.PingServer;
 import net.year4000.serverlist.Settings;
 import net.year4000.serverlist.messages.Message;
 import net.year4000.serverlist.messages.MessageFactory;
@@ -22,7 +19,7 @@ public final class ListSub {
         flags = "r"
     )
     public static void list(final CommandContext args, CommandSender sender) throws CommandException {
-        MessageFactory factory = PingServer.factory.getUnchecked("ServerList");
+        MessageFactory factory = new MessageFactory();
         final int MAX_PER_PAGE = 8;
 
         new SimplePaginatedResult<String>(MessageUtil.message(new Settings().getPrefix()), MAX_PER_PAGE) {

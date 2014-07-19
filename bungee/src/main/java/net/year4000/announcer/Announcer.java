@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class Announcer extends BungeeModule {
     @Getter
     private static Announcer inst;
-    private Settings settings;
+    private static Settings settings;
     private Map<String, Integer> messagesIndex = new HashMap<>();
     private List<ScheduledTask> broadcasters = new ArrayList<>();
 
@@ -34,10 +34,9 @@ public class Announcer extends BungeeModule {
     }
 
     public void enable() {
-        settings = new Settings();
-
+        settings = Settings.get();
         // Register the loop for each server.
-        addSchedulers();
+        //addSchedulers();
 
         // Register the commands
         registerCommand(AnnouncerBase.class);
@@ -63,17 +62,7 @@ public class Announcer extends BungeeModule {
      * @param index  The index to set to.
      */
     public int setMessagesIndex(String server, int index) {
-        messagesIndex.put(server, index);
-        return getMessageIndex(server);
-    }
-
-    /**
-     * Reload the config.
-     * @return Config instance.
-     */
-    public Settings reloadConfig() {
-        settings = new Settings();
-        return settings;
+        return messagesIndex.put(server, index);
     }
 
     /** Add the schedulers for the broadcast tasks. */
@@ -99,5 +88,4 @@ public class Announcer extends BungeeModule {
         }
         addSchedulers();
     }
-
 }

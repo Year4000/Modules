@@ -1,37 +1,20 @@
 package net.year4000.serverlist;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.year4000.serverlist.messages.MessageFactory;
-import net.year4000.serverlist.messages.MessageManager;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Data
 @AllArgsConstructor
 public class PingServer {
     private static final Map<String, String> ips = new HashMap<>();
     private static final Map<String, String> locale = new HashMap<>();
-    public static final LoadingCache<String, MessageFactory> factory = CacheBuilder.newBuilder()
-        .maximumSize(1)
-        .expireAfterWrite(1, TimeUnit.MINUTES)
-        .build(new CacheLoader<String, MessageFactory>() {
-            @Override
-            public MessageFactory load(String s) throws Exception {
-                MessageManager.get().reload();
-                return new MessageFactory();
-            }
-        });
-
     private PendingConnection connection;
     private ServerPing response;
 
@@ -40,6 +23,7 @@ public class PingServer {
      * @param player The player to track.
      */
     public static void addPlayer(ProxiedPlayer player) {
+        if (player == null) return;
         String address = cleanAddress(player.getAddress());
         ips.put(address, player.getName());
         locale.put(address, player.getLocale().toString());

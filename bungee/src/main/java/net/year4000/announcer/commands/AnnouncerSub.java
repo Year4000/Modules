@@ -1,10 +1,11 @@
 package net.year4000.announcer.commands;
 
 import com.ewized.utilities.bungee.util.MessageUtil;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.sk89q.bungee.util.BungeeWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.CommandSender;
@@ -15,11 +16,10 @@ import net.year4000.announcer.Broadcaster;
 import net.year4000.announcer.Settings;
 import net.year4000.announcer.messages.InternalManager;
 import net.year4000.announcer.messages.Message;
-import net.year4000.announcer.messages.MessageManager;
-
-import java.util.List;
 
 public final class AnnouncerSub {
+    private static Settings settings = Settings.get();
+
     @Command(
         aliases = {"reload", "refresh"},
         desc = "Reload the config.",
@@ -33,10 +33,7 @@ public final class AnnouncerSub {
             this.localeManager = InternalManager.get();
         }};
 
-        Announcer.getInst().reloadConfig();
         Announcer.getInst().reloadSchedulers();
-        MessageManager.get().reload();
-        InternalManager.get().reload();
         sender.sendMessage(MessageUtil.makeMessage(locale.get("cmd.reload")));
     }
 
@@ -70,7 +67,7 @@ public final class AnnouncerSub {
                 }
             }.display(
                 new BungeeWrappedCommandSender(sender),
-                Announcer.getInst().getSettings().getServerMessages(args.getString(0)),
+                settings.getServerMessages(args.getString(0)),
                 args.argsLength() == 2 ? args.getInteger(1) : 1
             );
         } catch (NullPointerException e) {
@@ -89,8 +86,7 @@ public final class AnnouncerSub {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         Message locale = new Message(player) {{
             this.localeManager = InternalManager.get();
-        }};
-        Settings settings = Announcer.getInst().getSettings();
+        }};;
 
         try {
             settings.addServerMessages(args.getString(0), args.getJoinedStrings(1));
@@ -115,7 +111,6 @@ public final class AnnouncerSub {
         Message locale = new Message(player) {{
             this.localeManager = InternalManager.get();
         }};
-        Settings settings = Announcer.getInst().getSettings();
 
         try {
             if (args.getInteger(1) < 0 || args.getInteger(1) > settings.getServerMessages(args.getString(0)).size()) {
@@ -138,13 +133,11 @@ public final class AnnouncerSub {
         min = 1
     )
     @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.setting"})
-    @SuppressWarnings("unchecked")
     public static void setting(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         Message locale = new Message(player) {{
             this.localeManager = InternalManager.get();
         }};
-        Settings settings = Announcer.getInst().getSettings();
 
         // View the settings.
         if (args.argsLength() == 1) {
@@ -159,8 +152,11 @@ public final class AnnouncerSub {
                 case "random":
                     message = locale.get("cmd.config.random", settings.isRandom());
                     break;
-                case "locales":
-                    message = locale.get("cmd.config.locales", Joiner.on("&7, &e").join(settings.getLocales()));
+                case "messagesurl":
+                    message = locale.get("cmd.config.messagesurl", settings.getMessagesURL());
+                    break;
+                case "internalurl":
+                    message = locale.get("cmd.config.internalurl", settings.getInternalURL());
                     break;
                 default:
                     message = locale.get("cmd.config.not_found");
@@ -182,9 +178,11 @@ public final class AnnouncerSub {
                     case "random":
                         message = locale.get("cmd.config.random", settings.setSetting("random", args.getString(1).equalsIgnoreCase("true")));
                         break;
-                    case "locales":
-                        List<String> locales = (List<String>) settings.setSetting("locales", Splitter.on(' ').splitToList(args.getJoinedStrings(1)));
-                        message = locale.get("cmd.config.locales", Joiner.on("&7, &e").join(locales));
+                    case "messagesurl":
+                        message = locale.get("cmd.config.messages_url", settings.setSetting("messagesURL", args.getString(1)));
+                        break;
+                    case "internalurl":
+                        message = locale.get("cmd.config.internal_url", settings.setSetting("internalURL", args.getString(1)));
                         break;
                     default:
                         message = locale.get("cmd.config.not_found");

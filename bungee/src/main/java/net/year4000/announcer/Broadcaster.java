@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Broadcaster implements Runnable {
-    private final Random rand = new Random(System.currentTimeMillis());
-    private final static Announcer plugin = Announcer.getInst();
+    private static final Random rand = new Random(System.currentTimeMillis());
+    private static Announcer plugin = Announcer.getInst();
+    private static Settings settings = Settings.get();
     private List<String> messages;
     private String server;
     private int index;
@@ -24,8 +25,8 @@ public class Broadcaster implements Runnable {
     public void run() {
         try {
             // Get the messages and the index.
-            messages = plugin.getSettings().getMessages(server);
-            index = plugin.getSettings().isRandom() ? Math.abs(rand.nextInt() % messages.size()) : plugin.getMessageIndex(server);
+            messages = settings.getMessages(server);
+            index = settings.isRandom() ? Math.abs(rand.nextInt() % messages.size()) : plugin.getMessageIndex(server);
 
             // Set the position to the messages.
             if (index == messages.size()) {
@@ -73,11 +74,11 @@ public class Broadcaster implements Runnable {
         try {
             // Raw Message
             if (MessageUtil.isRawMessage(message)) {
-                return MessageUtil.merge(plugin.getSettings().getPrefix(), MessageUtil.parseMessage(message));
+                return MessageUtil.merge(settings.getPrefix(), MessageUtil.parseMessage(message));
             }
             // Simple Classic Message
             else {
-                return MessageUtil.makeMessage(plugin.getSettings().getPrefix() + message);
+                return MessageUtil.makeMessage(settings.getPrefix() + message);
             }
         } catch (NullPointerException e) {
             Announcer.debug(e.getMessage());

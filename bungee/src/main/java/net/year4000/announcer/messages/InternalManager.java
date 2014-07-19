@@ -1,34 +1,19 @@
 package net.year4000.announcer.messages;
 
-import com.ewized.utilities.core.util.locale.LocaleManager;
-import net.year4000.announcer.Announcer;
+import com.ewized.utilities.core.util.cache.QuickCache;
+import com.ewized.utilities.core.util.locale.URLLocaleManager;
+import net.year4000.announcer.Settings;
+import net.year4000.ducktape.bungee.DuckTape;
 
-public class InternalManager extends LocaleManager {
-    private static InternalManager inst;
-    protected static final String LOCALE_PATH = "/net/year4000/announcer/locales/";
-    private static String[] localeCodes = {"en_US", "pt_BR"};
+public class InternalManager extends URLLocaleManager {
+    private static String url = Settings.get().getInternalURL();
+    private static QuickCache<InternalManager> inst = QuickCache.builder(InternalManager.class).build();
 
-    private InternalManager() {
-        super(Announcer.class);
+    public InternalManager() {
+        super(DuckTape.get().getLog(), url, parseJson(url + LOCALES_JSON));
     }
 
     public static InternalManager get() {
-        if (inst == null) {
-            inst = new InternalManager();
-        }
-
-        return inst;
-    }
-
-    @Override
-    protected void loadLocales(String path) {
-        for (String locale : localeCodes) {
-            loadLocale(locale, clazz.getResourceAsStream(LOCALE_PATH + locale + ".properties"));
-        }
-    }
-
-    /** Reload locales */
-    public void reload() {
-        inst = new InternalManager();
+        return inst.get();
     }
 }

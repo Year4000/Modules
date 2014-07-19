@@ -1,5 +1,6 @@
 package net.year4000.announcer;
 
+import com.ewized.utilities.core.util.cache.QuickCache;
 import net.cubespace.Yamler.Config.Comment;
 import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Settings extends Config {
+    private static QuickCache<Settings> inst = QuickCache.builder(Settings.class).build();
+
     public Settings() {
         try {
             CONFIG_HEADER = new String[]{"Announcer Configuration"};
@@ -27,14 +30,17 @@ public class Settings extends Config {
         }
     }
 
+    public static Settings get() {
+        return inst.get();
+    }
+
     @Comment("The setting for Announcer, the setting explains itself.")
     private Map<String, Object> settings = new HashMap<String, Object>() {{
         put("delay", 60);
         put("random", false);
         put("prefix", "&7[&6TIP&7]&r ");
-        put("locales", new ArrayList<String>() {{
-            add("en_US");
-        }});
+        put("messagesURL", "https://git.year4000.net/year4000/locales/raw/master/net/year4000/announcer/messages/");
+        put("internalURL", "https://git.year4000.net/year4000/locales/raw/master/net/year4000/announcer/locales/");
     }};
 
     // Messages Setting
@@ -42,7 +48,7 @@ public class Settings extends Config {
     private Map<String, List<String>> messages = new HashMap<String, List<String>>() {{
         // Global messages
         put("global", new ArrayList<String>() {{
-            add("&eWelcome &6%player%&e!");
+            add("&eWelcome &6{player}&e!");
             add("[{text:'Welcome ', color:yellow}, {text:'%player%', color: gold}, {text:'!',color:yellow}]");
         }});
 
@@ -77,12 +83,19 @@ public class Settings extends Config {
     }
 
     /**
-     * Get the prefix for the messages.
-     * @return The prefix.
+     * Get the URL for internal messages.
+     * @return The URL.
      */
-    @SuppressWarnings("unchecked")
-    public List<String> getLocales() throws NullPointerException {
-        return (List<String>) settings.get("locales");
+    public String getInternalURL() throws NullPointerException {
+        return (String) settings.get("internalURL");
+    }
+
+    /**
+     * Get the URL for internal messages.
+     * @return The URL.
+     */
+    public String getMessagesURL() throws NullPointerException {
+        return (String) settings.get("messagesURL");
     }
 
     /**
