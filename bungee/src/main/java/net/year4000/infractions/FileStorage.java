@@ -6,7 +6,8 @@ import lombok.Data;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class FileStorage {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();

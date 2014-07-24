@@ -6,6 +6,7 @@ import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.ducktape.core.loader.ClassModuleLoader;
 import net.year4000.infractions.Infractions;
 import net.year4000.ramtweaks.RamTweaks;
+import net.year4000.serverlinker.ServerLinker;
 import net.year4000.serverlist.ServerList;
 
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Modules extends BungeePlugin {
             .add(ServerList.class)
             .add(RamTweaks.class)
             .add(Infractions.class)
+            .add(ServerLinker.class)
             .getClasses();
 
         for (Class<?> cl : clazz) {

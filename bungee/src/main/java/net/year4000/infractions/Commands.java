@@ -10,8 +10,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.lang.String;
-
 public final class Commands {
     @Command(aliases = {"bans"}, desc = "")
     @CommandPermissions({"infractions.staff", "infractions.ban"})

@@ -9,6 +9,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.serverlist.messages.Message;
@@ -60,7 +62,7 @@ public class ListListener implements Listener {
 
                        for (int i = 0; i < playerCount; i++) {
                            String line = proxy.getPlayers().toArray()[i].toString();
-                           players[i] = new ServerPing.PlayerInfo(locale.get(line), "");
+                           players[i] = new ServerPing.PlayerInfo(line, "");
                        }
                    }
 
@@ -73,17 +75,34 @@ public class ListListener implements Listener {
            });
 
     @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
-        ProxyServer.getInstance().getScheduler().schedule(DuckTape.get(), () -> {
-            ProxiedPlayer player = event.getPlayer();
-            PingServer.addPlayer(event.getPlayer());
-            ServerList.debug("ServerList Info: " + player.getName() + " | " + player.getLocale().toString());
-        }, 5, TimeUnit.SECONDS);
+    public void onPostLogin(final PostLoginEvent event) {
+        TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
+
+        class AddPlayer implements Runnable {
+            ScheduledTask task;
+            ProxiedPlayer player;
+
+            AddPlayer(ProxiedPlayer player) {
+                this.player = player;
+                task = scheduler.schedule(DuckTape.get(), this, 1, 1, TimeUnit.SECONDS);
+            }
+
+            @Override
+            public void run() {
+                if (player.getLocale() == null) return;
+
+                PingServer.addPlayer(player);
+                ServerList.debug("ServerList Info: " + player.getName() + " | " + player.getLocale().toString());
+                task.cancel();
+            }
+        }
+
+        new AddPlayer(event.getPlayer());
     }
 
     @EventHandler
     public void onServerPing(ProxyPingEvent event) throws Exception {
-        ServerPing server = ping.get(new PingServer(event.getConnection(), event.getResponse()));
+        ServerPing server = ping.getUnchecked(new PingServer(event.getConnection(), event.getResponse()));
         if (server != null) {
             event.setResponse(server);
         }

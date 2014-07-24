@@ -3,8 +3,6 @@ package net.year4000.infractions;
 import lombok.Data;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 

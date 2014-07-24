@@ -7,10 +7,22 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import net.md_5.bungee.api.CommandSender;
 import net.year4000.ramtweaks.messages.Message;
+import net.year4000.ramtweaks.messages.ShutdownMessage;
 
 import java.lang.management.ManagementFactory;
 
 public final class RamCommands {
+    @Command(
+        aliases = {"grestart"},
+        desc = "Restart the network with a friendly 10 sec delay.",
+        flags = "t:",
+        max = 1
+    )
+    @CommandPermissions({"eramtweaks.restart"})
+    public static void restart(CommandContext args, CommandSender sender) throws CommandException {
+        new ShutdownMessage(args.hasFlag('t') ? args.getFlagInteger('t') : 10);
+    }
+
     @Command(
         aliases = {"guptime"},
         desc = "Get the uptime of the network."

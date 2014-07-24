@@ -22,7 +22,7 @@ public class PingServer {
      * Add the player to keep track of them.
      * @param player The player to track.
      */
-    public static void addPlayer(ProxiedPlayer player) {
+    public synchronized static void addPlayer(ProxiedPlayer player) {
         if (player == null) return;
         String address = cleanAddress(player.getAddress());
         ips.put(address, player.getName());

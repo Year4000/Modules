@@ -1,4 +1,4 @@
-package net.year4000.serverlist.messages;
+package net.year4000.serverlinker.messages;
 
 import com.ewized.utilities.bungee.util.BungeeLocale;
 import net.md_5.bungee.api.CommandSender;
@@ -7,13 +7,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 public class Message extends BungeeLocale {
     public Message(ProxiedPlayer player) {
         super(player);
-        this.localeManager = MessageManager.get();
-    }
-
-    public Message(String locale) {
-        super(null);
-        this.localeManager = MessageManager.get();
-        this.locale = locale == null ? DEFAULT_LOCALE : locale;
+        localeManager = MessageManager.get();
     }
 
     public Message(CommandSender sender) {

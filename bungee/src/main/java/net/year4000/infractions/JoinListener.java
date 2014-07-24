@@ -4,10 +4,10 @@ import com.ewized.utilities.bungee.util.MessageUtil;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.ducktape.bungee.DuckTape;
 
@@ -16,24 +16,41 @@ import java.util.concurrent.TimeUnit;
 public class JoinListener implements Listener {
     @EventHandler
     public void onJoin(PostLoginEvent event) {
-        ProxiedPlayer name = event.getPlayer();
-        Player player = new Player(name);
+        TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
 
-        ProxyServer.getInstance().getScheduler().schedule(DuckTape.get(), () -> {
-            Message locale = new Message(name);
+        class CheckPlayer implements Runnable {
+            ScheduledTask task;
+            ProxiedPlayer player;
 
-            if (player.isBanned()) {
-                name.disconnect(createMessage(
-                    locale.get("login.banned"),
-                    name,
-                    player.getLastMessage()
-                ));
+            CheckPlayer(ProxiedPlayer player) {
+                this.player = player;
+                task = scheduler.schedule(DuckTape.get(), this, 1, 1, TimeUnit.SECONDS);
             }
-            else if (player.isLocked()) {
-                String locked = String.format(locale.get("login.locked", player.getTime()));
-                name.disconnect(createMessage(locked, name, player.getLastMessage()));
+
+            @Override
+            public void run() {
+                if (player.getLocale() == null) return;
+
+                Player iplayer = new Player(player);
+                Message locale = new Message(player);
+
+                if (iplayer.isBanned()) {
+                    player.disconnect(createMessage(
+                        locale.get("login.banned"),
+                        player,
+                        iplayer.getLastMessage()
+                    ));
+                }
+                else if (iplayer.isLocked()) {
+                    String locked = String.format(locale.get("login.locked", iplayer.getTime()));
+                    player.disconnect(createMessage(locked, player, iplayer.getLastMessage()));
+                }
+
+                task.cancel();
             }
-        }, 2, TimeUnit.SECONDS);
+        }
+
+        new CheckPlayer(event.getPlayer());
     }
 
     /**

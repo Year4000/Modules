@@ -1,10 +1,15 @@
 package net.year4000.serverlist;
 
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.module.BungeeModule;
 import net.year4000.ducktape.bungee.module.ModuleListeners;
 import net.year4000.ducktape.core.module.ModuleInfo;
 import net.year4000.serverlist.commands.ListBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ModuleInfo(
     name = "ServerList",
@@ -16,6 +21,8 @@ import net.year4000.serverlist.commands.ListBase;
 public class ServerList extends BungeeModule {
     @Getter
     private static ServerList inst;
+    @Getter
+    private List<ScheduledTask> tasks = new ArrayList<>();
 
     public void load() {
         inst = this;
@@ -23,5 +30,10 @@ public class ServerList extends BungeeModule {
 
     public void enable() {
         registerCommand(ListBase.class);
+    }
+
+
+    public void disable() {
+        tasks.stream().filter(t -> t != null).forEach(ProxyServer.getInstance().getScheduler()::cancel);
     }
 }
