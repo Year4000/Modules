@@ -13,6 +13,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.serverlinker.ServerLinker;
 import net.year4000.serverlinker.Settings;
+import net.year4000.serverlinker.messages.Message;
 import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
@@ -89,24 +90,21 @@ public final class GeneralCommands {
         }
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(sender.getName());
+        Message locale = new Message(player);
 
         if (args.argsLength() == 0) {
-            String currentServer = String.format(
-                "&2You are on &a%s&2, use &a/servers&2 to find servers.",
-                player.getServer().getInfo().getName()
-            );
-            player.sendMessage(MessageUtil.makeMessage(currentServer));
-            player.sendMessage(MessageUtil.makeMessage("&2Use &a/server [server name] &2 to connect to a server."));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("server.on", player.getServer().getInfo().getName())));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("server.use")));
         }
         else {
             String serverName = args.getJoinedStrings(0);
             ServerInfo server = ProxyServer.getInstance().getServerInfo(serverName);
 
             if (server == null) {
-                throw new CommandException(String.format("&6There is no server named &e%s&6.", serverName));
+                throw new CommandException(locale.get("server.no_name", serverName));
             }
 
-            player.sendMessage(MessageUtil.makeMessage(String.format("&2Connecting to &a%s&2.", server.getName())));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("server.connect", server.getName())));
             player.connect(server);
         }
     }
@@ -123,15 +121,16 @@ public final class GeneralCommands {
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(sender.getName());
         ServerInfo lowest = ServerLinker.getInstance().getLowestHub();
+        Message locale = new Message(player);
 
         if (lowest == null) {
-            player.sendMessage(MessageUtil.makeMessage("&6Their is no online hubs, alert a staff member!"));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("hub.none")));
         }
         else if (Settings.get().getServer(player.getServer().getInfo().getName()).isHub()) {
-            player.sendMessage(MessageUtil.makeMessage("&6You are all ready on a hub!"));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("hub.on")));
         }
         else {
-            player.sendMessage(MessageUtil.makeMessage("&2Connecting to &a%s&2.", lowest.getName()));
+            player.sendMessage(MessageUtil.makeMessage(locale.get("server.connect", lowest.getName())));
             player.connect(lowest);
         }
     }

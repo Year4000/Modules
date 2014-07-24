@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.year4000.serverlinker.Server;
 import net.year4000.serverlinker.Settings;
+import net.year4000.serverlinker.messages.Message;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
 import java.net.InetSocketAddress;
@@ -23,6 +24,7 @@ public final class LinkerCommands {
         min = 2
     )
     public static void addserver(final CommandContext args, CommandSender sender) throws CommandException {
+        Message locale = new Message(sender);
         String name = args.getString(0);
         String address = args.getString(1);
         String group = args.hasFlag('g') ? args.getFlag('g') : name;
@@ -50,7 +52,7 @@ public final class LinkerCommands {
 
         StatusCollection.get().addServer(serverInfo);
 
-        sender.sendMessage(MessageUtil.makeMessage("&6Added server &e" + serverInfo.getName()));
+        sender.sendMessage(MessageUtil.makeMessage(locale.get("linker.add", serverInfo.getName())));
     }
 
     @Command(
@@ -60,14 +62,15 @@ public final class LinkerCommands {
         min = 1
     )
     public static void delserver(final CommandContext args, CommandSender sender) throws CommandException {
+        Message locale = new Message(sender);
         String name = args.getJoinedStrings(0);
         ServerInfo server;
 
         if ((server = ProxyServer.getInstance().getServers().remove(name)) == null) {
-            throw new CommandException("Could not find server " + name);
+            throw new CommandException(locale.get("linker.no_found",  name));
         }
 
         StatusCollection.get().removeServer(server);
-        sender.sendMessage(MessageUtil.makeMessage("&6Removed server &e" + name));
+        sender.sendMessage(MessageUtil.makeMessage(locale.get("linker.remove", name)));
     }
 }
