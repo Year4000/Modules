@@ -12,8 +12,8 @@ import net.year4000.serverlist.ServerList;
 import java.util.Set;
 
 public class Modules extends BungeePlugin {
-    DuckTape duckTape = DuckTape.get();
-    Set<Class<?>> clazz;
+    private DuckTape duckTape = DuckTape.get();
+    private Set<Class<?>> clazz;
 
     @Override
     public void onLoad() {
