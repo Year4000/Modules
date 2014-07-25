@@ -1,6 +1,7 @@
 package net.year4000.modules;
 
 import com.ewized.utilities.bukkit.BukkitPlugin;
+import net.year4000.chat.ColorMotd;
 import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.core.loader.ClassModuleLoader;
 import net.year4000.ramtweaks.RamTweaks;
@@ -16,6 +17,8 @@ public class Modules extends BukkitPlugin {
         duckTape = DuckTape.get();
         clazz = new ClassModuleLoader(duckTape.getModules())
             .add(RamTweaks.class)
+            //.add(DressUp.class)
+            .add(ColorMotd.class)
             .getClasses();
 
         for (Class<?> cl : clazz) {

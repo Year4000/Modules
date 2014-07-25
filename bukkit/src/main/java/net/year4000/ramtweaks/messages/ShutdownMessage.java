@@ -33,7 +33,7 @@ public class ShutdownMessage implements Runnable {
         else if (countdown > 0) {
             console.sendMessage(MessageUtil.message(new Message(console).get(type, countdown)));
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.kickPlayer(MessageUtil.message(MessageUtil.message(new Message(player).get(type, countdown))));
+                player.sendMessage(MessageUtil.message(MessageUtil.message(new Message(player).get(type, countdown))));
             }
         }
         countdown--;

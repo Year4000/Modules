@@ -1,0 +1,25 @@
+package net.year4000.chat;
+
+import com.ewized.utilities.bukkit.util.MessageUtil;
+import net.year4000.ducktape.bukkit.module.BukkitModule;
+import net.year4000.ducktape.bukkit.module.ModuleListeners;
+import net.year4000.ducktape.core.module.ModuleInfo;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
+
+@ModuleInfo(
+    name = "ColorMotd",
+    version = "1.2",
+    description = "Convert Minecraft color codes to real colors",
+    authors = {"Year4000"}
+)
+@ModuleListeners({ColorMotd.ColorListener.class})
+public class ColorMotd extends BukkitModule {
+    public class ColorListener implements Listener {
+        @EventHandler
+        public void onPing(ServerListPingEvent event) {
+            event.setMotd(MessageUtil.replaceColors(event.getMotd()));
+        }
+    }
+}
