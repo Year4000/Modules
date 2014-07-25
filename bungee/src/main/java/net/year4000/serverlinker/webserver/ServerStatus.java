@@ -3,6 +3,7 @@ package net.year4000.serverlinker.webserver;
 import com.ewized.utilities.core.util.Pinger;
 import lombok.Data;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.year4000.serverlinker.ServerLinker;
 import net.year4000.serverlinker.Settings;
 
 import java.io.IOException;
@@ -22,16 +23,13 @@ public class ServerStatus {
     }
 
     /** Ping the server and update the status */
-    public void ping() throws IOException {
-        InetSocketAddress address = info.getAddress();
-        status = new Pinger(address, Pinger.TIME_OUT).fetchData();
-        // use bellow if we want to hide things
-        /*info.ping((ping, throwable) ->  {
-            try {
-                status = new ServerPing(ping.getVersion(), ping.getPlayers(), ping.getDescription(), ping.getFaviconObject());
-            } catch (Exception e) {
-                ServerLinker.debug(e, true);
-            }
-        });*/
+    public void ping() {
+        try {
+            InetSocketAddress address = info.getAddress();
+            status = new Pinger(address, Pinger.TIME_OUT).fetchData();
+        } catch (IOException e) {
+            ServerLinker.debug(name + " ping exception: " + e.getMessage());
+            status = null;
+        }
     }
 }

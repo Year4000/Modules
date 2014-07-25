@@ -28,14 +28,14 @@ import java.util.concurrent.TimeUnit;
     description = "The core system that handles everything about the servers.",
     authors = {"Year4000"}
 )
-@ModuleListeners({Listeners.class/*, StatusListener.class*/})
+@ModuleListeners({Listeners.class})
 public class ServerLinker extends BungeeModule {
     private static ProxyServer proxy = ProxyServer.getInstance();
     @Getter
     private static ServerLinker instance;
     @Getter
     @Setter
-    private ScheduledTask webserver, updateclock;
+    private ScheduledTask updateclock;
     private LoadingCache<String, ServerInfo> lowestHub = CacheBuilder.newBuilder()
         .maximumSize(1)
         .expireAfterAccess(5, TimeUnit.SECONDS)
@@ -103,13 +103,14 @@ public class ServerLinker extends BungeeModule {
         updateclock = StatusCollection.get().updateClock();
 
         // the web server
-        webserver = ServerHandler.startWebServer();
+        ServerHandler.startWebServer();
     }
 
     @Override
     public void disable() {
+        ServerHandler.stopWebServer();
+
         updateclock.cancel();
-        webserver.cancel();
     }
 
     /** Would the command sender have permissions. */

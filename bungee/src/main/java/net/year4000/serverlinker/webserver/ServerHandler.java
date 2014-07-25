@@ -17,6 +17,7 @@ import java.io.IOException;
 
 public class ServerHandler extends AbstractHandler {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static WebThread server;
 
     @Override
     public void handle(String s, Request request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException, ServletException {
@@ -27,19 +28,37 @@ public class ServerHandler extends AbstractHandler {
         gson.toJson(StatusCollection.get().getServers(), httpResponse.getWriter());
     }
 
-    public static ScheduledTask startWebServer() {
-        return ProxyServer.getInstance().getScheduler().runAsync(DuckTape.get(), () -> {
+    public static void startWebServer() {
+        server = new WebThread();
+    }
+
+    public static void stopWebServer() {
+        try {
+            server.webServer.stop();
+            server.task.cancel();
+        } catch (Exception e) {
+            ServerLinker.debug(e, false);
+        }
+    }
+
+    public static class WebThread implements Runnable {
+        ScheduledTask task;
+        Server webServer;
+
+        public WebThread() {
+            task = ProxyServer.getInstance().getScheduler().runAsync(DuckTape.get(), this);
+        }
+
+        @Override
+        public void run() {
             try {
-                Server webServer = new Server(5555);
+                webServer = new Server(5555);
                 webServer.setHandler(new ServerHandler());
                 webServer.start();
                 webServer.join();
-
-                // Loop to keep the server running
-                while (true);
             } catch (Exception e) {
                 ServerLinker.debug(e, false);
             }
-        });
+        }
     }
 }

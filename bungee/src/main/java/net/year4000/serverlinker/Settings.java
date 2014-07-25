@@ -7,10 +7,10 @@ import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -45,7 +45,7 @@ public class Settings extends Config {
     private Map<String, String> groups = new HashMap<>();
 
     @Comment("The list of servers that this network runs.")
-    private List<Server> servers = new ArrayList<Server>() {{
+    private List<Server> servers = new CopyOnWriteArrayList<Server>() {{
         add(new Server(){{
             setName("Year4000 Network");
             setGroup("network");
