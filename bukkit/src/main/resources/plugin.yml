@@ -1,5 +1,0 @@
-name: Modules
-version: 0
-author: Year4000
-main: net.year4000.modules.Modules
-depend: [DuckTape]
