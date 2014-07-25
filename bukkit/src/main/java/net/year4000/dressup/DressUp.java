@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ModuleInfo(
     name = "DressUp",
@@ -39,27 +40,35 @@ public class DressUp extends BukkitModule {
 
     @Override
     public void enable() {
-        MessageManager.get().getLocales().forEach((locale, file) -> {
-            hats.put(locale, makeInv(Settings.HAT, locale));
-            shirts.put(locale, makeInv(Settings.CHEST, locale));
-            pants.put(locale, makeInv(Settings.PANTS, locale));
-            boots.put(locale, makeInv(Settings.BOOTS, locale));
-        });
+        try {
+            MessageManager.get().getLocales().forEach((locale, file) -> {
+                hats.put(locale, makeInv(Settings.HAT, locale));
+                shirts.put(locale, makeInv(Settings.CHEST, locale));
+                pants.put(locale, makeInv(Settings.PANTS, locale));
+                boots.put(locale, makeInv(Settings.BOOTS, locale));
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** Make the inventory based on the locale message */
     private Inventory makeInv(String list, Locale locale) {
         List<ArmorItem> items = Settings.get().getItems().get(list);
         Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(items.size()), new Message(locale).get("inv." + list));
-
+/*
 
         ItemStack[] content = new ItemStack[items.size()];
 
         for (int i = 0; i < items.size(); i++) {
             content[i] = items.get(i).makeItem();
-        }
+        }*/
 
-        inv.setContents(content);
+        inv.setContents(items.stream()
+            .map(item -> item.makeItem(locale))
+            .collect(Collectors.toList())
+            .toArray(new ItemStack[items.size()])
+        );
 
         return inv;
     }
