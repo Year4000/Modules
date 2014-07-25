@@ -1,4 +1,4 @@
-package net.year4000.chat;
+package net.year4000.colormotd;
 
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
@@ -16,7 +16,7 @@ import org.bukkit.event.server.ServerListPingEvent;
 )
 @ModuleListeners({ColorMotd.ColorListener.class})
 public class ColorMotd extends BukkitModule {
-    public class ColorListener implements Listener {
+    public static class ColorListener implements Listener {
         @EventHandler
         public void onPing(ServerListPingEvent event) {
             event.setMotd(MessageUtil.replaceColors(event.getMotd()));
