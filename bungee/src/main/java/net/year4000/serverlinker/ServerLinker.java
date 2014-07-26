@@ -1,6 +1,5 @@
 package net.year4000.serverlinker;
 
-import com.ewized.utilities.core.util.Pinger;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -16,9 +15,9 @@ import net.year4000.ducktape.core.module.ModuleInfo;
 import net.year4000.serverlinker.commands.GeneralCommands;
 import net.year4000.serverlinker.commands.LinkerBaseCommand;
 import net.year4000.serverlinker.webserver.ServerHandler;
+import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
@@ -47,23 +46,27 @@ public class ServerLinker extends BungeeModule {
                 for (Server serverName : Settings.get().getServers()) {
                     //System.out.println(serverName);
                     if (!serverName.isHub()) continue;
+
                     ServerInfo current = ProxyServer.getInstance().getServerInfo(serverName.getName());
+
+                    if (current == null) {
+                        log(serverName.getName() + " is not in the server list");
+                        continue;
+                    }
+
                     try {
-                        Pinger.StatusResponse server = new Pinger(
-                            current.getAddress(),
-                            Pinger.TIME_OUT
-                        ).fetchData();
+                        ServerStatus server = StatusCollection.get().getServers().get(serverName.getName());
 
                         if (lowestServer == null) {
                             lowestServer = current;
                         }
 
-                        if (lowestServer.getPlayers().size() > server.getPlayers().getOnline()) {
+                        if (lowestServer.getPlayers().size() > server.getStatus().getPlayers().getOnline()) {
                             lowestServer = current;
                         }
-                    } catch (IOException e) {
+                    } catch (NullPointerException e) {
                         // Server could be down go to next server. and log to console
-                        log("The server `%s` could be down, this is a warning.", serverName);
+                        log("The server `%s` could be down, this is a warning.", serverName.getName());
                     }
                 }
 
