@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.serverlist.messages.Message;
 import net.year4000.serverlist.messages.MessageFactory;
@@ -28,6 +29,7 @@ public class ListListener implements Listener {
         .build(new CacheLoader<PingServer, ServerPing>() {
                @Override
                public ServerPing load(PingServer pingServer) throws Exception {
+                   ProxyServer proxy = ProxyServer.getInstance();
                    Settings config = new Settings();
                    ServerPing.PlayerInfo[] players;
                    String motd = replaceColors(config.getPrefix());
@@ -56,13 +58,16 @@ public class ListListener implements Listener {
                        motd += config.getNoPlayer().equals("") ? "" : " \n" + locale.get(config.getNoPlayer());
 
                        // Set the player's ping for players on the server.
-                       ProxyServer proxy = ProxyServer.getInstance();
-                       int playerCount = proxy.getOnlineCount();
-                       players = new ServerPing.PlayerInfo[playerCount];
+                       players = pingServer.getResponse().getPlayers().getSample();
 
-                       for (int i = 0; i < playerCount; i++) {
-                           String line = proxy.getPlayers().toArray()[i].toString();
-                           players[i] = new ServerPing.PlayerInfo(line, "");
+                       if (players.length == 0) {
+                           int playerCount = proxy.getOnlineCount();
+                           players = new ServerPing.PlayerInfo[playerCount];
+
+                           for (int i = 0; i < playerCount; i++) {
+                               String line = proxy.getPlayers().toArray()[i].toString();
+                               players[i] = new ServerPing.PlayerInfo(line, "");
+                           }
                        }
                    }
 
@@ -100,7 +105,7 @@ public class ListListener implements Listener {
         new AddPlayer(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerPing(ProxyPingEvent event) throws Exception {
         ServerPing server = ping.getUnchecked(new PingServer(event.getConnection(), event.getResponse()));
         if (server != null) {
