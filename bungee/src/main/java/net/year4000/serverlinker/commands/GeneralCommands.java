@@ -39,8 +39,8 @@ public final class GeneralCommands {
                 String htop = String.format(
                     "&7&m******&a %s &7(&a%s&8/&a%s&7) &2[page &a%s&2/&a%s&2] &7&m******",
                     header,
-                    proxy.getPlayers().size(),
-                    proxy.getConfig().getListeners().stream().findAny().get().getMaxPlayers(),
+                    StatusCollection.get().getOnlinePlayers(),
+                    StatusCollection.get().getMaxPlayers(),
                     page,
                     maxPages
                 );

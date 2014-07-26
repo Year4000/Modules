@@ -35,6 +35,9 @@ public class Settings extends Config {
         return inst;
     }
 
+    @Comment("The max size of sample players to send")
+    private int sampleSize = 100;
+
     @Comment("The url to grab the locales from")
     private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/serverlinker/locales/";
 
