@@ -16,6 +16,6 @@ public class ServerGroup extends Config {
 
     public ServerGroup(Server server) {
         name = server.getGroup();
-        display = Settings.get().getGroups().get(name);
+        display = Settings.get().getGroups().get(name) == null ? name : Settings.get().getGroups().get(name);
     }
 }
