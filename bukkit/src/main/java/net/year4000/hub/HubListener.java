@@ -75,6 +75,9 @@ public final class HubListener implements Listener {
 
         player.setGameMode(Hub.GAME_MODE);
 
+        // Player flight
+        player.setAllowFlight(player.hasPermission("pi"));
+
         new EffectsClock(player);
     }
 
