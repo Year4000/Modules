@@ -30,20 +30,25 @@ public class MathInChat extends BukkitModule {
     public static class MathListener implements Listener {
         @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
         public void onChat(AsyncPlayerChatEvent event) {
-            String message = event.getMessage().replaceAll(" ", "");
+            String message = event.getMessage().replaceAll("( |,|;)", "");
 
-            if (isExpression(message)) {
+            if (message.startsWith("!")) {
+                event.setMessage(message.replace("!", ""));
+            }
+            else if (isExpression(message)) {
                 event.setCancelled(true);
 
                 try {
-                    event.getPlayer().sendMessage(message + "=" + engine.eval(message));
+                    event.getPlayer().sendMessage(purty(message + "=" + engine.eval(message)));
                 } catch (ScriptException e) {
-                    event.getPlayer().sendMessage(MessageUtil.replaceColors("&6Error at &7: &e" + e.getColumnNumber()));
+                    event.getPlayer().sendMessage(MessageUtil.replaceColors(" &7[&e!&7] &6Error at char&7: &e" + e.getColumnNumber()));
                 }
             }
         }
 
         private boolean isExpression(String message) {
+            if (message.startsWith("!")) return false;
+
             for (Character ex : expressions) {
                 if (message.contains(ex.toString())) {
                     return true;
@@ -51,6 +56,25 @@ public class MathInChat extends BukkitModule {
             }
 
             return false;
+        }
+
+        private String purty(String message) {
+            message = message.replaceAll("\\+", "&7+&a");
+            message = message.replaceAll("-", "&7-&a");
+            message = message.replaceAll("/", "&7/&a");
+            message = message.replaceAll("\\*", "&7*&a");
+            message = message.replaceAll("%", "&7%&a");
+            message = message.replaceAll("=", "&7=&a");
+            message = message.replaceAll("\\.", "&7.&a");
+
+            message = message.replaceAll("\\(", "&7(&a");
+            message = message.replaceAll("\\)", "&7)&a");
+            message = message.replaceAll("\\{", "&7{&a");
+            message = message.replaceAll("}", "&7}&a");
+            message = message.replaceAll("\\[", "&7[&a");
+            message = message.replaceAll("]", "&7]&a");
+
+            return MessageUtil.replaceColors("&7> &a" + message);
         }
     }
 }
