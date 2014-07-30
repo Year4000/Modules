@@ -75,6 +75,8 @@ public final class HubListener implements Listener {
     private void kit(Player player) {
         // Spawn Effects
 
+        player.setTotalExperience(0);
+        player.setExp(0F);
         player.setGameMode(Hub.GAME_MODE);
 
         // Player flight
