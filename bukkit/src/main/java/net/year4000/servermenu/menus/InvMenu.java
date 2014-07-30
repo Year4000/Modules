@@ -61,6 +61,7 @@ public class InvMenu {
         // Menu Bar
         if (oneGroup) {
             int count = -1;
+
             for (String item : group) {
                 ServerJson.Group group = APIManager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
                 items[++count] = createItemBar(count, group, code, (int) ping.stream().filter(s -> s.getGroup().getName().equals(item)).count());
@@ -71,13 +72,14 @@ public class InvMenu {
                 InvMenu hubs =  new InvMenu(true, false, Settings.get().getHubGroup());
                 ServerJson.Group group = APIManager.getGroups().stream().filter(g -> g.getName().equals(Settings.get().getHubGroup())).findAny().get();
 
-                items[8] = hubs.createItemBar(7, group, code, hubs.serversCount);
+                items[8] = createItemBar(7, group, code, hubs.serversCount);
                 items[8].removeEnchantment(Enchantment.LURE);
             }
         }
 
         // Servers
         int servers = oneGroup ? 8 : -1;
+
         for (ServerJson server : api) {
             items[++servers] = serverItem(code, server);
         }
@@ -102,6 +104,7 @@ public class InvMenu {
         String menuName = this.menu;
         meta.setLore(new ArrayList<String>() {{
             add(MessageUtil.replaceColors(locale.get("menu.servers", servers)));
+
             if (!menu.getName().equals(menuName)) {
                 add("");
                 add(MessageUtil.replaceColors(locale.get("menu.click", menu.getDisplay())));
@@ -147,6 +150,7 @@ public class InvMenu {
 
                 // Status ect
                 add(MessageUtil.replaceColors(locale.get("server.online")));
+
                 if (!self) {
                     add("");
                     add(MessageUtil.replaceColors(locale.get("server.click")));
