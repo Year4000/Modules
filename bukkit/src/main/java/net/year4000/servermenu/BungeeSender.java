@@ -19,7 +19,7 @@ import java.io.DataOutputStream;
 @AllArgsConstructor
 public class BungeeSender implements Listener, PluginMessageListener {
     @Getter
-    private static String currentServer = Bukkit.getServerName();
+    private static String currentServer = null;
     private String server;
 
     public BungeeSender() {
@@ -52,6 +52,8 @@ public class BungeeSender implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerInteractEvent event) {
+        if (currentServer != null) return;
+
         try (
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos)
