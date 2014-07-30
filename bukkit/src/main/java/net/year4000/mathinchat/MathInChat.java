@@ -1,5 +1,6 @@
 package net.year4000.mathinchat;
 
+import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
@@ -22,14 +23,14 @@ import java.util.Set;
 )
 @ModuleListeners({MathInChat.MathListener.class})
 public class MathInChat extends BukkitModule {
-    static Set<Character> expressions = ImmutableSet.of('+', '-', '*', '^', '%', '\\');
+    static Set<Character> expressions = ImmutableSet.of('+', '-', '*', '%', '/');
     static ScriptEngineManager mgr = new ScriptEngineManager();
     static ScriptEngine engine = mgr.getEngineByName("JavaScript");
 
     public static class MathListener implements Listener {
         @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
         public void onChat(AsyncPlayerChatEvent event) {
-            String message = event.getMessage();
+            String message = event.getMessage().replaceAll(" ", "");
 
             if (isExpression(message)) {
                 event.setCancelled(true);
@@ -37,7 +38,7 @@ public class MathInChat extends BukkitModule {
                 try {
                     event.getPlayer().sendMessage(message + "=" + engine.eval(message));
                 } catch (ScriptException e) {
-                    event.getPlayer().sendMessage(e.getMessage());
+                    event.getPlayer().sendMessage(MessageUtil.replaceColors("&6Error at &7: &e" + e.getColumnNumber()));
                 }
             }
         }
