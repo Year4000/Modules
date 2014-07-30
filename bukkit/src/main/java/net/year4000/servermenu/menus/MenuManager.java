@@ -19,11 +19,18 @@ public class MenuManager {
     private Collection<ServerJson.Group> groups;
 
     public MenuManager() {
-        pullAPIData();
+        //pullAPIData();
+
+
+    }
+
+    public void updateServers() {
+        menus.clear();
+        itemMenu.clear();
 
         Settings.get().getMenus().forEach(menu -> {
             List<String> groups = menu.getGroups();
-            if (groups.get(0) != null && itemMenu.get(menu.getTitle()) == null) {
+            if (groups.get(0) != null) {
                 String firstMenu = null;
 
                 for (String group : groups) {

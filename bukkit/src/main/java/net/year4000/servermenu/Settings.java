@@ -43,7 +43,7 @@ public class Settings extends Config {
     @Comment("Should the menus have a return to hub button.")
     private boolean hub = false;
 
-    @Comment("The group for the hubs")
+    @Comment("The group for the hubse")
     private String hubGroup = "us-hubs";
 
     @Comment("The menus")

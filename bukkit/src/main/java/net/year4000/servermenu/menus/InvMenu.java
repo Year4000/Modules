@@ -5,6 +5,7 @@ import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import lombok.Data;
+import net.year4000.servermenu.BungeeSender;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.Message;
 import org.bukkit.Bukkit;
@@ -54,7 +55,7 @@ public class InvMenu {
     public Inventory menu(String code) {
         boolean oneGroup = group.length > 1;
         int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));
-        Inventory menu = Bukkit.createInventory(null, invSize, "inv." + this.menu);
+        Inventory menu = Bukkit.createInventory(null, invSize, MessageUtil.replaceColors("&8&l" + menuDisplay));
         ItemStack[] items = new ItemStack[invSize];
 
         // Menu Bar
@@ -98,10 +99,13 @@ public class InvMenu {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(MessageUtil.replaceColors("&a" + menu.getDisplay()));
+        String menuName = this.menu;
         meta.setLore(new ArrayList<String>() {{
             add(MessageUtil.replaceColors(locale.get("menu.servers", servers)));
-            add("");
-            add(MessageUtil.replaceColors(locale.get("menu.click", menu.getDisplay())));
+            if (!menu.getName().equals(menuName)) {
+                add("");
+                add(MessageUtil.replaceColors(locale.get("menu.click", menu.getDisplay())));
+            }
         }});
 
         // glow
@@ -118,10 +122,12 @@ public class InvMenu {
         ItemStack item;
         Message locale = new Message(code);
 
-        // online
+        // Server is itself
+        boolean self = server.getName().equals(BungeeSender.getCurrentServer());
+
         if (server.getStatus() != null) {
             int number = findNumber(server.getName());
-            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, (short) 13);
+            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 5 : (short) 13);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b" + server.getName()));
             meta.setLore(new ArrayList<String>() {{
@@ -141,15 +147,17 @@ public class InvMenu {
 
                 // Status ect
                 add(MessageUtil.replaceColors(locale.get("server.online")));
-                add("");
-                add(MessageUtil.replaceColors(locale.get("server.click")));
+                if (!self) {
+                    add("");
+                    add(MessageUtil.replaceColors(locale.get("server.click")));
+                }
             }});
             item.setItemMeta(meta);
         }
         //offline
         else {
             int number = findNumber(server.getName());
-            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, (short) 14);
+            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 6 : (short) 14);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b" + server.getName()));
             meta.setLore(Arrays.asList(MessageUtil.replaceColors(locale.get("server.offline"))));

@@ -90,7 +90,7 @@ public class MenuListener implements Listener {
     }
 
     /** Close the menu */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onCloseMenu(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
