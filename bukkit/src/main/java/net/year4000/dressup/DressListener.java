@@ -7,6 +7,7 @@ import net.year4000.dressup.message.Message;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ import java.util.WeakHashMap;
 public class DressListener implements Listener {
     private Map<Player, String> lastOpened = new WeakHashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
         Player player = ((Player)event.getWhoClicked());
         Message locale = new Message(player);
