@@ -6,6 +6,7 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.core.module.ModuleInfo;
 import net.year4000.hubitems.items.FunItemManager;
+import net.year4000.hubitems.items.passive.Flight;
 import net.year4000.hubitems.items.passive.NightVision;
 import net.year4000.hubitems.items.passive.Speed;
 import net.year4000.hubitems.items.staffs.FireBallStaff;
@@ -40,6 +41,7 @@ import java.util.Map;
     // Ability
     NightVision.class,
     Speed.class,
+    Flight.class,
     // Items
     IceStaff.class,
     FireStaff.class,

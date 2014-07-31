@@ -70,14 +70,9 @@ public final class HubListener implements Listener {
     // player login / leave //
 
     private void kit(Player player) {
-        // Spawn Effects
-
         player.setTotalExperience(0);
         player.setExp(0F);
         player.setGameMode(Hub.GAME_MODE);
-
-        // Player flight
-        player.setAllowFlight(player.hasPermission("pi"));
 
         // Clear effects then set them
         player.getActivePotionEffects().forEach(p -> player.removePotionEffect(p.getType()));
@@ -103,10 +98,6 @@ public final class HubListener implements Listener {
     public void onLogin(PlayerQuitEvent event) {
         event.setQuitMessage(null);
     }
-
-    // Effects clock //
-
-
 
     @EventHandler
     public void closeMenu(InventoryClickEvent event) {

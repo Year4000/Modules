@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -19,9 +20,17 @@ import org.bukkit.scheduler.BukkitTask;
     passive = true
 )
 public class Speed extends FunItem {
+    private BukkitTask task;
+
     @EventHandler
     public void onLogin(PlayerJoinEvent event) {
-        new EffectsClock(event.getPlayer());
+        task = new EffectsClock(event.getPlayer()).task;
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        task.cancel();
+        task = new EffectsClock(event.getPlayer()).task;
     }
 
     class EffectsClock implements Runnable {
