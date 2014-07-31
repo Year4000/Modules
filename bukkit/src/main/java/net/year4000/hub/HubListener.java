@@ -82,6 +82,9 @@ public final class HubListener implements Listener {
         // Player flight
         player.setAllowFlight(player.hasPermission("pi"));
 
+        // Clear effects then set them
+        player.getActivePotionEffects().forEach(p -> player.removePotionEffect(p.getType()));
+
         new EffectsClock(player);
     }
 
@@ -113,7 +116,7 @@ public final class HubListener implements Listener {
         Player player;
         PotionEffectType[] types = {
             PotionEffectType.NIGHT_VISION,
-            PotionEffectType.JUMP,
+            //PotionEffectType.JUMP,
             PotionEffectType.SPEED
         };
 
