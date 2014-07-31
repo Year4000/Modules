@@ -16,9 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 public final class HubListener implements Listener {
 
@@ -84,8 +81,6 @@ public final class HubListener implements Listener {
 
         // Clear effects then set them
         player.getActivePotionEffects().forEach(p -> player.removePotionEffect(p.getType()));
-
-        new EffectsClock(player);
     }
 
     @EventHandler
@@ -111,32 +106,7 @@ public final class HubListener implements Listener {
 
     // Effects clock //
 
-    class EffectsClock implements Runnable {
-        BukkitTask task;
-        Player player;
-        PotionEffectType[] types = {
-            PotionEffectType.NIGHT_VISION,
-            //PotionEffectType.JUMP,
-            PotionEffectType.SPEED
-        };
 
-        public EffectsClock(Player runon) {
-            player = runon;
-            task = Bukkit.getScheduler().runTaskTimerAsynchronously(DuckTape.get(), this, 1, 60 * 20L);
-        }
-
-        @Override
-        public void run() {
-            if (!player.isOnline()) {
-                task.cancel();
-                return;
-            }
-
-            for (PotionEffectType type : types) {
-                player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 2, true));
-            }
-        }
-    }
 
     @EventHandler
     public void closeMenu(InventoryClickEvent event) {

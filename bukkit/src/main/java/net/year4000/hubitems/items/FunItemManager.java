@@ -48,8 +48,14 @@ public class FunItemManager {
 
         meta.setDisplayName(MessageUtil.replaceColors("&a" + locale.get(item.name())));
         meta.setLore(new ArrayList<String>() {{
+            // passive
+            if (item.passive()) {
+                add(MessageUtil.replaceColors(locale.get("mana.passive")));
+            }
             // mana cost
-            add(MessageUtil.replaceColors(locale.get("mana.cost", Common.manaConverter(item.mana()))));
+            else {
+                add(MessageUtil.replaceColors(locale.get("mana.cost", Common.manaConverter(item.mana()))));
+            }
 
             // description
             for (String line : Common.loreDescription(locale.get(item.description()))) {
@@ -58,7 +64,7 @@ public class FunItemManager {
 
             // permission if needed
             if (item.permission().length == 2) {
-                if (player.hasPermission(item.permission()[0])) {
+                if (!player.hasPermission(item.permission()[0])) {
                     add("");
                     for (String string : Common.loreDescription(locale.get(item.permission()[1]))) {
                         add(MessageUtil.replaceColors("&6" + string));
@@ -72,6 +78,7 @@ public class FunItemManager {
         return stack;
     }
 
+    /** Load the items to the player's inventory for the first time */
     public ItemStack[] loadItems(Player player) {
         Message locale = new Message(player);
         ItemStack[] items = new ItemStack[itemInfo.size() + 9];
@@ -80,9 +87,14 @@ public class FunItemManager {
         for (int i = 9; i < itemInfo.size() + 9; i++) {
             FunItemInfo info = itemInfo.get(i - 9);
             items[i] = makeItem(player, info);
-            List<String> lore = items[i].getItemMeta().getLore();
-            lore.addAll(Arrays.asList("", locale.get("mana.select")));
-            items[i].getItemMeta().setLore(lore);
+
+            if (!info.passive()) {
+                ItemMeta meta = items[i].getItemMeta();
+                List<String> lore = meta.getLore();
+                lore.addAll(Arrays.asList("", locale.get("mana.select")));
+                meta.setLore(lore);
+                items[i].setItemMeta(meta);
+            }
         }
 
         return items;

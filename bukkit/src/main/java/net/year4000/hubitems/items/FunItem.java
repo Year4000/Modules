@@ -3,6 +3,7 @@ package net.year4000.hubitems.items;
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.hubitems.messages.Message;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -20,8 +21,11 @@ public abstract class FunItem implements Listener {
         float cost = mana;
         float exp = player.getExp();
 
-        if (exp - cost <= 0F) {
-            player.sendMessage(" " + MessageUtil.replaceColors(new Message(player).get("mana.required")));
+        if (exp - cost <= 0F && !player.getGameMode().equals(GameMode.CREATIVE)) {
+            String itemName = player.getItemInHand().getItemMeta().getDisplayName();
+            double need = Math.abs(cost - exp);
+            String message = MessageUtil.replaceColors(new Message(player).get("mana.required", need, itemName));
+            player.sendMessage(" " + message);
             FunEffectsUtil.playSound(player, Sound.BLAZE_HIT);
             return false;
         }

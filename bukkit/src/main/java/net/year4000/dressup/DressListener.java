@@ -4,8 +4,6 @@ import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.dressup.message.Message;
-import net.year4000.ducktape.bukkit.DuckTape;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -62,35 +60,33 @@ public class DressListener implements Listener {
 
         if (lastOpened.get(player) != null && !playerItems.contains(event.getCurrentItem())) {
             if (player.hasPermission("theta")) {
-                Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
-                    // Hat
-                    if (lastOpened.get(player).equals(Settings.HAT)) {
-                        player.sendMessage(MessageUtil.replaceColors(locale.get("set.hat")));
-                        player.getInventory().setHelmet(event.getCurrentItem());
-                    }
-                    // Chest
-                    if (lastOpened.get(player).equals(Settings.CHEST)) {
-                        player.sendMessage(MessageUtil.replaceColors(locale.get("set.shirt")));
-                        player.getInventory().setChestplate(event.getCurrentItem());
-                    }
-                    // Pants
-                    if (lastOpened.get(player).equals(Settings.PANTS)) {
-                        player.sendMessage(MessageUtil.replaceColors(locale.get("set.pants")));
-                        player.getInventory().setLeggings(event.getCurrentItem());
-                    }
-                    // Boots
-                    if (lastOpened.get(player).equals(Settings.BOOTS)) {
-                        player.sendMessage(MessageUtil.replaceColors(locale.get("set.boots")));
-                        player.getInventory().setBoots(event.getCurrentItem());
-                    }
+                // Hat
+                if (lastOpened.get(player).equals(Settings.HAT)) {
+                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.hat")));
+                    player.getInventory().setHelmet(event.getCurrentItem());
+                }
+                // Chest
+                if (lastOpened.get(player).equals(Settings.CHEST)) {
+                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.shirt")));
+                    player.getInventory().setChestplate(event.getCurrentItem());
+                }
+                // Pants
+                if (lastOpened.get(player).equals(Settings.PANTS)) {
+                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.pants")));
+                    player.getInventory().setLeggings(event.getCurrentItem());
+                }
+                // Boots
+                if (lastOpened.get(player).equals(Settings.BOOTS)) {
+                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.boots")));
+                    player.getInventory().setBoots(event.getCurrentItem());
+                }
 
-                    // Let the user know something happened
-                    FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                    //noinspection deprecation
-                    player.updateInventory();
-                    player.closeInventory();
-                    lastOpened.remove(player);
-                });
+                // Let the user know something happened
+                FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
+                //noinspection deprecation
+                player.updateInventory();
+                player.closeInventory();
+                lastOpened.remove(player);
             }
             else {
                 player.sendMessage(MessageUtil.replaceColors(locale.get("access.vip") + " \n &awww.year4000.net/page/shop"));

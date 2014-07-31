@@ -22,6 +22,9 @@ public @interface FunItemInfo {
     /** The permission required to use this item */
     public String[] permission() default {};
 
+    /** Is this ability passive */
+    public boolean passive() default false;
+
     /** The cost of the item per use */
-    public float mana();
+    public float mana() default 0F;
 }
