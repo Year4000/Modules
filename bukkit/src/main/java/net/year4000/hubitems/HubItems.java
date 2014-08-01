@@ -21,7 +21,9 @@ import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -148,7 +150,17 @@ public class HubItems extends BukkitModule {
                     FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                     FunItemInfo info = FunItemManager.get().getItemInfo(player, nameStriped);
 
-                    player.getInventory().setItem(4, FunItemManager.get().makeItem(player, info));
+                    ItemStack item = FunItemManager.get().makeItem(player, info);
+
+                    // If item is bow make the item have infinity
+                    if (item.getType().equals(Material.BOW)) {
+                        ItemMeta meta = item.getItemMeta();
+                        meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                        item.setItemMeta(meta);
+                    }
+
+                    player.getInventory().setItem(4, item);
+
                     player.updateInventory();
                     player.closeInventory();
                 }
