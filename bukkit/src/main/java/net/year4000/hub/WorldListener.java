@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -73,5 +74,10 @@ public class WorldListener implements Listener {
         if (Math.sqrt(pos.distanceSquared(spawn)) < 20 && HubListener.mode(event.getPlayer())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockSpread(BlockSpreadEvent event) {
+        event.setCancelled(true);
     }
 }

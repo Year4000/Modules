@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
     name = "icestaff.name",
     icon = Material.DIAMOND_HOE,
     description = "icestaff.description",
-    permission = {"mu" , "icestaff.permission"},
+    //permission = {"mu" , "icestaff.permission"},
     mana = 0.05F
 )
 public class IceStaff extends FunItem {

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFallEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.scheduler.BukkitTask;
@@ -46,6 +47,11 @@ public class WorldBack implements Listener, Runnable {
 
     @EventHandler(ignoreCancelled = true)
     public void onStateChange(BlockFallEvent event) {
+        filter(event.getBlock());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onStateChange(BlockBurnEvent event) {
         filter(event.getBlock());
     }
 
