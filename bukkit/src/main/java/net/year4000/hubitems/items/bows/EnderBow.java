@@ -58,6 +58,7 @@ public class EnderBow extends FunItem {
     public void onHit(ProjectileHitEvent e) {
         if (enderPearls.containsKey(e.getEntity().getEntityId())) {
             enderPearls.get(e.getEntity().getEntityId()).teleport(e.getEntity().getLocation());
+            enderPearls.remove(e.getEntity().getEntityId());
         }
     }
 }
