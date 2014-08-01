@@ -58,7 +58,7 @@ public class WorldListener implements Listener {
         Location spawn = event.getLocation().getWorld().getSpawnLocation();
         Location pos = event.getLocation();
 
-        if (Math.sqrt(pos.distanceSquared(spawn)) < 20) {
+        if (pos.distance(spawn) < Hub.SPAWN_PROTECTION) {
             event.setCancelled(true);
         }
     }
@@ -71,7 +71,7 @@ public class WorldListener implements Listener {
         Location spawn = event.getClickedBlock().getLocation().getWorld().getSpawnLocation();
         Location pos = event.getClickedBlock().getLocation();
 
-        if (Math.sqrt(pos.distanceSquared(spawn)) < Hub.SPAWN_PROTECTION && HubListener.mode(event.getPlayer())) {
+        if (pos.distance(spawn) < Hub.SPAWN_PROTECTION && HubListener.mode(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
