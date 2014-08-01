@@ -123,7 +123,7 @@ public class HubItems extends BukkitModule {
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
+            Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
                 Player player = event.getPlayer();
                 Inventory inv = player.getInventory();
 
@@ -132,7 +132,7 @@ public class HubItems extends BukkitModule {
                 hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
 
                 player.updateInventory();
-            });
+            }, 3L);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)

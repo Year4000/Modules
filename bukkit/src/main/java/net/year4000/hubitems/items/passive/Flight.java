@@ -23,6 +23,6 @@ public class Flight extends FunItem {
         Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
             Player player = event.getPlayer();
             player.setAllowFlight(player.hasPermission(info.permission()[0]));
-        }, 2L);
+        }, 3L);
     }
 }
