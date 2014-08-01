@@ -138,7 +138,7 @@ public class HubItems extends BukkitModule {
                 ItemMeta i = event.getCurrentItem().getItemMeta();
                 String nameStriped = MessageUtil.stripColors(i.getDisplayName());
 
-                if (i.getLore().contains(MessageUtil.replaceColors(locale.get("mana.select")))) {
+                if (i.getLore().contains(locale.get("mana.select"))) {
                     FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                     FunItemInfo info = FunItemManager.get().getItemInfo(player, nameStriped);
 

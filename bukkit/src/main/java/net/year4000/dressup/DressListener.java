@@ -65,22 +65,22 @@ public class DressListener implements Listener {
             if (player.hasPermission("theta")) {
                 // Hat
                 if (lastOpened.get(player).equals(Settings.HAT)) {
-                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.hat")));
+                    player.sendMessage(locale.get("set.hat"));
                     player.getInventory().setHelmet(event.getCurrentItem());
                 }
                 // Chest
                 if (lastOpened.get(player).equals(Settings.CHEST)) {
-                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.shirt")));
+                    player.sendMessage(locale.get("set.shirt"));
                     player.getInventory().setChestplate(event.getCurrentItem());
                 }
                 // Pants
                 if (lastOpened.get(player).equals(Settings.PANTS)) {
-                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.pants")));
+                    player.sendMessage(locale.get("set.pants"));
                     player.getInventory().setLeggings(event.getCurrentItem());
                 }
                 // Boots
                 if (lastOpened.get(player).equals(Settings.BOOTS)) {
-                    player.sendMessage(MessageUtil.replaceColors(locale.get("set.boots")));
+                    player.sendMessage(locale.get("set.boots"));
                     player.getInventory().setBoots(event.getCurrentItem());
                 }
 

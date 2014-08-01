@@ -27,7 +27,9 @@ public class FunItemManager {
     }
 
     public FunItemInfo getItemInfo(Player player, String title) {
-        return itemInfo.stream().filter(i -> new Message(player).get(i.name()).equals(MessageUtil.stripColors(title))).collect(Collectors.toList()).get(0);
+        return itemInfo.stream()
+            .filter(i -> MessageUtil.stripColors(new Message(player).get(i.name())).equals(MessageUtil.stripColors(title)))
+            .collect(Collectors.toList()).get(0);
     }
 
 
@@ -56,11 +58,11 @@ public class FunItemManager {
         meta.setLore(new ArrayList<String>() {{
             // passive
             if (item.passive()) {
-                add(MessageUtil.replaceColors(locale.get("mana.passive")));
+                add(locale.get("mana.passive"));
             }
             // mana cost
             else {
-                add(MessageUtil.replaceColors(locale.get("mana.cost", Common.manaConverter(item.mana()))));
+                add(locale.get("mana.cost", Common.manaConverter(item.mana())));
             }
 
             // description

@@ -103,11 +103,11 @@ public class InvMenu {
         meta.setDisplayName(MessageUtil.replaceColors("&a" + menu.getDisplay()));
         String menuName = this.menu;
         meta.setLore(new ArrayList<String>() {{
-            add(MessageUtil.replaceColors(locale.get("menu.servers", servers)));
+            add(locale.get("menu.servers", servers));
 
             if (!menu.getName().equals(menuName)) {
                 add("");
-                add(MessageUtil.replaceColors(locale.get("menu.click", menu.getDisplay())));
+                add(locale.get("menu.click", menu.getDisplay()));
             }
         }});
 
@@ -149,11 +149,11 @@ public class InvMenu {
                 }
 
                 // Status ect
-                add(MessageUtil.replaceColors(locale.get("server.online")));
+                add(locale.get("server.online"));
 
                 if (!self) {
                     add("");
-                    add(MessageUtil.replaceColors(locale.get("server.click")));
+                    add(locale.get("server.click"));
                 }
             }});
             item.setItemMeta(meta);
@@ -164,7 +164,7 @@ public class InvMenu {
             item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 6 : (short) 14);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b" + server.getName()));
-            meta.setLore(Arrays.asList(MessageUtil.replaceColors(locale.get("server.offline"))));
+            meta.setLore(Arrays.asList(locale.get("server.offline")));
             item.setItemMeta(meta);
         }
 

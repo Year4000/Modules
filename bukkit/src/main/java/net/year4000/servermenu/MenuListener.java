@@ -28,7 +28,7 @@ public class MenuListener implements Listener {
             String item =  MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName());
 
             if (MenuManager.get().isMenu(item) && (rightBlock || rightAir)) {
-                player.sendMessage(MessageUtil.replaceColors(locale.get("menu.open", player.getItemInHand().getItemMeta().getDisplayName())));
+                player.sendMessage(locale.get("menu.open", player.getItemInHand().getItemMeta().getDisplayName()));
                 Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> MenuManager.get().openMenu(player, item));
                 event.setCancelled(true);
             }
@@ -54,9 +54,9 @@ public class MenuListener implements Listener {
                 event.setCancelled(true);
             }
 
-            if (i.getEnchants().size() == 0 && i.getLore().contains(MessageUtil.replaceColors(locale.get("menu.click", nameStriped)))) {
+            if (i.getEnchants().size() == 0 && i.getLore().contains(locale.get("menu.click", nameStriped))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                player.sendMessage(MessageUtil.replaceColors(locale.get("menu.open", i.getDisplayName())));
+                player.sendMessage(locale.get("menu.open", i.getDisplayName()));
                 Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> MenuManager.get().openMenu(player, nameStriped));
             }
         } catch (NullPointerException e) {
@@ -76,9 +76,9 @@ public class MenuListener implements Listener {
         try {
             ItemMeta i = event.getCurrentItem().getItemMeta();
 
-            if (i.getLore().contains(MessageUtil.replaceColors(locale.get("server.click")))) {
+            if (i.getLore().contains(locale.get("server.click"))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                player.sendMessage(MessageUtil.replaceColors(locale.get("server.connect", i.getDisplayName())));
+                player.sendMessage(locale.get("server.connect", i.getDisplayName()));
                 new BungeeSender(MessageUtil.stripColors(i.getDisplayName())).send(player);
                 player.closeInventory();
             }

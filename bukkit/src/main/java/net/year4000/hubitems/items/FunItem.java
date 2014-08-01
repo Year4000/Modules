@@ -24,7 +24,7 @@ public abstract class FunItem implements Listener {
         if (exp - cost <= 0F && !player.getGameMode().equals(GameMode.CREATIVE)) {
             String itemName = player.getItemInHand().getItemMeta().getDisplayName();
             double need = Math.abs(cost - exp);
-            String message = MessageUtil.replaceColors(new Message(player).get("mana.required", need, itemName));
+            String message = new Message(player).get("mana.required", need, itemName);
             player.sendMessage(" " + message);
             FunEffectsUtil.playSound(player, Sound.BLAZE_HIT);
             return false;
@@ -36,7 +36,7 @@ public abstract class FunItem implements Listener {
 
     public boolean isItem(Player player) {
         try {
-            return MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName()).equals(new Message(player).get(info.name()));
+            return MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName()).equals(MessageUtil.stripColors(new Message(player).get(info.name())));
         } catch (NullPointerException e) {
             return false;
         }
