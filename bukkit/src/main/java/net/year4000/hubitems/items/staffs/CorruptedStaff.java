@@ -30,9 +30,9 @@ import java.util.*;
     mana = 0.2F
 )
 public class CorruptedStaff extends FunItem {
-    Random rand = new Random();
-    Map<Integer, Player> skulls = new HashMap<>();
-    Set<Material> icePatch = ImmutableSet.of(Material.NETHERRACK, Material.NETHER_BRICK, Material.SOUL_SAND);
+    private Random rand = new Random();
+    private Map<Integer, Player> skulls = new HashMap<>();
+    private Set<Material> icePatch = ImmutableSet.of(Material.NETHERRACK, Material.NETHER_BRICK, Material.SOUL_SAND);
 
     @EventHandler
     public void use(PlayerInteractEvent event) {

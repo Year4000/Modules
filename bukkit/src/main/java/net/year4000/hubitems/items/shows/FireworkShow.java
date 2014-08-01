@@ -22,8 +22,8 @@ import java.util.Random;
     mana = 0.6F
 )
 public class FireworkShow extends FunItem {
-    List<Color> colors = Arrays.asList(Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.ORANGE, Color.PURPLE);
-    Random rand = new Random();
+    private List<Color> colors = Arrays.asList(Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.ORANGE, Color.PURPLE);
+    private Random rand = new Random();
 
     @EventHandler
     public void use(PlayerInteractEvent event) {

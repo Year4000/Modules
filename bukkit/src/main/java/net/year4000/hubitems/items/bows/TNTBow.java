@@ -21,6 +21,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @FunItemInfo(
     name = "tntbow.name",
@@ -30,7 +31,8 @@ import java.util.Map;
     mana = 0.25F
 )
 public class TNTBow extends FunItem {
-    Map<Integer, Player> tnts = new HashMap<>();
+    private Random rand = new Random();
+    private Map<Integer, Player> tnts = new HashMap<>();
 
     @EventHandler
     public void use(EntityShootBowEvent event) {
@@ -62,6 +64,8 @@ public class TNTBow extends FunItem {
             tnts.remove(event.getEntity().getEntityId());
         }
 
-        event.getEntity().getWorld().getEntities().stream().filter(entity -> entity.getLocation().distance(event.getLocation()) < 6).forEach(entity -> entity.setVelocity(new Vector(0, 3, 0)));
+        event.getEntity().getWorld().getEntities().stream()
+            .filter(entity -> entity.getLocation().distance(event.getLocation()) < 6)
+            .forEach(entity -> entity.setVelocity(new Vector(rand.nextDouble(), 1.3 + rand.nextDouble(), rand.nextDouble())));
     }
 }

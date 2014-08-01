@@ -28,7 +28,7 @@ import java.util.Map;
     mana = 0.15F
 )
 public class EnderBow extends FunItem {
-    Map<Integer, Player> enderPearls = new HashMap<>();
+    private Map<Integer, Player> enderPearls = new HashMap<>();
 
     /** Change the way bows act */
     @EventHandler(ignoreCancelled = true)

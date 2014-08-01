@@ -30,9 +30,9 @@ import java.util.*;
     mana = 0.08F
 )
 public class IceStaff extends FunItem {
-    Random rand = new Random();
-    Map<Integer, Player> ice = new HashMap<>();
-    Set<Material> icePatch = ImmutableSet.of(Material.ICE, Material.SNOW_BLOCK, Material.PACKED_ICE);
+    private Random rand = new Random();
+    private Map<Integer, Player> ice = new HashMap<>();
+    private Set<Material> icePatch = ImmutableSet.of(Material.ICE, Material.SNOW_BLOCK, Material.PACKED_ICE);
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
