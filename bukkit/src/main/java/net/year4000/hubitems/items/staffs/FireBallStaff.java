@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
     icon = Material.STONE_HOE,
     description = "fireballstaff.description",
     permission = {"mu" , "fireballstaff.permission"},
-    mana = 0.10F
+    mana = 0.1F
 )
 public class FireBallStaff extends FunItem {
     @EventHandler
