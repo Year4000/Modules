@@ -1,10 +1,13 @@
 package net.year4000.hubitems.items.passive;
 
+import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 @FunItemInfo(
@@ -15,9 +18,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
     passive = true
 )
 public class Flight extends FunItem {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onFlight(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        player.setAllowFlight(player.hasPermission(info.permission()[0]));
+        Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
+            Player player = event.getPlayer();
+            player.setAllowFlight(player.hasPermission(info.permission()[0]));
+        });
     }
 }
