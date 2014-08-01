@@ -14,6 +14,7 @@ import org.bukkit.*;
 )
 @ModuleListeners({HubListener.class, WorldListener.class, WorldBack.class})
 public class Hub extends BukkitModule {
+    public static final int SPAWN_PROTECTION = 20;
     WorldBack worldBack;
     public static final GameMode GAME_MODE = GameMode.ADVENTURE;
     
