@@ -31,6 +31,10 @@ public class ParticleUtil {
         sendPacket(player, particle, location.getX(), location.getY(), location.getZ());
     }
 
+    public static void sendPackets(Particles particle, Location location) {
+        sendPackets(particle, location.getX(), location.getY(), location.getZ());
+    }
+
     public static void sendPacket(Player player, Particles particle, double x, double y, double z) {
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(particle.name, (float) x, (float) y, (float) z, 0, 0, 0, 0, 1);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);

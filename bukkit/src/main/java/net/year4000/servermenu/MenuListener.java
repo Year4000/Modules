@@ -25,7 +25,7 @@ public class MenuListener implements Listener {
             Message locale = new Message(player);
             boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
             boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
-            String item =  MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName());
+            String item = MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName());
 
             if (MenuManager.get().isMenu(item) && (rightBlock || rightAir)) {
                 player.sendMessage(locale.get("menu.open", player.getItemInHand().getItemMeta().getDisplayName()));

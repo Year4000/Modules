@@ -20,8 +20,6 @@ public class MenuManager {
 
     public MenuManager() {
         //pullAPIData();
-
-
     }
 
     public void updateServers() {

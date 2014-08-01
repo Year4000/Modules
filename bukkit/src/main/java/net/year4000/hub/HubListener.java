@@ -10,8 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -99,10 +97,10 @@ public final class HubListener implements Listener {
         event.setQuitMessage(null);
     }
 
-    @EventHandler
+    /*@EventHandler
     public void closeMenu(InventoryClickEvent event) {
         if (event.getRawSlot() == 0 && event.getInventory().getType().equals(InventoryType.PLAYER)) {
             event.getWhoClicked().openWorkbench(event.getWhoClicked().getLocation(), true);
         }
-    }
+    }*/
 }

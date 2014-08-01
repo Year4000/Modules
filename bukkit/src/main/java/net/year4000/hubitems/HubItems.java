@@ -13,7 +13,6 @@ import net.year4000.hubitems.items.passive.Flight;
 import net.year4000.hubitems.items.passive.NightVision;
 import net.year4000.hubitems.items.passive.Speed;
 import net.year4000.hubitems.items.staffs.FireBallStaff;
-import net.year4000.hubitems.items.staffs.FireStaff;
 import net.year4000.hubitems.items.staffs.IceStaff;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
@@ -52,7 +51,6 @@ import java.util.Map;
     Flight.class,
     // Items
     IceStaff.class,
-    FireStaff.class,
     FireBallStaff.class
 })
 public class HubItems extends BukkitModule {
