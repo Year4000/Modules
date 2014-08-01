@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FunItemManager {
     private static FunItemManager inst;
@@ -24,6 +25,11 @@ public class FunItemManager {
 
         return inst;
     }
+
+    public FunItemInfo getItemInfo(Player player, String title) {
+        return itemInfo.stream().filter(i -> new Message(player).get(i.name()).equals(MessageUtil.stripColors(title))).collect(Collectors.toList()).get(0);
+    }
+
 
     /** Load the item info so we can manage it */
     public FunItemInfo loadItem(Class<? extends FunItem> item) {

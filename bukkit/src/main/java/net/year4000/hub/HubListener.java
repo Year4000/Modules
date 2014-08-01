@@ -101,7 +101,7 @@ public final class HubListener implements Listener {
 
     @EventHandler
     public void closeMenu(InventoryClickEvent event) {
-        if (event.getRawSlot() == 0 && event.getInventory().getType().equals(InventoryType.PLAYER)) {
+        if (event.getSlot() == 0 && event.getInventory().getType().equals(InventoryType.PLAYER)) {
             event.getWhoClicked().openWorkbench(event.getWhoClicked().getLocation(), true);
         }
     }

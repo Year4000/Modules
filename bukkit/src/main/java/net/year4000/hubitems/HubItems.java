@@ -1,10 +1,13 @@
 package net.year4000.hubitems;
 
+import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.ItemUtil;
+import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.items.FunItemManager;
 import net.year4000.hubitems.items.passive.Flight;
 import net.year4000.hubitems.items.passive.NightVision;
@@ -16,15 +19,20 @@ import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -89,7 +97,18 @@ public class HubItems extends BukkitModule {
 
         @EventHandler
         public void onDrop(PlayerDropItemEvent event) {
-            event.setCancelled(!event.getPlayer().getGameMode().equals(GameMode.CREATIVE));
+            Player player = event.getPlayer();
+
+            if (!player.getGameMode().equals(GameMode.CREATIVE)) {
+                Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
+                    Inventory inv = player.getInventory();
+                    inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+                    hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
+                    player.updateInventory();
+                });
+
+                event.setCancelled(true);
+            }
         }
 
         @EventHandler
@@ -102,6 +121,35 @@ public class HubItems extends BukkitModule {
             hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
 
             player.updateInventory();
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onClicked(InventoryClickEvent event) {
+            if (!(event.getWhoClicked() instanceof Player)) return;
+
+            Player player = (Player) event.getWhoClicked();
+            Message locale = new Message(player);
+
+            try {
+                ItemMeta i = event.getCurrentItem().getItemMeta();
+                String nameStriped = MessageUtil.stripColors(i.getDisplayName());
+
+                if (i.getLore().contains(MessageUtil.replaceColors(locale.get("mana.select")))) {
+                    FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
+                    FunItemInfo info = FunItemManager.get().getItemInfo(player, nameStriped);
+
+                    player.getInventory().setItem(4, FunItemManager.get().makeItem(player, info));
+                    player.updateInventory();
+                    player.closeInventory();
+                }
+            } catch (NullPointerException e) {
+                // Left Blank as this will happen is its not a good item
+                //e.printStackTrace();
+            }
+
+            if (Arrays.asList(player.getInventory().getContents()).contains(event.getCurrentItem())) {
+                event.setCancelled(true);
+            }
         }
     }
 }

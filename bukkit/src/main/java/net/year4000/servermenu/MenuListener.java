@@ -49,7 +49,10 @@ public class MenuListener implements Listener {
         try {
             ItemMeta i = event.getCurrentItem().getItemMeta();
             String nameStriped = MessageUtil.stripColors(i.getDisplayName());
-            event.setCancelled(event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}")));
+
+            if (event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}"))) {
+                event.setCancelled(true);
+            }
 
             if (i.getEnchants().size() == 0 && i.getLore().contains(MessageUtil.replaceColors(locale.get("menu.click", nameStriped)))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
@@ -72,9 +75,8 @@ public class MenuListener implements Listener {
 
         try {
             ItemMeta i = event.getCurrentItem().getItemMeta();
-            boolean cancel;
 
-            if (cancel = i.getLore().contains(MessageUtil.replaceColors(locale.get("server.click")))) {
+            if (i.getLore().contains(MessageUtil.replaceColors(locale.get("server.click")))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                 player.sendMessage(MessageUtil.replaceColors(locale.get("server.connect", i.getDisplayName())));
                 new BungeeSender(MessageUtil.stripColors(i.getDisplayName())).send(player);
@@ -82,7 +84,10 @@ public class MenuListener implements Listener {
             }
 
             // cancel the event
-            event.setCancelled(event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}")));
+            if (event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}"))) {
+                event.setCancelled(true);
+            }
+
         } catch (NullPointerException e) {
             // Left Blank as this will happen if its not a good item
             //e.printStackTrace();

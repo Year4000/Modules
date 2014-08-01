@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
 public class DressListener implements Listener {
     private Map<Player, String> lastOpened = new WeakHashMap<>();
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onClick(InventoryClickEvent event) {
         Player player = ((Player)event.getWhoClicked());
         Message locale = new Message(player);
@@ -28,7 +28,9 @@ public class DressListener implements Listener {
         //System.out.println("Slot: " + event.getSlot());
         //System.out.println("Raw Slot: " + event.getRawSlot());
 
-        event.setCancelled(event.getSlot() > 35 && event.getSlot() < 40);
+        if (event.getSlot() > 35 && event.getSlot() < 40) {
+            event.setCancelled(true);
+        }
 
         // Hat 39
         if (event.getSlot() == 39) {
