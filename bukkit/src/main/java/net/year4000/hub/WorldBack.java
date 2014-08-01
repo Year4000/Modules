@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.stream.Collectors;
 
 public class WorldBack implements Listener, Runnable {
     private static final Random rand = new Random();
@@ -62,7 +63,12 @@ public class WorldBack implements Listener, Runnable {
 
     /** Filter the blocks that should regen */
     public void filter(Block block) {
-        if (!blackList.contains(block.getType())) {
+        boolean contains = blocks.stream()
+            .map(b -> b.location)
+            .collect(Collectors.toList())
+            .contains(block.getLocation().toVector());
+
+        if (!blackList.contains(block.getType()) && !contains) {
             blocks.add(new BlockBack(block));
         }
     }
