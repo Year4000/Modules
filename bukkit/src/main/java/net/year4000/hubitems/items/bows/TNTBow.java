@@ -1,8 +1,10 @@
 package net.year4000.hubitems.items.bows;
 
 import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.hub.Hub;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
+import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
 import org.bukkit.Bukkit;
@@ -17,6 +19,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @FunItemInfo(
     name = "tntbow.name",
     icon = Material.BOW,
@@ -25,6 +30,8 @@ import org.bukkit.util.Vector;
     mana = 0.25F
 )
 public class TNTBow extends FunItem {
+    Map<Integer, Player> tnts = new HashMap<>();
+
     @EventHandler
     public void use(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -37,6 +44,7 @@ public class TNTBow extends FunItem {
             Vector vector = new Vector().copy(event.getProjectile().getVelocity());
             Location loc = event.getEntity().getLocation().clone().add(0, event.getEntity().getEyeHeight(), 0).add(0, 0.7, 0);
             Entity entity = world.spawnEntity(loc, EntityType.PRIMED_TNT);
+            tnts.put(entity.getEntityId(), player);
 
             entity.setVelocity(vector);
             new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.CLOUD);
@@ -48,6 +56,12 @@ public class TNTBow extends FunItem {
 
     @EventHandler
     public void happy(EntityExplodeEvent event) {
+        if (tnts.containsKey(event.getEntity().getEntityId()) && event.getEntity().getLocation().distance(event.getEntity().getWorld().getSpawnLocation()) < Hub.SPAWN_PROTECTION) {
+            Player player = tnts.get(event.getEntity().getEntityId());
+            player.sendMessage(new Message(player).get("spawn.protect"));
+            tnts.remove(event.getEntity().getEntityId());
+        }
+
         event.getEntity().getWorld().getEntities().stream().filter(entity -> entity.getLocation().distance(event.getLocation()) < 6).forEach(entity -> entity.setVelocity(new Vector(0, 3, 0)));
     }
 }
