@@ -14,50 +14,34 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.Vector;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 @FunItemInfo(
-    name = "enderbow.name",
+    name = "eggbow.name",
     icon = Material.BOW,
-    description = "enderbow.description",
-    permission = {"theta" , "enderbow.permission"},
-    mana = 0.15F
+    description = "eggbow.description",
+    permission = {"mu" , "eggbow.permission"},
+    mana = 0.05F
 )
-public class EnderBow extends FunItem {
-    Map<Integer, Player> enderPearls = new WeakHashMap<>();
-
-    /** Change the way bows act */
-    @EventHandler(ignoreCancelled = true)
-    public void onBow(EntityShootBowEvent event) {
+public class EggBow extends FunItem {
+    @EventHandler
+    public void use(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
         if (!isItem(player)) return;
 
         if (cost(player, info.mana())) {
-            World world = event.getEntity().getWorld();
+            World world = player.getWorld();
             Vector vector = new Vector().copy(event.getProjectile().getVelocity());
             Location loc = event.getEntity().getLocation().clone().add(0, event.getEntity().getEyeHeight(), 0).add(0, 0.7, 0);
-            Entity entity = world.spawnEntity(loc, EntityType.ENDER_PEARL);
+            Entity entity = world.spawnEntity(loc, EntityType.EGG);
 
             entity.setVelocity(vector);
-            new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.PORTAL);
-            enderPearls.put( entity.getEntityId(), player);
+            new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.HEART);
         }
 
         event.setCancelled(true); // don't use the arrow in the inventory
         Bukkit.getScheduler().runTask(DuckTape.get(), () -> player.updateInventory());
-    }
-
-    /** Teleport the player if the player shot an ender pearl */
-    @EventHandler
-    public void onHit(ProjectileHitEvent e) {
-        if (enderPearls.containsKey(e.getEntity().getEntityId())) {
-            enderPearls.get(e.getEntity().getEntityId()).teleport(e.getEntity().getLocation());
-        }
     }
 }
