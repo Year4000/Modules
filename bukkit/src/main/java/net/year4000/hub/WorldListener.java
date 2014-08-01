@@ -1,10 +1,13 @@
 package net.year4000.hub;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
@@ -45,6 +48,30 @@ public class WorldListener implements Listener {
         if (newChunks.contains(event.getTo().getChunk()) || y < 0) {
             event.getPlayer().teleport(Hub.hubSpawn(), PlayerTeleportEvent.TeleportCause.PLUGIN);
             event.getPlayer().setGameMode(Hub.GAME_MODE);
+        }
+    }
+
+    /** Protest the area around spawn by explosions */
+    @EventHandler
+    public void onProtectSpawn(EntityExplodeEvent event) {
+        Location spawn = event.getLocation().getWorld().getSpawnLocation();
+        Location pos = event.getLocation();
+
+        if (Math.sqrt(pos.distanceSquared(spawn)) < 20) {
+            event.setCancelled(true);
+        }
+    }
+
+    /** Protest the area around spawn by explosions */
+    @EventHandler
+    public void onProtectSpawn(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) return;
+
+        Location spawn = event.getClickedBlock().getLocation().getWorld().getSpawnLocation();
+        Location pos = event.getClickedBlock().getLocation();
+
+        if (Math.sqrt(pos.distanceSquared(spawn)) < 20 && HubListener.mode(event.getPlayer())) {
+            event.setCancelled(true);
         }
     }
 }

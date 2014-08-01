@@ -94,7 +94,7 @@ public class FunItemManager {
             FunItemInfo info = itemInfo.get(i - 9);
             items[i] = makeItem(player, info);
 
-            if (!info.passive()) {
+            if (!info.passive() && player.hasPermission(info.permission()[0])) {
                 ItemMeta meta = items[i].getItemMeta();
                 List<String> lore = meta.getLore();
                 lore.addAll(Arrays.asList("", locale.get("mana.select")));

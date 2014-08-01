@@ -20,10 +20,10 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public final class HubListener implements Listener {
 
     /** Should the event be cancled based on the player's mode */
-    private boolean mode(Player player) {
+    public static boolean mode(Player player) {
         return !player.getGameMode().equals(GameMode.CREATIVE) || !player.isOp();
     }
-    private boolean mode(Entity player) {
+    public static boolean mode(Entity player) {
         return player instanceof Player && mode((Player) player);
     }
 

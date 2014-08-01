@@ -86,6 +86,10 @@ public class HubItems extends BukkitModule {
         Bukkit.getScheduler().runTaskTimer(DuckTape.get(), new ManaClock(), 1, 1);
     }
 
+    public static boolean mode(Player player) {
+        return !player.getGameMode().equals(GameMode.CREATIVE) || !player.isOp();
+    }
+
     /** The listeners that control this module */
     public static class HubListener implements Listener {
         @EventHandler
@@ -147,7 +151,7 @@ public class HubItems extends BukkitModule {
                 //e.printStackTrace();
             }
 
-            if (Arrays.asList(player.getInventory().getContents()).contains(event.getCurrentItem())) {
+            if (Arrays.asList(player.getInventory().getContents()).contains(event.getCurrentItem()) && mode(player)) {
                 event.setCancelled(true);
             }
         }
