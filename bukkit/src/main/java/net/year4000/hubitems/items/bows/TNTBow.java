@@ -48,6 +48,6 @@ public class TNTBow extends FunItem {
 
     @EventHandler
     public void happy(EntityExplodeEvent event) {
-        event.getEntity().getWorld().getEntities().stream().filter(entity -> entity.getLocation().distance(event.getLocation()) < 6).forEach(entity -> entity.setVelocity(entity.getVelocity().multiply(3)));
+        event.getEntity().getWorld().getEntities().stream().filter(entity -> entity.getLocation().distance(event.getLocation()) < 6).forEach(entity -> entity.setVelocity(new Vector(0, 3, 0)));
     }
 }
