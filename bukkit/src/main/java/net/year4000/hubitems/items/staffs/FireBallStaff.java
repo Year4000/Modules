@@ -6,8 +6,7 @@ import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,9 +26,8 @@ public class FireBallStaff extends FunItem {
 
         if (cost(player, info.mana())) {
             World world = player.getWorld();
-            Egg egg = player.throwEgg();
-            egg.setPassenger(world.spawnEntity(player.getEyeLocation().clone().add(0, 0.8, 0), EntityType.FIREBALL));
-            new Tracker(world, egg.getEntityId(), ParticleUtil.Particles.FLAME);
+            Fireball fireball = player.launchProjectile(Fireball.class);
+            new Tracker(world, fireball.getEntityId(), ParticleUtil.Particles.FLAME);
         }
     }
 }
