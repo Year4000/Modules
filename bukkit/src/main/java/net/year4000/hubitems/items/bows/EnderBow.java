@@ -17,8 +17,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 @FunItemInfo(
     name = "enderbow.name",
@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
     mana = 0.15F
 )
 public class EnderBow extends FunItem {
-    Map<Integer, Player> enderPearls = new WeakHashMap<>();
+    Map<Integer, Player> enderPearls = new HashMap<>();
 
     /** Change the way bows act */
     @EventHandler(ignoreCancelled = true)

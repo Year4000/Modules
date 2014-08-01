@@ -13,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.util.Vector;
 
@@ -43,5 +44,10 @@ public class TNTBow extends FunItem {
 
         event.setCancelled(true); // don't use the arrow in the inventory
         Bukkit.getScheduler().runTask(DuckTape.get(), () -> player.updateInventory());
+    }
+
+    @EventHandler
+    public void happy(EntityExplodeEvent event) {
+        event.getEntity().getWorld().getEntities().stream().filter(entity -> entity.getLocation().distance(event.getLocation()) < 6).forEach(entity -> entity.setVelocity(entity.getVelocity().multiply(3)));
     }
 }

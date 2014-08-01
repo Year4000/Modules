@@ -14,6 +14,8 @@ public class ParticleUtil {
         FLAME("flame"),
         HEART("heart"),
         HUGE_EXPLOSION("hugeexplosion"),
+        LARGE_EXPLOSION("largeexplode"),
+        LARGE_SMOKE("largesmoke"),
         LAVA("lava"),
         LAVA_DRIP("dripLava"),
         PORTAL("portal"),

@@ -15,6 +15,8 @@ import net.year4000.hubitems.items.bows.TNTBow;
 import net.year4000.hubitems.items.passive.Flight;
 import net.year4000.hubitems.items.passive.NightVision;
 import net.year4000.hubitems.items.passive.Speed;
+import net.year4000.hubitems.items.shows.FireworkShow;
+import net.year4000.hubitems.items.staffs.CorruptedStaff;
 import net.year4000.hubitems.items.staffs.FireBallStaff;
 import net.year4000.hubitems.items.staffs.IceStaff;
 import net.year4000.hubitems.messages.Message;
@@ -57,9 +59,11 @@ import java.util.Map;
     // Items
     IceStaff.class,
     FireBallStaff.class,
+    CorruptedStaff.class,
     EnderBow.class,
     EggBow.class,
-    TNTBow.class
+    TNTBow.class,
+    FireworkShow.class
 })
 public class HubItems extends BukkitModule {
     private static Map<Locale, Map<Integer, ItemStack>> hotbar = new HashMap<Locale, Map<Integer, ItemStack>>() {{

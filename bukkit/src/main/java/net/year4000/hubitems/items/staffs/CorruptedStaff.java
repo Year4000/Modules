@@ -15,7 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -23,43 +23,43 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.*;
 
 @FunItemInfo(
-    name = "icestaff.name",
-    icon = Material.DIAMOND_HOE,
-    description = "icestaff.description",
-    //permission = {"mu" , "icestaff.permission"},
-    mana = 0.08F
+    name = "corruptedstaff.name",
+    icon = Material.IRON_HOE,
+    description = "corruptedstaff.name",
+    permission = {"sigma", "corruptedstaff.permission"},
+    mana = 0.2F
 )
-public class IceStaff extends FunItem {
+public class CorruptedStaff extends FunItem {
     Random rand = new Random();
-    Map<Integer, Player> ice = new HashMap<>();
-    Set<Material> icePatch = ImmutableSet.of(Material.ICE, Material.SNOW_BLOCK, Material.PACKED_ICE);
+    Map<Integer, Player> skulls = new HashMap<>();
+    Set<Material> icePatch = ImmutableSet.of(Material.NETHERRACK, Material.NETHER_BRICK, Material.SOUL_SAND);
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
         if (!isItem(event.getPlayer()) || isRightClick(event.getAction())) return;
 
         if (cost(event.getPlayer(), info.mana())) {
-            Snowball entity = event.getPlayer().launchProjectile(Snowball.class);
-            ice.put(entity.getEntityId(), event.getPlayer());
-            new Tracker(event.getPlayer().getWorld(), entity.getEntityId(), ParticleUtil.Particles.WATER_DRIP);
+            WitherSkull entity = event.getPlayer().launchProjectile(WitherSkull.class);
+            skulls.put(entity.getEntityId(), event.getPlayer());
+            new Tracker(event.getPlayer().getWorld(), entity.getEntityId(), ParticleUtil.Particles.LARGE_SMOKE);
         }
     }
 
-    /** When the snow ball breaks send out an ice blast */
+    /** When the skulls breaks send out an ice blast */
     @EventHandler
     public void onHit(ProjectileHitEvent e) {
-        if (ice.containsKey(e.getEntity().getEntityId())) {
+        if (skulls.containsKey(e.getEntity().getEntityId())) {
             Location loc = e.getEntity().getLocation();
 
             // set impact to snow/ice and add it to world back
-            callIceBlock(ice.get(e.getEntity().getEntityId()), loc.getBlock().getRelative(BlockFace.DOWN));
+            callSkullBlock(skulls.get(e.getEntity().getEntityId()), loc.getBlock().getRelative(BlockFace.DOWN));
 
-            ice.remove(e.getEntity().getEntityId());
+            skulls.remove(e.getEntity().getEntityId());
         }
     }
 
-    /** Send out an ice patch */
-    private void callIceBlock(Player player, Block block) {
+    /** Send out an corrupted area */
+    private void callSkullBlock(Player player, Block block) {
         if (Math.sqrt(block.getLocation().distanceSquared(block.getWorld().getSpawnLocation())) < Hub.SPAWN_PROTECTION) {
             player.sendMessage(new Message(player).get("spawn.protect"));
             return;
@@ -70,7 +70,7 @@ public class IceStaff extends FunItem {
         for (BlockFace face : BlockFace.values()) {
             Block side = block.getRelative(face);
 
-            if (!icePatch.contains(side.getType()) && rand.nextBoolean()) {
+            if (!icePatch.contains(side.getType()) && rand.nextBoolean() && !side.getType().equals(Material.AIR)) {
                 Bukkit.getPluginManager().callEvent(new WorldBackEvent(side));
 
                 if (patch.hasNext()) {
@@ -81,7 +81,7 @@ public class IceStaff extends FunItem {
                 }
 
                 for (Player online : Bukkit.getOnlinePlayers()) {
-                    online.playEffect(side.getLocation(), Effect.SNOWBALL_BREAK, 0);
+                    online.playEffect(side.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
                 }
             }
         }
