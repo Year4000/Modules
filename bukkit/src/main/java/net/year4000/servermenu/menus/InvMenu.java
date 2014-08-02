@@ -8,6 +8,7 @@ import lombok.Data;
 import net.year4000.servermenu.BungeeSender;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.Message;
+import net.year4000.servermenu.message.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -26,15 +27,14 @@ public class InvMenu {
     private final String[] group;
     private final boolean players;
     private final boolean motd;
-    //private Map<Integer, Map<Locale, ItemStack[]>> pages; // todo pages
-    //private Map<Locale, Inventory> views;
+    private Map<Integer, Map<Locale, ItemStack[]>> pages;
+    private Map<Locale, Inventory> views;
     private final Collection<ServerJson> ping = APIManager.getServers();
     private final List<ServerJson> api;
     private final int serversCount;
 
-
     public InvMenu(boolean players, boolean motd, String menu, String... group) {
-        api = ping.stream().filter(s -> s.getGroup().getName().equals(menu)).collect(Collectors.toList());
+        api = ping.stream().filter(s -> s.getGroup().getName().equals(menu) && !s.getName().startsWith(".")).collect(Collectors.toList());
         serversCount = api.size();
         this.players = players;
         this.motd = motd;
@@ -47,11 +47,17 @@ public class InvMenu {
         else {
             this.menuDisplay = menu;
         }
+
         // construct defaults
         //MessageManager.get().getLocales().forEach((code, p) -> views.put(code, menu(code.toString())));
     }
 
+    public Inventory openMenu(String code) {
+        return views.get(new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE));
+    }
+
     /** Get the main menu */
+    @Deprecated
     public Inventory menu(String code) {
         boolean oneGroup = group.length > 1;
         int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));

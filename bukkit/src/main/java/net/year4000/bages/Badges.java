@@ -39,7 +39,7 @@ public class Badges extends BukkitModule {
     public static class BadgeListener implements Listener {
         @EventHandler
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> {
+            Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
                 Player player = event.getPlayer();
 
                 while (player.getEffectivePermissions().size() == 0);

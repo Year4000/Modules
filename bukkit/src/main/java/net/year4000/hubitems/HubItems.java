@@ -127,7 +127,7 @@ public class HubItems extends BukkitModule {
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> {
+            Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
                 Player player = event.getPlayer();
 
                 while (player.getEffectivePermissions().size() == 0);

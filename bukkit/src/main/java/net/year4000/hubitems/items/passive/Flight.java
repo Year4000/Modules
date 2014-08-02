@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class Flight extends FunItem {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onFlight(PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> {
+        Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
             Player player = event.getPlayer();
 
             while (player.getEffectivePermissions().size() == 0);
