@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 public final class HubListener implements Listener {
@@ -87,6 +88,11 @@ public final class HubListener implements Listener {
         event.setRespawnLocation(Hub.hubSpawn());
 
         kit(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onLogin(PlayerDeathEvent event) {
+        event.getDrops().clear();
     }
 
     @EventHandler

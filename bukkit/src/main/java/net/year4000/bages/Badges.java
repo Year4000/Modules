@@ -10,6 +10,7 @@ import net.year4000.ducktape.core.module.ModuleInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.Scoreboard;
@@ -37,12 +38,11 @@ public class Badges extends BukkitModule {
     }
 
     public static class BadgeListener implements Listener {
-        @EventHandler
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
-                Player player = event.getPlayer();
+            Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
 
-                while (player.getEffectivePermissions().size() == 0);
+                Player player = event.getPlayer();
 
                 String uuid = player.getName();
                 Team team = scoreboard.getTeam(uuid);
@@ -59,7 +59,7 @@ public class Badges extends BukkitModule {
                 team.setSuffix(MessageUtil.replaceColors("&f"));
                 team.add(uuid);
                 player.setScoreboard(scoreboard);
-            });
+            }, 20L);
         }
     }
 }

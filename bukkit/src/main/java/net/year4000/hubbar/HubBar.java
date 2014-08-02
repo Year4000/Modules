@@ -22,7 +22,7 @@ import java.util.Set;
 )
 @ModuleListeners({BarAPIListener.class})
 public class HubBar extends BukkitModule {
-    private Set<String> shimmer = ImmutableSet.of("3", "b", "7", "6", "2", "a", "4", "c", "5", "d", "8", "e");
+    private Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
     private final String NAME = "Year4000";
     private final String IP = "mc.year4000.net";
     private Iterable<String> forever = Iterables.cycle(shimmer);

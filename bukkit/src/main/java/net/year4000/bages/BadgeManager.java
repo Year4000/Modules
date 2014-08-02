@@ -14,7 +14,7 @@ public class BadgeManager {
     @AllArgsConstructor
     public enum Badges {
         ALPHA(ChatColor.DARK_AQUA, "α", "alpha"),
-        THETA(ChatColor.GRAY, "θ", "theta"),
+        THETA(ChatColor.GRAY, "Θ", "theta"),
         MU(ChatColor.YELLOW, "μ", "mu"),
         PI(ChatColor.AQUA, "π", "pi"),
         SIGMA(ChatColor.GOLD, "σ", "sigma"),
@@ -28,7 +28,7 @@ public class BadgeManager {
 
         @Override
         public String toString() {
-            return MessageUtil.replaceColors(color + ChatColor.BOLD.toString() + badge);
+            return MessageUtil.replaceColors(color + badge);
         }
     }
 

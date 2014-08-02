@@ -34,6 +34,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -125,18 +126,26 @@ public class HubItems extends BukkitModule {
             }
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
+            Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
                 Player player = event.getPlayer();
-
-                while (player.getEffectivePermissions().size() == 0);
 
                 Inventory inv = player.getInventory();
                 inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
                 hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
                 player.updateInventory();
-            });
+            }, 20L);
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onJoin(PlayerRespawnEvent event) {
+            Player player = event.getPlayer();
+
+            Inventory inv = player.getInventory();
+            inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+            hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
+            player.updateInventory();
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
