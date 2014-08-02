@@ -18,6 +18,7 @@ import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
 import java.net.InetSocketAddress;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public final class GeneralCommands {
@@ -74,7 +75,7 @@ public final class GeneralCommands {
             }
         }.display(
             new BungeeWrappedCommandSender(sender),
-            StatusCollection.get().getServers().values(),
+            StatusCollection.get().getServers().values().stream().filter(s -> !s.getName().startsWith(".")).collect(Collectors.toList()),
             args.argsLength() == 1 ? args.getInteger(0) : 1
         );
     }
