@@ -61,7 +61,7 @@ public class IceStaff extends FunItem {
     /** Send out an ice patch */
     private void callIceBlock(Player player, Block block) {
         if (block.getLocation().distance(block.getWorld().getSpawnLocation()) < Hub.SPAWN_PROTECTION) {
-            player.sendMessage(new Message(player).get("spawn.protect"));
+            player.sendMessage(" " + new Message(player).get("spawn.protect"));
             return;
         }
 

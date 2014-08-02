@@ -60,7 +60,7 @@ public class TNTBow extends FunItem {
     public void happy(EntityExplodeEvent event) {
         if (tnts.containsKey(event.getEntity().getEntityId()) && event.getEntity().getLocation().distance(event.getEntity().getWorld().getSpawnLocation()) < Hub.SPAWN_PROTECTION) {
             Player player = tnts.get(event.getEntity().getEntityId());
-            player.sendMessage(new Message(player).get("spawn.protect"));
+            player.sendMessage(" " + new Message(player).get("spawn.protect"));
             tnts.remove(event.getEntity().getEntityId());
         }
 

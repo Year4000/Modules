@@ -61,7 +61,7 @@ public class CorruptedStaff extends FunItem {
     /** Send out an corrupted area */
     private void callSkullBlock(Player player, Block block) {
         if (Math.sqrt(block.getLocation().distanceSquared(block.getWorld().getSpawnLocation())) < Hub.SPAWN_PROTECTION) {
-            player.sendMessage(new Message(player).get("spawn.protect"));
+            player.sendMessage(" " + new Message(player).get("spawn.protect"));
             return;
         }
 
