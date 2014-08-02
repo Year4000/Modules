@@ -42,7 +42,7 @@ public class HubBar extends BukkitModule {
 
             // send message
             for (Player player : Bukkit.getOnlinePlayers()) {
-                BarAPI.setMessage(player, MessageUtil.replaceColors(name + " &7| " + ip), 0F);
+                BarAPI.setMessage(player, MessageUtil.replaceColors(name + " &7| " + ip), 0.0001F);
             }
         }, 0L, 20L);
     }
