@@ -21,10 +21,13 @@ public class Flight extends FunItem {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFlight(PlayerJoinEvent event) {
         Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
-
             Player player = event.getPlayer();
 
-            player.setAllowFlight(player.hasPermission(info.permission()[0]));
+            try {
+                player.setAllowFlight(player.hasPermission(info.permission()[0]));
+            } catch (Exception e) {
+                player.kickPlayer(e.getMessage());
+            }
         }, 20L);
     }
 }

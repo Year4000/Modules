@@ -41,24 +41,27 @@ public class Badges extends BukkitModule {
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onJoin(PlayerJoinEvent event) {
             Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
-
                 Player player = event.getPlayer();
 
-                String uuid = player.getName();
-                Team team = scoreboard.getTeam(uuid);
+                try {
+                    String uuid = player.getName();
+                    Team team = scoreboard.getTeam(uuid);
 
-                // register team if not exists
-                if (team == null) {
-                    scoreboard.registerNewTeam(uuid);
-                    team = scoreboard.getTeam(uuid);
+                    // register team if not exists
+                    if (team == null) {
+                        scoreboard.registerNewTeam(uuid);
+                        team = scoreboard.getTeam(uuid);
+                    }
+
+                    String playerColor = MessageUtil.replaceColors("&" + random.next());
+                    player.setDisplayName(MessageUtil.replaceColors(playerColor + uuid + "&f"));
+                    team.setPrefix(manager.getBadge(player) + " " + playerColor);
+                    team.setSuffix(MessageUtil.replaceColors("&f"));
+                    team.add(uuid);
+                    player.setScoreboard(scoreboard);
+                } catch (Exception e) {
+                    player.kickPlayer(e.getMessage());
                 }
-
-                String playerColor = MessageUtil.replaceColors("&" + random.next());
-                player.setDisplayName(MessageUtil.replaceColors(playerColor + uuid + "&f"));
-                team.setPrefix(manager.getBadge(player) + " " + playerColor);
-                team.setSuffix(MessageUtil.replaceColors("&f"));
-                team.add(uuid);
-                player.setScoreboard(scoreboard);
             }, 20L);
         }
     }

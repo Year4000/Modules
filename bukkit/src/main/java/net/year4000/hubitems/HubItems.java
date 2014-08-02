@@ -131,10 +131,15 @@ public class HubItems extends BukkitModule {
             Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
                 Player player = event.getPlayer();
 
-                Inventory inv = player.getInventory();
-                inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
-                player.updateInventory();
+                try {
+                    Inventory inv = player.getInventory();
+                    inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+                    Locale locale = new Locale(MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : Message.DEFAULT_LOCALE);
+                    hotbar.get(locale).forEach(inv::setItem);
+                    player.updateInventory();
+                } catch (Exception e) {
+                    player.kickPlayer(e.getMessage());
+                }
             }, 20L);
         }
 
