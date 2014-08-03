@@ -28,9 +28,9 @@ public class InvMenu {
     private final boolean players;
     private final boolean motd;
     private Map<Integer, Map<Locale, ItemStack[]>> pages;
-    private Map<Locale, Inventory> views;
-    private final Collection<ServerJson> ping = APIManager.getServers();
-    private final List<ServerJson> api;
+    private Map<Locale, Inventory> views = new HashMap<>();
+    private Collection<ServerJson> ping = APIManager.getServers();
+    private List<ServerJson> api;
     private final int serversCount;
 
     public InvMenu(boolean players, boolean motd, String menu, String... group) {
@@ -49,19 +49,31 @@ public class InvMenu {
         }
 
         // construct defaults
-        //MessageManager.get().getLocales().forEach((code, p) -> views.put(code, menu(code.toString())));
+        MessageManager.get().getLocales().keySet().forEach(code -> views.put(code, makeMenuInventory()));
+    }
+
+    public void updateServers() {
+        views.forEach(this::updateServers);
     }
 
     public Inventory openMenu(String code) {
         return views.get(new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE));
     }
 
-    /** Get the main menu */
-    @Deprecated
-    public Inventory menu(String code) {
+    private Inventory makeMenuInventory() {
         boolean oneGroup = group.length > 1;
         int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));
-        Inventory menu = Bukkit.createInventory(null, invSize, MessageUtil.replaceColors("&8&l" + menuDisplay));
+        return Bukkit.createInventory(null, invSize, MessageUtil.replaceColors("&8&l" + menuDisplay));
+    }
+
+    public void updateServers(Locale locale, Inventory menu) {
+        if (menu.getViewers().size() == 0) return;
+        ping = APIManager.getServers();
+        api = ping.stream().filter(s -> s.getGroup().getName().equals(this.menu) && !s.getName().startsWith(".")).collect(Collectors.toList());
+
+        String code = locale.toString();
+        boolean oneGroup = group.length > 1;
+        int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));
         ItemStack[] items = new ItemStack[invSize];
 
         // Menu Bar
@@ -93,11 +105,6 @@ public class InvMenu {
         items[invSize - 5] = ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(code).get("menu.close") + "'}}");
 
         menu.setContents(items);
-        return menu;
-    }
-
-    public void updateMenus() {
-
     }
 
     /** Create the item in the menu bar */

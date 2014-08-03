@@ -2,12 +2,12 @@ package net.year4000.hubitems.items.staffs;
 
 import com.google.common.collect.ImmutableSet;
 import net.year4000.hub.Hub;
-import net.year4000.hub.WorldBackEvent;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
+import net.year4000.worldback.WorldBackEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;

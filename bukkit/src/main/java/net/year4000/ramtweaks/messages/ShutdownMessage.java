@@ -1,11 +1,13 @@
 package net.year4000.ramtweaks.messages;
 
 import com.ewized.utilities.bukkit.util.MessageUtil;
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.concurrent.TimeUnit;
 
 public class ShutdownMessage implements Runnable {
     private BukkitTask task;
@@ -14,7 +16,7 @@ public class ShutdownMessage implements Runnable {
 
     public ShutdownMessage(int time) {
         countdown = time;
-        task = Bukkit.getScheduler().runTaskTimer(DuckTape.get(), this, 20, 20);
+        task = SchedulerUtil.repeatSync(this, 1, TimeUnit.SECONDS);
     }
 
     @Override

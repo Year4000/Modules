@@ -1,10 +1,12 @@
 package net.year4000.hub;
 
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.ducktape.module.ModuleInfo;
 import org.bukkit.*;
+
+import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "Hub",
@@ -12,10 +14,9 @@ import org.bukkit.*;
     description = "Controls basic parts of the hub",
     authors = {"Year4000"}
 )
-@ModuleListeners({HubListener.class, WorldListener.class, WorldBack.class})
+@ModuleListeners({HubListener.class, WorldListener.class})
 public class Hub extends BukkitModule {
     public static final int SPAWN_PROTECTION = 10;
-    WorldBack worldBack;
     public static final GameMode GAME_MODE = GameMode.ADVENTURE;
     
     @Override
@@ -23,20 +24,15 @@ public class Hub extends BukkitModule {
         World main = Bukkit.getWorlds().get(0);
 
         // Lock the world's state
-        Bukkit.getScheduler().runTaskTimer(DuckTape.get(), () -> {
+        SchedulerUtil.repeatSync(() -> {
             main.setAutoSave(false);
             main.setDifficulty(Difficulty.PEACEFUL);
             main.setThundering(false);
             main.setThunderDuration(Integer.MAX_VALUE);
             main.setStorm(false);
             main.setWeatherDuration(Integer.MAX_VALUE);
-        }, 1, Integer.MAX_VALUE / 2);
-        Bukkit.getScheduler().runTaskTimer(DuckTape.get(), () -> main.setTime(14800), 1, 2);
-    }
-
-    @Override
-    public void disable() {
-        worldBack.cancel();
+        }, 1, TimeUnit.HOURS);
+        SchedulerUtil.repeatSync(() -> main.setTime(14800), (long) 0.2, TimeUnit.SECONDS);
     }
 
     public static Location hubSpawn() {

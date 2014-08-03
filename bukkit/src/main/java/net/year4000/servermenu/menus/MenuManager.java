@@ -66,10 +66,10 @@ public class MenuManager {
     /** Open the menu */
     public void openMenu(Player player, String title) {
         if (isMenu(title)) {
-            player.openInventory(menus.get(itemMenu.get(title)).menu(player.getLocale()));
+            player.openInventory(menus.get(itemMenu.get(title)).openMenu(player.getLocale()));
         }
         else if (isRawMenu(title)) {
-            player.openInventory(menus.get(title).menu(player.getLocale()));
+            player.openInventory(menus.get(title).openMenu(player.getLocale()));
         }
         else {
             ServerMenu.debug(title + " is not a menu item.");

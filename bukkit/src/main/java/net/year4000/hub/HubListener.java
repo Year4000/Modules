@@ -1,7 +1,7 @@
 package net.year4000.hub;
 
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -53,14 +53,14 @@ public final class HubListener implements Listener {
         e.setTo(to);
 
         // Cool Effect
-        Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
+        SchedulerUtil.runSync(() -> {
             FunEffectsUtil.playSound(e.getPlayer(), Sound.ENDERMAN_TELEPORT);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (Math.sqrt(player.getLocation().distanceSquared(to)) < 50) {
                     player.playEffect(to, Effect.ENDER_SIGNAL, 1);
                 }
             }
-        }, 1);
+        });
     }
 
     // player login / leave //

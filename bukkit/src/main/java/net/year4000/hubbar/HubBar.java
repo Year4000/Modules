@@ -3,16 +3,17 @@ package net.year4000.hubbar;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.ducktape.module.ModuleInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "HubBar",
@@ -34,7 +35,7 @@ public class HubBar extends BukkitModule {
         color = forever.iterator();
 
         // the task that updates the bar
-        task = Bukkit.getScheduler().runTaskTimer(DuckTape.get(), () -> {
+        task = SchedulerUtil.repeatSync(() -> {
             // change the message
             String b = "&" + color.next() + "&l";
             String name = b + "[&" + color.next() + "&l" + NAME + b + "]";
@@ -44,7 +45,7 @@ public class HubBar extends BukkitModule {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 BarAPI.setMessage(player, MessageUtil.replaceColors(name + " &7| " + ip), 0.0001F);
             }
-        }, 0L, 20L);
+        }, 1, TimeUnit.SECONDS);
     }
 
     @Override

@@ -2,7 +2,7 @@ package net.year4000.ramtweaks;
 
 import lombok.Getter;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.module.ModuleInfo;
 import org.bukkit.scheduler.BukkitTask;
 
 @ModuleInfo(

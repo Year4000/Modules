@@ -3,10 +3,10 @@ package net.year4000.bages;
 import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.ducktape.module.ModuleInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +18,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "Badges",
@@ -40,7 +41,7 @@ public class Badges extends BukkitModule {
     public static class BadgeListener implements Listener {
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
+            SchedulerUtil.runSync(() -> {
                 Player player = event.getPlayer();
 
                 try {
@@ -62,7 +63,7 @@ public class Badges extends BukkitModule {
                 } catch (Exception e) {
                     player.kickPlayer(e.getMessage());
                 }
-            }, 20L);
+            }, 1, TimeUnit.SECONDS);
         }
     }
 }

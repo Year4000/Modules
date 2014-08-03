@@ -3,10 +3,9 @@ package net.year4000.servermenu;
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.servermenu.menus.MenuManager;
 import net.year4000.servermenu.message.Message;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +28,7 @@ public class MenuListener implements Listener {
 
             if (MenuManager.get().isMenu(item) && (rightBlock || rightAir)) {
                 player.sendMessage(locale.get("menu.open", player.getItemInHand().getItemMeta().getDisplayName()));
-                Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> MenuManager.get().openMenu(player, item));
+                SchedulerUtil.runAsync(() -> MenuManager.get().openMenu(player, item));
                 event.setCancelled(true);
             }
         } catch (NullPointerException e) {
@@ -57,7 +56,7 @@ public class MenuListener implements Listener {
             if (i.getEnchants().size() == 0 && i.getLore().contains(locale.get("menu.click", nameStriped))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                 player.sendMessage(locale.get("menu.open", i.getDisplayName()));
-                Bukkit.getScheduler().runTaskAsynchronously(DuckTape.get(), () -> MenuManager.get().openMenu(player, nameStriped));
+                SchedulerUtil.runAsync(() -> MenuManager.get().openMenu(player, nameStriped));
             }
         } catch (NullPointerException e) {
             // Left Blank as this will happen is its not a good item

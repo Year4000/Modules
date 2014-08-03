@@ -1,13 +1,12 @@
 package net.year4000.hubitems.items.bows;
 
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hub.Hub;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -53,7 +52,7 @@ public class TNTBow extends FunItem {
         }
 
         event.setCancelled(true); // don't use the arrow in the inventory
-        Bukkit.getScheduler().runTask(DuckTape.get(), () -> player.updateInventory());
+        SchedulerUtil.runSync(() -> player.updateInventory());
     }
 
     @EventHandler

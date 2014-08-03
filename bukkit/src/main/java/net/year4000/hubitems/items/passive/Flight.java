@@ -1,14 +1,15 @@
 package net.year4000.hubitems.items.passive;
 
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.concurrent.TimeUnit;
 
 @FunItemInfo(
     name = "flight.name",
@@ -20,7 +21,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class Flight extends FunItem {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFlight(PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
+        SchedulerUtil.runSync(() -> {
             Player player = event.getPlayer();
 
             try {
@@ -28,6 +29,6 @@ public class Flight extends FunItem {
             } catch (Exception e) {
                 player.kickPlayer(e.getMessage());
             }
-        }, 20L);
+        }, 1, TimeUnit.SECONDS);
     }
 }

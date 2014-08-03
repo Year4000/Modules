@@ -3,10 +3,10 @@ package net.year4000.hubitems;
 import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import com.ewized.utilities.bukkit.util.ItemUtil;
 import com.ewized.utilities.bukkit.util.MessageUtil;
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.items.FunItemManager;
 import net.year4000.hubitems.items.bows.EggBow;
@@ -21,7 +21,6 @@ import net.year4000.hubitems.items.staffs.FireBallStaff;
 import net.year4000.hubitems.items.staffs.IceStaff;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -43,6 +42,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "HubItems",
@@ -94,7 +94,7 @@ public class HubItems extends BukkitModule {
 
     @Override
     public void enable() {
-        Bukkit.getScheduler().runTaskTimer(DuckTape.get(), new ManaClock(), 1, 1);
+        SchedulerUtil.repeatSync(new ManaClock(), (long) 0.1, TimeUnit.SECONDS);
     }
 
     public static boolean mode(Player player) {
@@ -115,7 +115,7 @@ public class HubItems extends BukkitModule {
             Player player = event.getPlayer();
 
             if (!player.getGameMode().equals(GameMode.CREATIVE)) {
-                Bukkit.getScheduler().runTask(DuckTape.get(), () -> {
+                SchedulerUtil.runSync(() -> {
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
                     hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
@@ -128,7 +128,7 @@ public class HubItems extends BukkitModule {
 
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onJoin(PlayerJoinEvent event) {
-            Bukkit.getScheduler().runTaskLater(DuckTape.get(), () -> {
+            SchedulerUtil.runSync(() -> {
                 Player player = event.getPlayer();
 
                 try {
@@ -140,7 +140,7 @@ public class HubItems extends BukkitModule {
                 } catch (Exception e) {
                     player.kickPlayer(e.getMessage());
                 }
-            }, 20L);
+            }, 1, TimeUnit.SECONDS);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)

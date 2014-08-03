@@ -1,12 +1,12 @@
 package net.year4000.hubitems.utils;
 
-import net.year4000.ducktape.bukkit.DuckTape;
-import org.bukkit.Bukkit;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Tracker implements Runnable {
@@ -19,7 +19,7 @@ public class Tracker implements Runnable {
         this.world = world;
         this.id = id;
         this.particle = particle;
-        task = Bukkit.getScheduler().runTaskTimer(DuckTape.get(), this, 1, 1);
+        task = SchedulerUtil.repeatSync(this, (long) 0.1, TimeUnit.SECONDS);
     }
 
     @Override

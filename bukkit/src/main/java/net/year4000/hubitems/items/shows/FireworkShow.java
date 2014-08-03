@@ -1,10 +1,13 @@
 package net.year4000.hubitems.items.shows;
 
-import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.utils.Common;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -14,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @FunItemInfo(
     name = "fireworkshow.name",
@@ -32,13 +36,13 @@ public class FireworkShow extends FunItem {
         Location start = event.getPlayer().getLocation().clone();
 
         if (cost(event.getPlayer(), info.mana())) {
-            BukkitTask task = Bukkit.getScheduler().runTaskTimer(DuckTape.get(), () -> {
+            BukkitTask task = SchedulerUtil.repeatSync(() -> {
                 for (Location loc : Common.getPointsCircle(start, 8, 3.5)) {
                     Firework firework = loc.getWorld().spawn(loc, Firework.class);
                     randomEffects(firework);
                 }
-            }, 20L, 20L);
-            Bukkit.getScheduler().runTaskLater(DuckTape.get(), task::cancel, 5 * 20L);
+            }, 1, TimeUnit.SECONDS);
+            SchedulerUtil.runSync(task::cancel, 5, TimeUnit.SECONDS);
         }
 
         event.setCancelled(true);

@@ -1,4 +1,4 @@
-package net.year4000.hub;
+package net.year4000.worldback;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
