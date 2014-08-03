@@ -28,7 +28,7 @@ public class LowRam implements Runnable {
         // log the ram usage
         Level last = DuckTape.get().getLog().getLevel();
         DuckTape.get().getLog().setLevel(Level.FINEST);
-        RamTweaks.debug("Max Ram: %s | Total Ram: %s | Free Ram: %s", max, total, free);
+        RamTweaks.log("Max Ram: %s | Total Ram: %s | Free Ram: %s", max, total, free);
         DuckTape.get().getLog().setLevel(last);
 
         // shutdown the server when ram is too low
@@ -36,9 +36,9 @@ public class LowRam implements Runnable {
             RamTweaks.log("Server restarting as their is low ram.");
 
             // Print debug log things to console
-            //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "debug info");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "serverinfo");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uptime");
-            //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunks");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunks");
 
             new ShutdownMessage(10);
         }
