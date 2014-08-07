@@ -1,7 +1,7 @@
 package net.year4000.serverlist.commands;
 
-import com.sk89q.minecraft.util.commands.*;
 import net.md_5.bungee.api.CommandSender;
+import net.year4000.utilities.bungee.commands.*;
 
 public final class ListBase {
     @Command(

@@ -1,13 +1,14 @@
 package net.year4000.ramtweaks;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
+
 import net.md_5.bungee.api.CommandSender;
 import net.year4000.ramtweaks.messages.Message;
 import net.year4000.ramtweaks.messages.ShutdownMessage;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.Command;
+import net.year4000.utilities.bungee.commands.CommandContext;
+import net.year4000.utilities.bungee.commands.CommandException;
+import net.year4000.utilities.bungee.commands.CommandPermissions;
 
 import java.lang.management.ManagementFactory;
 
@@ -31,7 +32,7 @@ public final class RamCommands {
     public static void uptime(CommandContext args, CommandSender sender) throws CommandException {
         long starttime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
-        sender.sendMessage(MessageUtil.makeMessage(new Message(sender).get(
+        sender.sendMessage(MessageUtil.message(new Message(sender).get(
             "cmd.uptime",
             DateUtil.formatDateDiff(starttime)
         )));
@@ -46,40 +47,40 @@ public final class RamCommands {
         Message locale = new Message(sender);
         Runtime rt = Runtime.getRuntime();
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.system",
             System.getProperty("os.name"),
             System.getProperty("os.version"),
             System.getProperty("os.arch"))));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.java",
             System.getProperty("java.vendor"),
             System.getProperty("java.version"),
             System.getProperty("java.vendor.url"))));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.jvm",
             System.getProperty("java.vm.vendor"),
             System.getProperty("java.vm.name"),
             System.getProperty("java.vm.version"))));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.processors",
             rt.availableProcessors()
         )));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.total_memory",
             Math.floor(rt.maxMemory() / 1024.0 / 1024.0)
         )));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.allocated_memory",
             Math.floor(rt.totalMemory() / 1024.0 / 1024.0)
         )));
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get(
+        sender.sendMessage(MessageUtil.message(locale.get(
             "cmd.info.free_memory",
             Math.floor(rt.freeMemory() / 1024.0 / 1024.0)
         )));

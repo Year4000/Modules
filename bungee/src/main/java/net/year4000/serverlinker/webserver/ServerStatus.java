@@ -1,10 +1,10 @@
 package net.year4000.serverlinker.webserver;
 
-import com.ewized.utilities.core.util.Pinger;
 import lombok.Data;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.year4000.serverlinker.ServerLinker;
 import net.year4000.serverlinker.Settings;
+import net.year4000.utilities.Pinger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

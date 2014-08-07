@@ -1,21 +1,21 @@
 package net.year4000.infractions;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.Command;
+import net.year4000.utilities.bungee.commands.CommandContext;
+import net.year4000.utilities.bungee.commands.CommandException;
+import net.year4000.utilities.bungee.commands.CommandPermissions;
 
 public final class Commands {
     @Command(aliases = {"bans"}, desc = "")
     @CommandPermissions({"infractions.staff", "infractions.ban"})
     public static void bans(CommandContext args, CommandSender sender) throws CommandException {
         Infractions.getStorage().read(FileStorage.STORAGE);
-        sender.sendMessage(MessageUtil.makeMessage("&6Infractions storage file is reloaded."));
+        sender.sendMessage(MessageUtil.message("&6Infractions storage file is reloaded."));
     }
 
     @Command(
@@ -53,7 +53,7 @@ public final class Commands {
         ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());
         //System.out.println(judge.getUUID());
         if (badguy.ban(judge, message)) {
-            sender.sendMessage(MessageUtil.makeMessage("Infraction could not be added to database."));
+            sender.sendMessage(MessageUtil.message("Infraction could not be added to database."));
         }
 
         // Kick the player from the server
@@ -102,7 +102,7 @@ public final class Commands {
         // Update the database.
         ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());
         if (!badguy.lock(judge, message, args.getString(1))) {
-            sender.sendMessage(MessageUtil.makeMessage("Infraction could not be added to database."));
+            sender.sendMessage(MessageUtil.message("Infraction could not be added to database."));
         }
 
         // Kick the player from the server
@@ -158,6 +158,6 @@ public final class Commands {
      */
     private static BaseComponent[] createMessage(ProxiedPlayer player, String message) {
         String link = Config.get().getLink().replaceAll("%player%", player.getName());
-        return MessageUtil.makeMessage(message + "\n\n" + new Message(player).get("default.notice") + "\n" + link);
+        return MessageUtil.message(message + "\n\n" + new Message(player).get("default.notice") + "\n" + link);
     }
 }

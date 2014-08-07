@@ -3,11 +3,11 @@ package net.year4000.infractions;
 import lombok.Getter;
 import net.year4000.ducktape.bungee.module.BungeeModule;
 import net.year4000.ducktape.bungee.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.module.ModuleInfo;
 
 @ModuleInfo(
     name = "Infractions",
-    version = "1.2.0",
+    version = "1.3",
     description = "Temp infractions until Account plugin is made.",
     authors = {"Year4000"}
 )

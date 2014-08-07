@@ -1,13 +1,5 @@
 package net.year4000.announcer.commands;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.sk89q.bungee.util.BungeeWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -16,6 +8,10 @@ import net.year4000.announcer.Broadcaster;
 import net.year4000.announcer.Settings;
 import net.year4000.announcer.messages.InternalManager;
 import net.year4000.announcer.messages.Message;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.*;
+import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 public final class AnnouncerSub {
     private static Settings settings = Settings.get();
@@ -34,7 +30,7 @@ public final class AnnouncerSub {
         }};
 
         Announcer.getInst().reloadSchedulers();
-        sender.sendMessage(MessageUtil.makeMessage(locale.get("cmd.reload")));
+        sender.sendMessage(MessageUtil.message(locale.get("cmd.reload")));
     }
 
     @Command(
@@ -90,7 +86,7 @@ public final class AnnouncerSub {
 
         try {
             settings.addServerMessages(args.getString(0), args.getJoinedStrings(1));
-            sender.sendMessage(MessageUtil.makeMessage(locale.get("cmd.message.add", args.getString(0))));
+            sender.sendMessage(MessageUtil.message(locale.get("cmd.message.add", args.getString(0))));
         } catch (NullPointerException e) {
             throw new CommandException(locale.get("cmd.server.not_found"));
         } catch (InvalidConfigurationException e) {
@@ -117,7 +113,7 @@ public final class AnnouncerSub {
                 throw new CommandException(locale.get("cmd.message.no_index"));
             } else {
                 settings.removeServerMessages(args.getString(0), args.getInteger(1) - 1);
-                sender.sendMessage(MessageUtil.makeMessage(locale.get("cmd.message.remove", args.getString(0))));
+                sender.sendMessage(MessageUtil.message(locale.get("cmd.message.remove", args.getString(0))));
             }
         } catch (NullPointerException e) {
             throw new CommandException(locale.get("cmd.server.not_found"));
@@ -161,7 +157,7 @@ public final class AnnouncerSub {
                 default:
                     message = locale.get("cmd.config.not_found");
             }
-            sender.sendMessage(MessageUtil.makeMessage(message));
+            sender.sendMessage(MessageUtil.message(message));
         }
         // Change the setting of option
         else {
@@ -187,7 +183,7 @@ public final class AnnouncerSub {
                     default:
                         message = locale.get("cmd.config.not_found");
                 }
-                sender.sendMessage(MessageUtil.makeMessage(message));
+                sender.sendMessage(MessageUtil.message(message));
             } catch (InvalidConfigurationException e) {
                 throw new CommandException(locale.get("cmd.config.error"));
             }

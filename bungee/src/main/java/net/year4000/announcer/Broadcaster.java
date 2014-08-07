@@ -1,10 +1,10 @@
 package net.year4000.announcer;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.announcer.messages.Message;
+import net.year4000.utilities.bungee.MessageUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -78,7 +78,7 @@ public class Broadcaster implements Runnable {
             }
             // Simple Classic Message
             else {
-                return MessageUtil.makeMessage(settings.getPrefix() + message);
+                return MessageUtil.message(settings.getPrefix() + message);
             }
         } catch (NullPointerException e) {
             Announcer.debug(e.getMessage());

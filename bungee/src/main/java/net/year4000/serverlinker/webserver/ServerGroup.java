@@ -3,9 +3,9 @@ package net.year4000.serverlinker.webserver;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.cubespace.Yamler.Config.Config;
 import net.year4000.serverlinker.Server;
 import net.year4000.serverlinker.Settings;
+import net.year4000.utilities.config.Config;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

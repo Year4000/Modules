@@ -3,11 +3,11 @@ package net.year4000.ramtweaks;
 import lombok.Getter;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.module.BungeeModule;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.module.ModuleInfo;
 
 @ModuleInfo(
     name = "RamTweaks",
-    version = "1.4",
+    version = "1.5",
     description = "Improve BungeeCord with a Module",
     authors = {"Year4000"}
 )

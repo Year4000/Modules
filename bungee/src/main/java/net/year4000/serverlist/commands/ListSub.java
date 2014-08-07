@@ -1,15 +1,15 @@
 package net.year4000.serverlist.commands;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.sk89q.bungee.util.BungeeWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.md_5.bungee.api.CommandSender;
 import net.year4000.serverlist.Settings;
 import net.year4000.serverlist.messages.Message;
 import net.year4000.serverlist.messages.MessageFactory;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.BungeeWrappedCommandSender;
+import net.year4000.utilities.bungee.commands.Command;
+import net.year4000.utilities.bungee.commands.CommandContext;
+import net.year4000.utilities.bungee.commands.CommandException;
+import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
 
 public final class ListSub {
     @Command(
@@ -22,7 +22,7 @@ public final class ListSub {
         MessageFactory factory = new MessageFactory();
         final int MAX_PER_PAGE = 8;
 
-        new SimplePaginatedResult<String>(MessageUtil.message(new Settings().getPrefix()), MAX_PER_PAGE) {
+        new SimplePaginatedResult<String>(MessageUtil.replaceColors(new Settings().getPrefix()), MAX_PER_PAGE) {
             @Override
             public String format(String msg, int index) {
                 try {

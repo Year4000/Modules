@@ -1,9 +1,5 @@
 package net.year4000.serverlinker.commands;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -11,6 +7,10 @@ import net.year4000.serverlinker.Server;
 import net.year4000.serverlinker.Settings;
 import net.year4000.serverlinker.messages.Message;
 import net.year4000.serverlinker.webserver.StatusCollection;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.Command;
+import net.year4000.utilities.bungee.commands.CommandContext;
+import net.year4000.utilities.bungee.commands.CommandException;
 
 import java.net.InetSocketAddress;
 
@@ -52,7 +52,7 @@ public final class LinkerCommands {
 
         StatusCollection.get().addServer(serverInfo);
 
-        sender.sendMessage(MessageUtil.makeMessage(locale.get("linker.add", serverInfo.getName())));
+        sender.sendMessage(MessageUtil.message(locale.get("linker.add", serverInfo.getName())));
     }
 
     @Command(
@@ -71,6 +71,6 @@ public final class LinkerCommands {
         }
 
         StatusCollection.get().removeServer(server);
-        sender.sendMessage(MessageUtil.makeMessage(locale.get("linker.remove", name)));
+        sender.sendMessage(MessageUtil.message(locale.get("linker.remove", name)));
     }
 }

@@ -7,7 +7,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.announcer.commands.AnnouncerBase;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.ducktape.bungee.module.BungeeModule;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.module.ModuleInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "Announcer",
-    version = "1.4",
+    version = "1.5",
     description = "Broadcast messages to the servers",
     authors = {"Year4000"}
 )

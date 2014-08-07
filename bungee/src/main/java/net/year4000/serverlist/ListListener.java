@@ -20,7 +20,7 @@ import net.year4000.serverlist.messages.MessageFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
-import static com.ewized.utilities.bungee.util.MessageUtil.replaceColors;
+import static net.year4000.utilities.bungee.MessageUtil.replaceColors;
 
 public class ListListener implements Listener {
     private final LoadingCache<PingServer, ServerPing> ping = CacheBuilder.newBuilder()

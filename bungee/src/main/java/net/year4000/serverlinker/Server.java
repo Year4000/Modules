@@ -2,7 +2,7 @@ package net.year4000.serverlinker;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Config;
+import net.year4000.utilities.config.Config;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

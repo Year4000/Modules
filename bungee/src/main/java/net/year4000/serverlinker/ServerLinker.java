@@ -11,7 +11,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.module.BungeeModule;
 import net.year4000.ducktape.bungee.module.ModuleListeners;
-import net.year4000.ducktape.core.module.ModuleInfo;
+import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.serverlinker.commands.GeneralCommands;
 import net.year4000.serverlinker.commands.LinkerBaseCommand;
 import net.year4000.serverlinker.webserver.ServerHandler;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "ServerLinker",
-    version = "1.5",
+    version = "1.6",
     description = "The core system that handles everything about the servers.",
     authors = {"Year4000"}
 )

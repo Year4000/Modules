@@ -1,11 +1,11 @@
 package net.year4000.announcer;
 
-import com.ewized.utilities.core.util.cache.QuickCache;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.Config;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Settings extends Config {
-    private static QuickCache<Settings> inst = QuickCache.builder(Settings.class).build();
+    private static Settings inst;
 
     public Settings() {
         try {
@@ -31,7 +31,11 @@ public class Settings extends Config {
     }
 
     public static Settings get() {
-        return inst.get();
+        if (inst == null) {
+            inst = new Settings();
+        }
+
+        return inst;
     }
 
     @Comment("The setting for Announcer, the setting explains itself.")

@@ -1,18 +1,17 @@
 package net.year4000.ramtweaks;
 
-import com.ewized.utilities.core.util.cache.QuickCache;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.Config;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Settings extends Config {
-    private static QuickCache<Settings> inst = QuickCache.builder(Settings.class).build();
+    private static Settings inst;
 
     public Settings() {
         try {
@@ -25,7 +24,11 @@ public class Settings extends Config {
     }
 
     public static Settings get() {
-        return inst.get();
+        if (inst == null) {
+            inst = new Settings();
+        }
+
+        return inst;
     }
 
     @Comment("The URL to grab the locale from")

@@ -1,8 +1,8 @@
 package net.year4000.serverlist.messages;
 
-import com.ewized.utilities.core.util.cache.QuickCache;
 import lombok.Data;
 import net.year4000.serverlist.Settings;
+import net.year4000.utilities.cache.QuickCache;
 
 import java.util.*;
 

@@ -1,6 +1,5 @@
 package net.year4000.serverlinker;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -13,6 +12,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import net.year4000.serverlinker.webserver.StatusCollection;
+import net.year4000.utilities.bungee.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public final class Listeners implements Listener {
 
         // Message from being kicked from server
         if (event.getState() == ServerKickEvent.State.CONNECTED) {
-            BaseComponent[] serverName = MessageUtil.makeMessage(String.format(
+            BaseComponent[] serverName = MessageUtil.message(String.format(
                 "&6%s &7>> &f",
                 event.getPlayer().getServer().getInfo().getName()
             ));
@@ -45,7 +45,7 @@ public final class Listeners implements Listener {
         }
         // Message while connecting to server.
         else if (event.getState() == ServerKickEvent.State.CONNECTING) {
-            BaseComponent[] server = MessageUtil.makeMessage(String.format(
+            BaseComponent[] server = MessageUtil.message(String.format(
                 "&6%s &7>> &f",
                 event.getPlayer().getName()
             ));

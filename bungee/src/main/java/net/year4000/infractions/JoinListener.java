@@ -1,6 +1,5 @@
 package net.year4000.infractions;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -10,6 +9,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.ducktape.bungee.DuckTape;
+import net.year4000.utilities.bungee.MessageUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -62,6 +62,6 @@ public class JoinListener implements Listener {
      */
     private static BaseComponent[] createMessage(String type, ProxiedPlayer player, String message) {
         String link = Config.get().getLink().replaceAll("%player%", player.getName());
-        return MessageUtil.makeMessage(type + "\n" + message + "\n\n" + link);
+        return MessageUtil.message(type + "\n" + message + "\n\n" + link);
     }
 }

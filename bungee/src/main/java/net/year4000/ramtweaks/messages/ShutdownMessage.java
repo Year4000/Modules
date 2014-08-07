@@ -1,10 +1,10 @@
 package net.year4000.ramtweaks.messages;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.DuckTape;
+import net.year4000.utilities.bungee.MessageUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,18 +25,18 @@ public class ShutdownMessage implements Runnable {
 
         if (countdown == 0) {
 
-            console.sendMessage(MessageUtil.makeMessage(new Message(console).get("restart.message")));
+            console.sendMessage(MessageUtil.message(new Message(console).get("restart.message")));
             proxy.getPlayers().stream()
                 .filter(p -> p != null && p.getLocale() != null && p.getServer() != null)
-                .forEach(player -> player.disconnect(MessageUtil.makeMessage(new Message(player).get("restart.message"))));
+                .forEach(player -> player.disconnect(MessageUtil.message(new Message(player).get("restart.message"))));
             task.cancel();
             proxy.stop();
         }
         else if (countdown > 0) {
-            console.sendMessage(MessageUtil.makeMessage(new Message(console).get(type, countdown)));
+            console.sendMessage(MessageUtil.message(new Message(console).get(type, countdown)));
             proxy.getPlayers().stream()
                 .filter(p -> p != null && p.getLocale() != null && p.getServer() != null)
-                .forEach(player -> player.sendMessage(MessageUtil.makeMessage(new Message(player).get(type, countdown))));
+                .forEach(player -> player.sendMessage(MessageUtil.message(new Message(player).get(type, countdown))));
         }
         countdown--;
     }

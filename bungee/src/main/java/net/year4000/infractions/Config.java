@@ -1,17 +1,16 @@
 package net.year4000.infractions;
 
-import com.ewized.utilities.core.util.cache.QuickCache;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Config extends net.cubespace.Yamler.Config.Config {
-    private static QuickCache<Config> inst = QuickCache.builder(Config.class).build();
+public class Config extends net.year4000.utilities.config.Config {
+    private static Config inst;
 
     public Config() {
         try {
@@ -24,7 +23,11 @@ public class Config extends net.cubespace.Yamler.Config.Config {
     }
 
     public static Config get() {
-        return inst.get();
+        if (inst == null) {
+            inst = new Config();
+        }
+
+        return inst;
     }
 
     @Comment("Settings for default messages.")

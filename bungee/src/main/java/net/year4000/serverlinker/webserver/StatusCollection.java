@@ -1,12 +1,12 @@
 package net.year4000.serverlinker.webserver;
 
-import com.ewized.utilities.core.util.Pinger;
 import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.DuckTape;
+import net.year4000.utilities.Pinger;
 
 import java.util.ArrayList;
 import java.util.List;

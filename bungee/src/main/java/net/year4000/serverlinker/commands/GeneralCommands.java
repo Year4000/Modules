@@ -1,12 +1,5 @@
 package net.year4000.serverlinker.commands;
 
-import com.ewized.utilities.bungee.util.MessageUtil;
-import com.ewized.utilities.core.util.Pinger;
-import com.sk89q.bungee.util.BungeeWrappedCommandSender;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.pagination.SimplePaginatedResult;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -16,6 +9,13 @@ import net.year4000.serverlinker.Settings;
 import net.year4000.serverlinker.messages.Message;
 import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
+import net.year4000.utilities.Pinger;
+import net.year4000.utilities.bungee.MessageUtil;
+import net.year4000.utilities.bungee.commands.BungeeWrappedCommandSender;
+import net.year4000.utilities.bungee.commands.Command;
+import net.year4000.utilities.bungee.commands.CommandContext;
+import net.year4000.utilities.bungee.commands.CommandException;
+import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
 
 import java.net.InetSocketAddress;
 import java.util.stream.Collectors;
@@ -94,8 +94,8 @@ public final class GeneralCommands {
         Message locale = new Message(player);
 
         if (args.argsLength() == 0) {
-            player.sendMessage(MessageUtil.makeMessage(locale.get("server.on", player.getServer().getInfo().getName())));
-            player.sendMessage(MessageUtil.makeMessage(locale.get("server.use")));
+            player.sendMessage(MessageUtil.message(locale.get("server.on", player.getServer().getInfo().getName())));
+            player.sendMessage(MessageUtil.message(locale.get("server.use")));
         }
         else {
             String serverName = args.getJoinedStrings(0);
@@ -105,7 +105,7 @@ public final class GeneralCommands {
                 throw new CommandException(locale.get("server.no_name", serverName));
             }
 
-            player.sendMessage(MessageUtil.makeMessage(locale.get("server.connect", server.getName())));
+            player.sendMessage(MessageUtil.message(locale.get("server.connect", server.getName())));
             player.connect(server);
         }
     }
@@ -125,13 +125,13 @@ public final class GeneralCommands {
         Message locale = new Message(player);
 
         if (lowest == null) {
-            player.sendMessage(MessageUtil.makeMessage(locale.get("hub.none")));
+            player.sendMessage(MessageUtil.message(locale.get("hub.none")));
         }
         else if (Settings.get().getServer(player.getServer().getInfo().getName()).isHub()) {
-            player.sendMessage(MessageUtil.makeMessage(locale.get("hub.on")));
+            player.sendMessage(MessageUtil.message(locale.get("hub.on")));
         }
         else {
-            player.sendMessage(MessageUtil.makeMessage(locale.get("server.connect", lowest.getName())));
+            player.sendMessage(MessageUtil.message(locale.get("server.connect", lowest.getName())));
             player.connect(lowest);
         }
     }
