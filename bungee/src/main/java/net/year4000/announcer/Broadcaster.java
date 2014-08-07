@@ -11,26 +11,27 @@ import java.util.Random;
 
 public class Broadcaster implements Runnable {
     private static final Random rand = new Random(System.currentTimeMillis());
-    private static Announcer plugin = Announcer.getInst();
     private static Settings settings = Settings.get();
     private List<String> messages;
     private String server;
-    private int index;
+    private int index = 0;
 
     public Broadcaster(String server) {
         this.server = server;
+        messages = settings.getMessages(server);
     }
 
     @Override
     public void run() {
         try {
             // Get the messages and the index.
-            messages = settings.getMessages(server);
-            index = settings.isRandom() ? Math.abs(rand.nextInt() % messages.size()) : plugin.getMessageIndex(server);
+            if (settings.isRandom()) {
+                index = Math.abs(rand.nextInt() % messages.size());
+            }
 
             // Set the position to the messages.
             if (index == messages.size()) {
-                index = plugin.setMessagesIndex(server, 0);
+                index = 0;
             }
 
             // Broadcast the message
@@ -55,7 +56,7 @@ public class Broadcaster implements Runnable {
         }
 
         Announcer.debug("Running a " + messages.get(index) + " for: " + server);
-        plugin.setMessagesIndex(server, ++index);
+        ++index;
     }
 
     /**

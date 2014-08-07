@@ -6,8 +6,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.announcer.Announcer;
 import net.year4000.announcer.Broadcaster;
 import net.year4000.announcer.Settings;
-import net.year4000.announcer.messages.InternalManager;
-import net.year4000.announcer.messages.Message;
+import net.year4000.announcer.messages.InMessage;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.bungee.commands.*;
 import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
@@ -25,9 +24,7 @@ public final class AnnouncerSub {
     @CommandPermissions({"announcer.admin", "announcer.reload"})
     public static void reload(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
-        Message locale = new Message(player) {{
-            this.localeManager = InternalManager.get();
-        }};
+        InMessage locale = new InMessage(player);
 
         Announcer.getInst().reloadSchedulers();
         sender.sendMessage(MessageUtil.message(locale.get("cmd.reload")));
@@ -44,9 +41,7 @@ public final class AnnouncerSub {
     @CommandPermissions({"announcer.admin", "announcer.list"})
     public static void list(final CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
-        Message locale = new Message(player) {{
-            this.localeManager = InternalManager.get();
-        }};
+        InMessage locale = new InMessage(player);
 
         try {
             // Show raw messages or pretty messages.
@@ -80,9 +75,7 @@ public final class AnnouncerSub {
     @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.add"})
     public static void add(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
-        Message locale = new Message(player) {{
-            this.localeManager = InternalManager.get();
-        }};;
+        InMessage locale = new InMessage(player);
 
         try {
             settings.addServerMessages(args.getString(0), args.getJoinedStrings(1));
@@ -104,9 +97,7 @@ public final class AnnouncerSub {
     @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.remove"})
     public static void remove(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
-        Message locale = new Message(player) {{
-            this.localeManager = InternalManager.get();
-        }};
+        InMessage locale = new InMessage(player);
 
         try {
             if (args.getInteger(1) < 0 || args.getInteger(1) > settings.getServerMessages(args.getString(0)).size()) {
@@ -131,9 +122,7 @@ public final class AnnouncerSub {
     @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.setting"})
     public static void setting(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
-        Message locale = new Message(player) {{
-            this.localeManager = InternalManager.get();
-        }};
+        InMessage locale = new InMessage(player);
 
         // View the settings.
         if (args.argsLength() == 1) {

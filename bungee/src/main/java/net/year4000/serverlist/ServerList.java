@@ -13,7 +13,7 @@ import java.util.List;
 
 @ModuleInfo(
     name = "ServerList",
-    version = "1.4",
+    version = "1.5",
     description = "Edit the way clients shows the server in the server-list.",
     authors = {"Year4000"}
 )

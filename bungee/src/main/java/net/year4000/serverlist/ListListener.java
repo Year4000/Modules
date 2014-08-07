@@ -60,7 +60,7 @@ public class ListListener implements Listener {
                        // Set the player's ping for players on the server.
                        players = pingServer.getResponse().getPlayers().getSample();
 
-                       if (players.length == 0) {
+                       if (players != null && players.length == 0) {
                            int playerCount = proxy.getOnlineCount();
                            players = new ServerPing.PlayerInfo[playerCount];
 
