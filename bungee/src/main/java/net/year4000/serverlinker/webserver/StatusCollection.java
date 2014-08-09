@@ -34,7 +34,7 @@ public class StatusCollection {
     }
 
     public void updateStatus() {
-        servers.forEach((name, server) -> server.ping());
+        servers.values().forEach(ServerStatus::ping);
     }
 
     public synchronized ServerStatus addServer(ServerInfo server) {
@@ -46,7 +46,7 @@ public class StatusCollection {
     }
 
     public ScheduledTask updateClock() {
-        return proxy.getScheduler().schedule(DuckTape.get(), this::updateStatus, 5, 5, TimeUnit.SECONDS);
+        return proxy.getScheduler().schedule(DuckTape.get(), this::updateStatus, 5, 2, TimeUnit.SECONDS);
     }
 
     /** Get the max players of all the servers combined */
