@@ -18,12 +18,13 @@ public class Broadcaster implements Runnable {
 
     public Broadcaster(String server) {
         this.server = server;
-        messages = settings.getMessages(server);
     }
 
     @Override
     public void run() {
         try {
+            messages = settings.getMessages(server);
+
             // Get the messages and the index.
             if (settings.isRandom()) {
                 index = Math.abs(rand.nextInt() % messages.size());
