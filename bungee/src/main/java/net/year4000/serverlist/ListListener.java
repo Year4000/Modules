@@ -1,5 +1,6 @@
 package net.year4000.serverlist;
 
+import com.google.common.base.Ascii;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import static net.year4000.utilities.bungee.MessageUtil.replaceColors;
 
 public class ListListener implements Listener {
+    private static final int MOTD_MAX = 45;
     private final LoadingCache<PingServer, ServerPing> ping = CacheBuilder.newBuilder()
         .maximumSize(1000)
         .expireAfterWrite(new Settings().getCache(), TimeUnit.SECONDS)
@@ -39,13 +41,13 @@ public class ListListener implements Listener {
 
                    // Load the random messages top layer.
                    ServerList.debug("Server List Message: " + message);
-                   motd += locale.get(message);
+                   motd += locale.get(Ascii.truncate(message, MOTD_MAX - motd.length(), "&7..."));
 
                    // Load the player bottom layer and player sample.
                    if (pingServer.getPlayer(ip) != null) {
                        // Bottom row is a player is found.
                        String motdPlayer = locale.get(config.getPlayer());
-                       motd += motdPlayer.equals("") ? "" : " \n" + motdPlayer.replaceAll("\\{player\\}", pingServer.getPlayer(ip));
+                       motd += Ascii.truncate(motdPlayer.equals("") ? "" : " \n" + motdPlayer.replaceAll("\\{player\\}", pingServer.getPlayer(ip)), MOTD_MAX, "&7...");
 
                        // Set the player's ping to the one in the config.
                        players = new ServerPing.PlayerInfo[config.getPlayers().size()];
@@ -55,7 +57,7 @@ public class ListListener implements Listener {
                        }
                    } else {
                        // Bottom row if no player is found.
-                       motd += config.getNoPlayer().equals("") ? "" : " \n" + locale.get(config.getNoPlayer());
+                       motd += Ascii.truncate(config.getNoPlayer().equals("") ? "" : " \n" + locale.get(config.getNoPlayer()), MOTD_MAX, "&7...");
 
                        // Set the player's ping for players on the server.
                        players = pingServer.getResponse().getPlayers().getSample();
