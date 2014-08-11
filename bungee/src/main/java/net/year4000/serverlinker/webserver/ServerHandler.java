@@ -25,7 +25,7 @@ public class ServerHandler extends AbstractHandler {
         httpResponse.addHeader("Refresh", "30"); // let browsers update
         httpResponse.setStatus(HttpServletResponse.SC_OK);
         request.setHandled(true);
-        gson.toJson(StatusCollection.get().getServers(), httpResponse.getWriter());
+        gson.toJson(StatusCollection.get().getNonHiddenServers(), httpResponse.getWriter());
     }
 
     public static void startWebServer() {

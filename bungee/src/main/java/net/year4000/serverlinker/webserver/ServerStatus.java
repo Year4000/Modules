@@ -32,4 +32,9 @@ public class ServerStatus {
             status = null;
         }
     }
+
+    /** Is this server hidden */
+    public boolean isHidden() {
+        return name.startsWith(".") || getGroup().isHidden();
+    }
 }

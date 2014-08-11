@@ -11,6 +11,7 @@ import net.year4000.utilities.Pinger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 
@@ -33,18 +34,35 @@ public class StatusCollection {
         proxy.getServers().values().forEach(this::addServer);
     }
 
+    /** Don't display servers in the group hidden publicly */
+    public Map<String, ServerStatus> getNonHiddenServers() {
+        Map<String, ServerStatus> nonHidden = new TreeMap<>();
+
+        servers.forEach((name, server) -> {
+            if (!server.isHidden()) {
+                nonHidden.put(name, server);
+            }
+        });
+
+        return nonHidden;
+    }
+
+    /** Update the ping status of each server */
     public void updateStatus() {
         servers.values().forEach(ServerStatus::ping);
     }
 
+    /** Add a server to be tracked by the api */
     public synchronized ServerStatus addServer(ServerInfo server) {
         return servers.put(server.getName(), new ServerStatus(server));
     }
 
+    /** Remove a server to be tracked by the api */
     public synchronized ServerStatus removeServer(ServerInfo server) {
         return servers.remove(server.getName());
     }
 
+    /** The clock that is ran to update the pings of the servers */
     public ScheduledTask updateClock() {
         return proxy.getScheduler().schedule(DuckTape.get(), this::updateStatus, 5, 2, TimeUnit.SECONDS);
     }

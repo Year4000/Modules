@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "ServerLinker",
-    version = "1.6",
+    version = "1.7",
     description = "The core system that handles everything about the servers.",
     authors = {"Year4000"}
 )
