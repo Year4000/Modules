@@ -1,7 +1,7 @@
 package net.year4000.ramtweaks.messages;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

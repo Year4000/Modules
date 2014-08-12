@@ -1,12 +1,13 @@
 package net.year4000.ramtweaks;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.google.common.base.Ascii;
 import net.year4000.ramtweaks.messages.Message;
 import net.year4000.ramtweaks.messages.ShutdownMessage;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
+import net.year4000.utilities.bukkit.commands.CommandPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -144,7 +145,7 @@ public final class RamCommands {
             sender.sendMessage(MessageUtil.message(locale.get(
                 "mem.world",
                 w.getEnvironment().name(),
-                w.getName(),
+                Ascii.truncate(w.getName(), 16, "..."),
                 worldChunks,
                 worldEnties,
                 worldTitleEnties

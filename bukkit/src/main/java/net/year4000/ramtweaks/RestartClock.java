@@ -11,12 +11,18 @@ import java.util.concurrent.TimeUnit;
 public class RestartClock implements Runnable {
     @Getter
     private BukkitTask task;
+    private boolean first = true;
 
     public RestartClock() {
-        task = SchedulerUtil.repeatSync(this, 10, TimeUnit.MINUTES);
+        task = SchedulerUtil.repeatAsync(this, 1, 10, TimeUnit.MINUTES);
     }
 
     public void run() {
+        if (first) {
+            first = false;
+            return;
+        }
+
         // Check if last player online
         if (Bukkit.getOnlinePlayers().length == 0) {
             new ShutdownMessage(10);
