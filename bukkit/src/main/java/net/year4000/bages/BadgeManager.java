@@ -1,9 +1,9 @@
 package net.year4000.bages;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.ewized.utilities.core.util.ChatColor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
