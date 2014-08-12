@@ -128,6 +128,12 @@ public class WorldBack extends BukkitModule {
             public void revert() {
                 Location loc = new Location(world, location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 Block oldBlock = world.getBlockAt(loc);
+
+                // Don't run if they are the same block
+                if (block.equals(oldBlock.getType())) {
+                    return;
+                }
+
                 //oldBlock.setType(block);
                 oldBlock.setTypeIdAndData(block.getId(), data, true);
 
