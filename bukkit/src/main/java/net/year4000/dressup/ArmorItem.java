@@ -1,12 +1,11 @@
 package net.year4000.dressup;
 
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Config;
 import net.year4000.dressup.message.Message;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.config.Config;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -38,7 +37,7 @@ public class ArmorItem extends Config {
             // module nbt
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
             lore.add("");
-            lore.add(MessageUtil.message(select.get("inv.click")));
+            lore.add(select.get("inv.click"));
             meta.setLore(lore);
 
             item.setItemMeta(meta);
@@ -49,7 +48,7 @@ public class ArmorItem extends Config {
 
             List<String> lore = new ArrayList<>();
             lore.add("");
-            lore.add(MessageUtil.message(select.get("inv.click")));
+            lore.add(select.get("inv.click"));
             meta.setLore(lore);
 
             item.setItemMeta(meta);

@@ -1,12 +1,13 @@
 package net.year4000.dressup;
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
+import com.google.common.base.Ascii;
 import lombok.Getter;
 import net.year4000.dressup.message.Message;
 import net.year4000.dressup.message.MessageManager;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -55,7 +56,7 @@ public class DressUp extends BukkitModule {
     /** Make the inventory based on the locale message */
     private Inventory makeInv(String list, Locale locale) {
         List<ArmorItem> items = Settings.get().getItems().get(list);
-        Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(items.size()), new Message(locale).get("inv." + list));
+        Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(items.size()), Ascii.truncate(new Message(locale).get("inv." + list), 32, "..."));
 /*
 
         ItemStack[] content = new ItemStack[items.size()];

@@ -1,21 +1,21 @@
 package net.year4000.dressup;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.dressup.message.Message;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class DressListener implements Listener {
     private Map<Player, String> lastOpened = new WeakHashMap<>();
@@ -24,11 +24,11 @@ public class DressListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         Player player = ((Player)event.getWhoClicked());
         Message locale = new Message(player);
-        List<ItemStack> playerItems = Arrays.asList(player.getInventory().getContents());
+        Set<ItemStack> playerItems = new HashSet<>(Arrays.asList(player.getInventory().getContents()));
         //System.out.println("Slot: " + event.getSlot());
         //System.out.println("Raw Slot: " + event.getRawSlot());
 
-        if (event.getSlot() > 35 && event.getSlot() < 40) {
+        if ((event.getSlot() > 35 && event.getSlot() < 40) || player.getGameMode() != GameMode.ADVENTURE) {
             event.setCancelled(true);
         }
 
@@ -66,22 +66,38 @@ public class DressListener implements Listener {
                 // Hat
                 if (lastOpened.get(player).equals(Settings.HAT)) {
                     player.sendMessage(locale.get("set.hat"));
-                    player.getInventory().setHelmet(event.getCurrentItem());
+                    ItemStack current = event.getCurrentItem().clone();
+                    ItemMeta meta = current.getItemMeta();
+                    meta.setLore(null);
+                    current.setItemMeta(meta);
+                    player.getInventory().setHelmet(current);
                 }
                 // Chest
                 if (lastOpened.get(player).equals(Settings.CHEST)) {
                     player.sendMessage(locale.get("set.shirt"));
-                    player.getInventory().setChestplate(event.getCurrentItem());
+                    ItemStack current = event.getCurrentItem().clone();
+                    ItemMeta meta = current.getItemMeta();
+                    meta.setLore(null);
+                    current.setItemMeta(meta);
+                    player.getInventory().setChestplate(current);
                 }
                 // Pants
                 if (lastOpened.get(player).equals(Settings.PANTS)) {
                     player.sendMessage(locale.get("set.pants"));
-                    player.getInventory().setLeggings(event.getCurrentItem());
+                    ItemStack current = event.getCurrentItem().clone();
+                    ItemMeta meta = current.getItemMeta();
+                    meta.setLore(null);
+                    current.setItemMeta(meta);
+                    player.getInventory().setLeggings(current);
                 }
                 // Boots
                 if (lastOpened.get(player).equals(Settings.BOOTS)) {
                     player.sendMessage(locale.get("set.boots"));
-                    player.getInventory().setBoots(event.getCurrentItem());
+                    ItemStack current = event.getCurrentItem().clone();
+                    ItemMeta meta = current.getItemMeta();
+                    meta.setLore(null);
+                    current.setItemMeta(meta);
+                    player.getInventory().setBoots(current);
                 }
 
                 // Let the user know something happened
@@ -96,6 +112,13 @@ public class DressListener implements Listener {
             }
 
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        if (event.getPlayer() instanceof Player) {
+            lastOpened.remove(event.getPlayer());
         }
     }
 }
