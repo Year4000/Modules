@@ -1,7 +1,7 @@
 package net.year4000.hub;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,7 +14,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 public final class HubListener implements Listener {
-
     /** Should the event be cancled based on the player's mode */
     public static boolean mode(Player player) {
         return !player.getGameMode().equals(GameMode.CREATIVE) || !player.isOp();
