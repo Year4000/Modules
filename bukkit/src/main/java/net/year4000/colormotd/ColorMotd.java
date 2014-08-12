@@ -1,9 +1,9 @@
 package net.year4000.colormotd;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
