@@ -1,12 +1,12 @@
 package net.year4000.hubbar;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
-import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -17,11 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "HubBar",
-    version = "1.0",
+    version = "1.1",
     description = "Have a boss bar in the lobby to tell its Year4000",
     authors = {"Year4000"}
 )
-@ModuleListeners({BarAPIListener.class})
 public class HubBar extends BukkitModule {
     private Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
     private final String NAME = "Year4000";
@@ -43,7 +42,7 @@ public class HubBar extends BukkitModule {
 
             // send message
             for (Player player : Bukkit.getOnlinePlayers()) {
-                BarAPI.setMessage(player, MessageUtil.replaceColors(name + " &7| " + ip), 0.0001F);
+                BossBar.setMessage(player, MessageUtil.replaceColors(name + " &7| " + ip), 0.0001F);
             }
         }, 1, TimeUnit.SECONDS);
     }
