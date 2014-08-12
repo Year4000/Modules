@@ -119,14 +119,17 @@ public class HubItems extends BukkitModule {
             if (!player.getGameMode().equals(GameMode.CREATIVE)) {
                 SchedulerUtil.runSync(() -> {
                     Inventory inv = player.getInventory();
-                    inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                    HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
 
                     if (!FunItemManager.get().getItemMaterials().contains(item.getType())) {
+                        inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+                        HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
                         ItemActor.get(player).applyFunItem();
                     }
+                    // Remove self then reset item contents
                     else {
                         ItemActor.get(player).setCurrentItem(null);
+                        inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+                        HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
                     }
 
                     player.updateInventory();
@@ -191,7 +194,15 @@ public class HubItems extends BukkitModule {
                     FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                     FunItemInfo info = FunItemManager.get().getItemInfo(player, nameStriped);
 
+                    // set the items
                     ItemActor.get(player).setCurrentItem(info);
+
+                    Inventory inv = player.getInventory();
+                    inv.setContents(FunItemManager.get().loadItems(player));
+                    HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+
+                    // apply the items
+                    ItemActor.get(player).applyFunItem(info);
 
                     player.updateInventory();
                     player.closeInventory();

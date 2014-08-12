@@ -2,6 +2,7 @@ package net.year4000.hubitems.items;
 
 import lombok.Getter;
 import net.year4000.hubitems.HubItems;
+import net.year4000.hubitems.ItemActor;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.utils.Common;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -103,9 +104,22 @@ public class FunItemManager {
 
                 ItemMeta meta = items[i].getItemMeta();
                 List<String> lore = meta.getLore();
-                lore.addAll(Arrays.asList("", locale.get("mana.select")));
+                boolean pendingGlow = false;
+
+                if (ItemActor.get(player).getCurrentItem() == info) {
+                    lore.addAll(Arrays.asList("", locale.get("mana.selected")));
+                    pendingGlow = true; // shimmer effect
+                }
+                else {
+                    lore.addAll(Arrays.asList("", locale.get("mana.select")));
+                }
+
                 meta.setLore(lore);
                 items[i].setItemMeta(meta);
+
+                if (pendingGlow) {
+                    items[i] = Common.addGlow(items[i]);
+                }
             }
         }
 
