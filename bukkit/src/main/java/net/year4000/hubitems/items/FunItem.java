@@ -1,13 +1,14 @@
 package net.year4000.hubitems.items;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
+import net.year4000.hubitems.ItemActor;
 import net.year4000.hubitems.messages.Message;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 
 public abstract class FunItem implements Listener {
     protected final FunItemInfo info;
@@ -19,35 +20,45 @@ public abstract class FunItem implements Listener {
 
     /** Make the item cost mana */
     public boolean cost(Player player, float mana) {
-        float cost = mana;
         float exp = player.getExp();
 
-        if (exp - cost <= 0F && !player.getGameMode().equals(GameMode.CREATIVE)) {
-            String itemName = player.getItemInHand().getItemMeta().getDisplayName();
-            double need = Math.abs(cost - exp);
-            String message = new Message(player).get("mana.required", need, itemName);
-            player.sendMessage(" " + message);
+        if (exp - mana <= 0F && !player.getGameMode().equals(GameMode.CREATIVE)) {
+            Message locale = new Message(player);
+            String itemName = "&a" + locale.get(ItemActor.get(player).getCurrentItem().name());
+            // DO NOT TOUCH THIS CONVERSION FORMAL IT WORKS
+            double need = (((mana - exp + mana) * 0.10F) * 1000) - (mana * 0.10F * 1000);
+            String message = locale.get("mana.required", need, itemName);
+            player.sendMessage(" " + message.replaceAll(ChatColor.COLOR_CHAR + "l", ""));
             FunEffectsUtil.playSound(player, Sound.BLAZE_HIT);
             return false;
         }
 
-        player.setExp(exp - cost);
+        player.setExp(exp - mana);
         return true;
     }
 
-    public boolean isItem(Player player) {
+    public boolean isItem(org.bukkit.event.block.Action action, Player player) {
         try {
-            return MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName()).equals(MessageUtil.stripColors(new Message(player).get(info.name())));
+            //HubItems.debug("Item Action: " + action.name() + " | " + info.action().name());
+            if (!info.action().isCorrectAction(action)) return false;
+
+            String item = MessageUtil.stripColors(new Message(player).get(info.name()) + actionDisplay(player, info.action()));
+            return MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName()).equals(item);
         } catch (NullPointerException e) {
             return false;
         }
     }
 
-    public boolean isLeftClick(Action action) {
-        return action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK);
-    }
-
-    public boolean isRightClick(Action action) {
-        return action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK);
+    public static String actionDisplay(Player player, Action action) {
+        Message locale = new Message(player);
+        if (action == Action.LEFT) {
+            return MessageUtil.replaceColors(" &8&l(" + locale.get("action.left") + ")");
+        }
+        else if (action == Action.RIGHT) {
+            return MessageUtil.replaceColors(" &8&l(" + locale.get("action.right") + ")");
+        }
+        else {
+            throw new UnsupportedOperationException(action.name() + " is not a valid action.");
+        }
     }
 }

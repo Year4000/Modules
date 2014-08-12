@@ -1,6 +1,7 @@
 package net.year4000.hubitems.items.bows;
 
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.utils.ParticleUtil;
@@ -20,7 +21,8 @@ import org.bukkit.util.Vector;
     icon = Material.BOW,
     description = "eggbow.description",
     permission = {"mu" , "eggbow.permission"},
-    mana = 0.05F
+    mana = 0.05F,
+    action = Action.RIGHT
 )
 public class EggBow extends FunItem {
     @EventHandler
@@ -28,7 +30,7 @@ public class EggBow extends FunItem {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        if (!isItem(player)) return;
+        if (!isItem(org.bukkit.event.block.Action.RIGHT_CLICK_AIR, player)) return;
 
         if (cost(player, info.mana())) {
             World world = player.getWorld();

@@ -1,5 +1,6 @@
 package net.year4000.hubitems.items.staffs;
 
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.utils.ParticleUtil;
@@ -16,13 +17,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
     icon = Material.STONE_HOE,
     description = "fireballstaff.description",
     permission = {"mu" , "fireballstaff.permission"},
-    mana = 0.1F
+    mana = 0.1F,
+    action = Action.LEFT
 )
 public class FireBallStaff extends FunItem {
     @EventHandler
     public void use(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!isItem(player) || isRightClick(event.getAction())) return;
+        if (!isItem(event.getAction(), player)) return;
 
         if (cost(player, info.mana())) {
             World world = player.getWorld();

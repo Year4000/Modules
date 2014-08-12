@@ -1,16 +1,16 @@
 package net.year4000.hubitems.utils;
 
-import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitTask;
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class Tracker implements Runnable {
-    private BukkitTask task;
+public class Tracker {
+    private static List<Reference<Tracker>> trackers = new CopyOnWriteArrayList<>();
     private World world;
     private int id;
     private ParticleUtil.Particles particle;
@@ -19,20 +19,25 @@ public class Tracker implements Runnable {
         this.world = world;
         this.id = id;
         this.particle = particle;
-        task = SchedulerUtil.repeatSync(this, (long) 0.1, TimeUnit.SECONDS);
+        trackers.add(new SoftReference<>(this));
     }
 
-    @Override
-    public void run() {
-        List<Entity> shoot = world.getEntities().stream()
-            .filter(id -> id.getEntityId() == this.id)
-            .collect(Collectors.toList());
+    public static class TrackerRunner implements Runnable {
+        @Override
+        public void run() {
+            for (Tracker track : trackers.stream().map(Reference::get).collect(Collectors.toList())) {
+                if (track == null) continue;
 
-        if (shoot.size() == 0) {
-            task.cancel();
-            return;
+                List<Entity> shoot = track.world.getEntities().stream()
+                    .filter(id -> id.getEntityId() == track.id)
+                    .collect(Collectors.toList());
+
+                if (shoot.size() == 0) {
+                    continue;
+                }
+
+                shoot.forEach(e -> ParticleUtil.sendPackets(track.particle, e.getLocation()));
+            }
         }
-
-        shoot.forEach(e -> ParticleUtil.sendPackets(particle, e.getLocation()));
     }
 }

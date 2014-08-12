@@ -1,8 +1,5 @@
 package net.year4000.hubitems;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
@@ -21,10 +18,13 @@ import net.year4000.hubitems.items.staffs.FireBallStaff;
 import net.year4000.hubitems.items.staffs.IceStaff;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
+import net.year4000.hubitems.utils.Tracker;
+import net.year4000.localewatchdog.PlayerChangeLocaleEvent;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "HubItems",
-    version = "1.0",
+    version = "1.1",
     description = "Control the items that the players can use including fun items.",
     authors = {"Year4000"}
 )
@@ -67,7 +67,7 @@ import java.util.concurrent.TimeUnit;
     FireworkShow.class
 })
 public class HubItems extends BukkitModule {
-    private static Map<Locale, Map<Integer, ItemStack>> hotbar = new HashMap<Locale, Map<Integer, ItemStack>>() {{
+    private static final Map<Locale, Map<Integer, ItemStack>> HOT_BAR = new HashMap<Locale, Map<Integer, ItemStack>>() {{
         MessageManager.get().getLocales().forEach((l, p) -> {
             Message locale = new Message(l);
 
@@ -76,7 +76,7 @@ public class HubItems extends BukkitModule {
                 String title = locale.get("gameservers.name");
                 String lore = locale.get("gameservers.click");
                 put(0, ItemUtil.makeItem("enchanted_book", String.format(
-                    "{'display':{'name':'%s', 'lore':['%s']}}",
+                    "{'display':{'name':'%s', 'lore':['','%s']}}",
                     title,
                     lore
                 )));
@@ -84,7 +84,7 @@ public class HubItems extends BukkitModule {
                 title = locale.get("hubs.name");
                 lore = locale.get("hubs.click");
                 put(8, ItemUtil.makeItem("enchanted_book", String.format(
-                    "{'display':{'name':'%s', 'lore':['%s']}}",
+                    "{'display':{'name':'%s', 'lore':['','%s']}}",
                     title,
                     lore
                 )));
@@ -95,6 +95,7 @@ public class HubItems extends BukkitModule {
     @Override
     public void enable() {
         SchedulerUtil.repeatSync(new ManaClock(), (long) 0.1, TimeUnit.SECONDS);
+        SchedulerUtil.repeatSync(new Tracker.TrackerRunner(), (long) 0.1, TimeUnit.SECONDS);
     }
 
     public static boolean mode(Player player) {
@@ -112,13 +113,22 @@ public class HubItems extends BukkitModule {
 
         @EventHandler
         public void onDrop(PlayerDropItemEvent event) {
-            Player player = event.getPlayer();
+            final Player player = event.getPlayer();
+            final ItemStack item = event.getItemDrop().getItemStack();
 
             if (!player.getGameMode().equals(GameMode.CREATIVE)) {
                 SchedulerUtil.runSync(() -> {
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                    hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
+                    HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+
+                    if (!FunItemManager.get().getItemMaterials().contains(item.getType())) {
+                        ItemActor.get(player).applyFunItem();
+                    }
+                    else {
+                        ItemActor.get(player).setCurrentItem(null);
+                    }
+
                     player.updateInventory();
                 });
 
@@ -135,7 +145,7 @@ public class HubItems extends BukkitModule {
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
                     Locale locale = new Locale(MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : Message.DEFAULT_LOCALE);
-                    hotbar.get(locale).forEach(inv::setItem);
+                    HOT_BAR.get(locale).forEach(inv::setItem);
                     player.updateInventory();
                 } catch (Exception e) {
                     player.kickPlayer(e.getMessage());
@@ -149,7 +159,20 @@ public class HubItems extends BukkitModule {
 
             Inventory inv = player.getInventory();
             inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-            hotbar.get(new Locale(player.getLocale())).forEach(inv::setItem);
+            HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+            ItemActor.get(player).applyFunItem();
+            player.updateInventory();
+        }
+
+        @EventHandler
+        public void onLocaleChange(PlayerChangeLocaleEvent event) {
+            Player player = event.getPlayer();
+
+            Inventory inv = player.getInventory();
+            inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
+            HOT_BAR.get(new Locale(event.getTo())).forEach(inv::setItem);
+
+            ItemActor.get(player).applyFunItem();
             player.updateInventory();
         }
 
@@ -168,16 +191,7 @@ public class HubItems extends BukkitModule {
                     FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
                     FunItemInfo info = FunItemManager.get().getItemInfo(player, nameStriped);
 
-                    ItemStack item = FunItemManager.get().makeItem(player, info);
-
-                    // If item is bow make the item have infinity
-                    if (item.getType().equals(Material.BOW)) {
-                        ItemMeta meta = item.getItemMeta();
-                        meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-                        item.setItemMeta(meta);
-                    }
-
-                    player.getInventory().setItem(4, item);
+                    ItemActor.get(player).setCurrentItem(info);
 
                     player.updateInventory();
                     player.closeInventory();

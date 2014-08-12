@@ -1,6 +1,6 @@
 package net.year4000.hubitems.messages;
 
-import com.ewized.utilities.bukkit.util.BukkitLocale;
+import net.year4000.utilities.bukkit.BukkitLocale;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;

@@ -1,7 +1,9 @@
 package net.year4000.hubitems.items.staffs;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import net.year4000.hub.Hub;
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
@@ -27,16 +29,18 @@ import java.util.*;
     icon = Material.DIAMOND_HOE,
     description = "icestaff.description",
     //permission = {"mu" , "icestaff.permission"},
-    mana = 0.08F
+    mana = 0.08F,
+    action = Action.LEFT
 )
 public class IceStaff extends FunItem {
     private Random rand = new Random();
     private Map<Integer, Player> ice = new HashMap<>();
     private Set<Material> icePatch = ImmutableSet.of(Material.ICE, Material.SNOW_BLOCK, Material.PACKED_ICE);
+    private Iterator<Material> icePatches = Iterables.cycle(icePatch).iterator();
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
-        if (!isItem(event.getPlayer()) || isRightClick(event.getAction())) return;
+        if (!isItem(event.getAction(), event.getPlayer())) return;
 
         if (cost(event.getPlayer(), info.mana())) {
             Snowball entity = event.getPlayer().launchProjectile(Snowball.class);
@@ -65,19 +69,14 @@ public class IceStaff extends FunItem {
             return;
         }
 
-        Iterator<Material> patch = icePatch.iterator();
-
         for (BlockFace face : BlockFace.values()) {
             Block side = block.getRelative(face);
 
             if (!icePatch.contains(side.getType()) && rand.nextBoolean()) {
                 Bukkit.getPluginManager().callEvent(new WorldBackEvent(side));
 
-                if (patch.hasNext()) {
-                    side.setType(patch.next());
-                }
-                else {
-                    patch = icePatch.iterator();
+                if (side.getType().isSolid() || side.getType() == Material.AIR) {
+                    side.setType(icePatches.next());
                 }
 
                 for (Player online : Bukkit.getOnlinePlayers()) {

@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
     public static double manaConverter(float mana) {
-        return (double) mana * .10;
+        return ((double) mana * .10) * 1000;
     }
 
 

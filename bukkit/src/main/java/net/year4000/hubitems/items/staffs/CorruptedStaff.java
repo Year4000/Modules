@@ -1,7 +1,9 @@
 package net.year4000.hubitems.items.staffs;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import net.year4000.hub.Hub;
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
@@ -25,18 +27,20 @@ import java.util.*;
 @FunItemInfo(
     name = "corruptedstaff.name",
     icon = Material.IRON_HOE,
-    description = "corruptedstaff.name",
+    description = "corruptedstaff.description",
     permission = {"sigma", "corruptedstaff.permission"},
-    mana = 0.2F
+    mana = 0.2F,
+    action = Action.LEFT
 )
 public class CorruptedStaff extends FunItem {
     private Random rand = new Random();
     private Map<Integer, Player> skulls = new HashMap<>();
-    private Set<Material> icePatch = ImmutableSet.of(Material.NETHERRACK, Material.NETHER_BRICK, Material.SOUL_SAND);
+    private Set<Material> deadPatch = ImmutableSet.of(Material.NETHERRACK, Material.NETHER_BRICK, Material.SOUL_SAND);
+    private Iterator<Material> deadPatches = Iterables.cycle(deadPatch).iterator();
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
-        if (!isItem(event.getPlayer()) || isRightClick(event.getAction())) return;
+        if (!isItem(event.getAction(), event.getPlayer())) return;
 
         if (cost(event.getPlayer(), info.mana())) {
             WitherSkull entity = event.getPlayer().launchProjectile(WitherSkull.class);
@@ -65,23 +69,18 @@ public class CorruptedStaff extends FunItem {
             return;
         }
 
-        Iterator<Material> patch = icePatch.iterator();
-
         for (BlockFace face : BlockFace.values()) {
             Block side = block.getRelative(face);
 
-            if (!icePatch.contains(side.getType()) && rand.nextBoolean() && !side.getType().equals(Material.AIR)) {
+            if (!deadPatch.contains(side.getType()) && rand.nextBoolean() && !side.getType().equals(Material.AIR)) {
                 Bukkit.getPluginManager().callEvent(new WorldBackEvent(side));
 
-                if (patch.hasNext()) {
-                    side.setType(patch.next());
-                }
-                else {
-                    patch = icePatch.iterator();
-                }
+                if (side.getType().isSolid()) {
+                    side.setType(deadPatches.next());
 
-                for (Player online : Bukkit.getOnlinePlayers()) {
-                    online.playEffect(side.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
+                    for (Player online : Bukkit.getOnlinePlayers()) {
+                        online.playEffect(side.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
+                    }
                 }
             }
         }

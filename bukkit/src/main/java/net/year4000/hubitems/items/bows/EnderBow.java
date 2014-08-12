@@ -1,6 +1,7 @@
 package net.year4000.hubitems.items.bows;
 
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.utils.ParticleUtil;
@@ -16,18 +17,19 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 @FunItemInfo(
     name = "enderbow.name",
     icon = Material.BOW,
     description = "enderbow.description",
     permission = {"theta" , "enderbow.permission"},
-    mana = 0.15F
+    mana = 0.15F,
+    action = Action.RIGHT
 )
 public class EnderBow extends FunItem {
-    private Map<Integer, Player> enderPearls = new HashMap<>();
+    private Map<Integer, Player> enderPearls = new WeakHashMap<>();
 
     /** Change the way bows act */
     @EventHandler(ignoreCancelled = true)
@@ -35,7 +37,7 @@ public class EnderBow extends FunItem {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        if (!isItem(player)) return;
+        if (!isItem(org.bukkit.event.block.Action.RIGHT_CLICK_AIR, player)) return;
 
         if (cost(player, info.mana())) {
             World world = event.getEntity().getWorld();

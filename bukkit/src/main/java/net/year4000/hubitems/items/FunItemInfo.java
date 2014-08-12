@@ -23,8 +23,11 @@ public @interface FunItemInfo {
     public String[] permission() default {};
 
     /** Is this ability passive */
-    public boolean passive() default false;
+    public PassiveState passive() default PassiveState.NONE;
 
     /** The cost of the item per use */
     public float mana() default 0F;
+
+    /** true for right click false for left click */
+    public Action action() default Action.NONE;
 }

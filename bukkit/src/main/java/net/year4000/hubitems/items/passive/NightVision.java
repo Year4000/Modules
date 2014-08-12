@@ -3,54 +3,64 @@ package net.year4000.hubitems.items.passive;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
+import net.year4000.hubitems.items.PassiveState;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 @FunItemInfo(
     name = "night.name",
     icon = Material.NETHER_STAR,
     description = "night.description",
-    passive = true
+    passive = PassiveState.ALLWAYS_ON
 )
 public class NightVision extends FunItem {
-    private BukkitTask task;
+    private static List<Player> players = new CopyOnWriteArrayList<>();
+
+    public NightVision() {
+        SchedulerUtil.repeatAsync(new EffectsClock(), 1, TimeUnit.HOURS);
+    }
 
     @EventHandler
-    public void onLogin(PlayerJoinEvent event) {
-        task = new EffectsClock(event.getPlayer()).task;
+    public void onJoin(PlayerJoinEvent event) {
+        addEffect(event.getPlayer());
+        players.add(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        players.remove(event.getPlayer());
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        task.cancel();
-        task = new EffectsClock(event.getPlayer()).task;
+        addEffect(event.getPlayer());
+        event.getPlayer().updateInventory();
     }
 
-    class EffectsClock implements Runnable {
-        BukkitTask task;
-        Player player;
+    private static void addEffect(Player player) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, true));
+    }
 
-        public EffectsClock(Player runon) {
-            player = runon;
-            task = SchedulerUtil.repeatSync(this, 1, TimeUnit.HOURS);;
-        }
-
+    public static class EffectsClock implements Runnable {
         @Override
         public void run() {
-            if (!player.isOnline()) {
-                task.cancel();
-                return;
-            }
+            for (Player player : players) {
+                if (!player.isOnline()) {
+                    continue;
+                }
 
-            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, true));
+                addEffect(player);
+            }
         }
     }
 }

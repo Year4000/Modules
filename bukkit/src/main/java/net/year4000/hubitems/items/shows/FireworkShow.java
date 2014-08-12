@@ -1,9 +1,11 @@
 package net.year4000.hubitems.items.shows;
 
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
+import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.utils.Common;
+import net.year4000.utilities.bukkit.BukkitUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -14,24 +16,25 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @FunItemInfo(
     name = "fireworkshow.name",
     icon = Material.FIREWORK,
     description = "fireworkshow.description",
-    mana = 0.6F
+    mana = 0.6F,
+    action = Action.RIGHT
 )
 public class FireworkShow extends FunItem {
-    private List<Color> colors = Arrays.asList(Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.ORANGE, Color.PURPLE);
+    private List<Color> colors = BukkitUtil.DYECOLOR_MAP.values().stream().collect(Collectors.toList());
     private Random rand = new Random();
 
     @EventHandler
     public void use(PlayerInteractEvent event) {
-        if (!isItem(event.getPlayer()) || isLeftClick(event.getAction())) return;
+        if (!isItem(event.getAction(), event.getPlayer())) return;
 
         Location start = event.getPlayer().getLocation().clone();
 
