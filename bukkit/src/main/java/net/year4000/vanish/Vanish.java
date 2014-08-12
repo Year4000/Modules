@@ -9,8 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 @ModuleInfo(
     name = "Vanish",
@@ -20,7 +20,7 @@ import java.util.Map;
 )
 @ModuleListeners({Vanish.HiddenListener.class})
 public class Vanish extends BukkitModule {
-    public static Map<Player, String> hidden = new HashMap<>();
+    public static Map<Player, String> hidden = new WeakHashMap<>();
 
     @Override
     public void enable() {

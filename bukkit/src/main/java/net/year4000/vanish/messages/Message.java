@@ -1,6 +1,6 @@
 package net.year4000.vanish.messages;
 
-import com.ewized.utilities.bukkit.util.BukkitLocale;
+import net.year4000.utilities.bukkit.BukkitLocale;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

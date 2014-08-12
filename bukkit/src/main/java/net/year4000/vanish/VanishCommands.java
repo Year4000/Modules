@@ -1,9 +1,9 @@
 package net.year4000.vanish;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
+import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.commands.Command;
+import net.year4000.utilities.bukkit.commands.CommandContext;
+import net.year4000.utilities.bukkit.commands.CommandException;
 import net.year4000.vanish.messages.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
