@@ -2,7 +2,6 @@ package net.year4000.servermenu.menus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.MenuMessage;
@@ -11,7 +10,10 @@ import net.year4000.utilities.bukkit.BukkitLocale;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;

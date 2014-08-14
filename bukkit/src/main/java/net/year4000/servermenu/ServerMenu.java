@@ -1,12 +1,10 @@
 package net.year4000.servermenu;
 
 import lombok.Getter;
-import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
-import net.year4000.servermenu.menus.InvMenu;
 import net.year4000.servermenu.menus.MenuManager;
 
 import java.util.concurrent.TimeUnit;
@@ -37,8 +35,7 @@ public class ServerMenu extends BukkitModule {
             manager.getMenus().values().parallelStream().forEach(menu -> {
                 if (menu.needNewInventory()) {
                     menu.regenerateMenuViews();
-                }
-                else {
+                } else {
                     menu.updateServers();
                 }
             });
