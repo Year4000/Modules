@@ -4,6 +4,7 @@ import lombok.Data;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.items.FunItemManager;
+import net.year4000.hubitems.utils.Common;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -69,11 +70,10 @@ public class ItemActor {
 
         // If item is bow make the item have infinity
         if (item.getType().equals(Material.BOW)) {
-            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+            //meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
         }
 
         item.setItemMeta(meta);
-
         player.getInventory().setItem(4, item);
     }
 

@@ -11,4 +11,9 @@ public enum PassiveState {
     public boolean isPassive() {
         return this != PassiveState.NONE;
     }
+
+    /** Is active to add glow effect */
+    public boolean isActive() {
+        return this == ALLWAYS_ON || this == ON;
+    }
 }

@@ -99,12 +99,13 @@ public class FunItemManager {
             FunItemInfo info = itemInfo.get(i - 9);
             items[i] = makeItem(player, info);
 
-            if (!info.passive().isPassive()) {
-                if (info.permission().length == 2 && !player.hasPermission(info.permission()[0])) continue;
+            if (info.permission().length == 2 && !player.hasPermission(info.permission()[0])) continue;
 
+            boolean pendingGlow = info.passive().isActive();
+
+            if (!info.passive().isPassive()) {
                 ItemMeta meta = items[i].getItemMeta();
                 List<String> lore = meta.getLore();
-                boolean pendingGlow = false;
 
                 if (ItemActor.get(player).getCurrentItem() == info) {
                     lore.addAll(Arrays.asList("", locale.get("mana.selected")));
@@ -116,10 +117,10 @@ public class FunItemManager {
 
                 meta.setLore(lore);
                 items[i].setItemMeta(meta);
+            }
 
-                if (pendingGlow) {
-                    items[i] = Common.addGlow(items[i]);
-                }
+            if (pendingGlow) {
+                items[i] = Common.addGlow(items[i]);
             }
         }
 

@@ -2,7 +2,6 @@ package net.year4000.hubitems.items;
 
 import net.year4000.hubitems.ItemActor;
 import net.year4000.hubitems.messages.Message;
-import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.GameMode;
@@ -24,11 +23,10 @@ public abstract class FunItem implements Listener {
 
         if (exp - mana <= 0F && !player.getGameMode().equals(GameMode.CREATIVE)) {
             Message locale = new Message(player);
-            String itemName = "&a" + locale.get(ItemActor.get(player).getCurrentItem().name());
+            String itemName = locale.get(ItemActor.get(player).getCurrentItem().name());
             // DO NOT TOUCH THIS CONVERSION FORMAL IT WORKS
             double need = (((mana - exp + mana) * 0.10F) * 1000) - (mana * 0.10F * 1000);
-            String message = locale.get("mana.required", need, itemName);
-            player.sendMessage(" " + message.replaceAll(ChatColor.COLOR_CHAR + "l", ""));
+            player.sendMessage(" " + locale.get("mana.required", need, itemName));
             FunEffectsUtil.playSound(player, Sound.BLAZE_HIT);
             return false;
         }
@@ -52,10 +50,10 @@ public abstract class FunItem implements Listener {
     public static String actionDisplay(Player player, Action action) {
         Message locale = new Message(player);
         if (action == Action.LEFT) {
-            return MessageUtil.replaceColors(" &8&l(" + locale.get("action.left") + ")");
+            return MessageUtil.replaceColors(" &7(" + locale.get("action.left") + ")");
         }
         else if (action == Action.RIGHT) {
-            return MessageUtil.replaceColors(" &8&l(" + locale.get("action.right") + ")");
+            return MessageUtil.replaceColors(" &7(" + locale.get("action.right") + ")");
         }
         else {
             throw new UnsupportedOperationException(action.name() + " is not a valid action.");

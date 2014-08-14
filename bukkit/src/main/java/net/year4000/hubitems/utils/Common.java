@@ -116,4 +116,14 @@ public final class Common {
         nmsStack.setTag(tag);
         return CraftItemStack.asCraftMirror(nmsStack);
     }
+
+    public static ItemStack removeGlow(ItemStack item) {
+        net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+        NBTTagCompound tag = null;
+        if (!nmsStack.hasTag()) return item;
+        tag = nmsStack.getTag();
+        tag.set("ench", null);
+        nmsStack.setTag(tag);
+        return CraftItemStack.asCraftMirror(nmsStack);
+    }
 }
