@@ -1,6 +1,7 @@
 package net.year4000.servermenu;
 
 import lombok.Getter;
+import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
@@ -28,7 +29,19 @@ public class ServerMenu extends BukkitModule {
 
     @Override
     public void enable() {
-        SchedulerUtil.repeatAsync(() -> MenuManager.get().updateServers(), 5, TimeUnit.MINUTES);
-        SchedulerUtil.repeatAsync(() -> MenuManager.get().getMenus().values().parallelStream().forEach(InvMenu::updateServers), 5, TimeUnit.SECONDS);
+        // async thread that pull the data and updates the menus
+        SchedulerUtil.repeatAsync(() -> {
+            MenuManager manager = MenuManager.get();
+
+            manager.pullAPIData();
+            manager.getMenus().values().parallelStream().forEach(menu -> {
+                if (menu.needNewInventory()) {
+                    menu.regenerateMenuViews();
+                }
+                else {
+                    menu.updateServers();
+                }
+            });
+        }, 5, TimeUnit.SECONDS);
     }
 }

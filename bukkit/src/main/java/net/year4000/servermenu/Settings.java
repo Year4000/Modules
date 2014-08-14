@@ -2,10 +2,10 @@ package net.year4000.servermenu;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Comment;
-import net.cubespace.Yamler.Config.Config;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.year4000.servermenu.config.MenuBook;
+import net.year4000.utilities.config.Comment;
+import net.year4000.utilities.config.Config;
+import net.year4000.utilities.config.InvalidConfigurationException;
 
 import java.io.File;
 import java.util.ArrayList;

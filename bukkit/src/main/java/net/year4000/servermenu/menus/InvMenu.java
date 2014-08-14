@@ -1,14 +1,17 @@
 package net.year4000.servermenu.menus;
 
-import com.ewized.utilities.bukkit.util.BukkitUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import lombok.Data;
 import net.year4000.servermenu.BungeeSender;
+import net.year4000.servermenu.Common;
+import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.Message;
 import net.year4000.servermenu.message.MessageManager;
+import net.year4000.utilities.bukkit.BukkitUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,63 +20,105 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 public class InvMenu {
-    private static final Set<Material> ITEMS = ImmutableSet.of(Material.ARROW, Material.CHAINMAIL_HELMET, Material.BOW, Material.GLOWSTONE, Material.MINECART, Material.LAVA_BUCKET, Material.POTION, Material.PORTAL);
+    private static final Set<Material> ITEMS = ImmutableSet.of(Material.ARROW, Material.CHAINMAIL_HELMET, Material.BOW, Material.GLOWSTONE, Material.MINECART, Material.LAVA_BUCKET, Material.POTION, Material.EYE_OF_ENDER);
     private final String menu;
     private final String menuDisplay;
     private final String[] group;
     private final boolean players;
     private final boolean motd;
+    private final MenuManager manager;
     private Map<Integer, Map<Locale, ItemStack[]>> pages;
     private Map<Locale, Inventory> views = new HashMap<>();
-    private Collection<ServerJson> ping = APIManager.getServers();
-    private List<ServerJson> api;
-    private final int serversCount;
+    private int serversCount;
 
-    public InvMenu(boolean players, boolean motd, String menu, String... group) {
-        api = ping.stream().filter(s -> s.getGroup().getName().equals(menu) && !s.getName().startsWith(".")).collect(Collectors.toList());
-        serversCount = api.size();
+    public InvMenu(MenuManager manager, boolean players, boolean motd, String menu, String... group) {
+        this.manager = manager;
         this.players = players;
         this.motd = motd;
         this.menu = menu;
         this.group = group;
 
-        if (serversCount > 0) {
-            this.menuDisplay = api.get(0).getGroup().getDisplay();
-        }
-        else {
-            this.menuDisplay = menu;
+        serversCount = getServers().size();
+
+        // The menu display / title
+        String name = menu;
+        try {
+            name = serversCount > 0 ? getServers().get(0).getGroup().getDisplay() : menu;
+        } finally {
+            this.menuDisplay = name;
         }
 
-        // construct defaults
-        MessageManager.get().getLocales().keySet().forEach(code -> views.put(code, makeMenuInventory()));
+        // create the menus for each locale
+        String title = Ascii.truncate(MessageUtil.replaceColors("&8&l" + menuDisplay), 32, "...");
+        Inventory invMenu = Bukkit.createInventory(null, menuSize(), title);
+
+        MessageManager.get().getLocales().keySet().forEach(code -> views.put(code, invMenu));
+        updateServers(true); // trigger update to show some servers on first view
     }
 
-    public void updateServers() {
-        views.forEach(this::updateServers);
+    /** Regenerate all the menus as we need to regenerate the menu size */
+    public void regenerateMenuViews() {
+        // get viewers
+
+        // update menus
+
+        // viewers get new views
+        updateServers();
     }
 
+    /** Get servers that are specific to this list */
+    private List<ServerJson> getServers() {
+        return getServers(false);
+    }
+
+    /** Get servers that are specific to this list */
+    private List<ServerJson> getServers(boolean showHidden) {
+        Predicate<? super ServerJson> hide = s -> s.getGroup().getName().equals(menu) && !s.isHidden();
+        Predicate<? super ServerJson> all = s -> s.getGroup().getName().equals(menu);
+
+        return manager.getServers().stream().filter(showHidden ? all : hide).collect(Collectors.toList());
+    }
+
+    /** Open the inventory that follows the locale code */
     public Inventory openMenu(String code) {
         return views.get(new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE));
     }
 
-    private Inventory makeMenuInventory() {
+    // generate the menu size to use
+    private int menuSize() {
         boolean oneGroup = group.length > 1;
-        int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));
-        return Bukkit.createInventory(null, invSize, MessageUtil.replaceColors("&8&l" + menuDisplay));
+        boolean shortMenu = serversCount < 9 && !oneGroup;
+        return BukkitUtil.invBase(shortMenu ? serversCount : serversCount + (oneGroup ? 18 : 9));
+    }
+
+    // Update Servers //
+
+    /** Update the inventory of the servers */
+    public void updateServers() {
+        updateServers(false);
+    }
+
+        /** Update the inventory of the servers */
+    public void updateServers(boolean force) {
+        views.forEach((locale, menu) -> {
+            if (menu.getViewers().size() != 0 || force) {
+                updateServers(locale, menu);
+            }
+        });
     }
 
     public void updateServers(Locale locale, Inventory menu) {
-        if (menu.getViewers().size() == 0) return;
-        ping = APIManager.getServers();
-        api = ping.stream().filter(s -> s.getGroup().getName().equals(this.menu) && !s.getName().startsWith(".")).collect(Collectors.toList());
-
         String code = locale.toString();
+        //ServerMenu.debug("UPDATE SERVERS LOCALE: " + menu.getTitle() + " " + code);
         boolean oneGroup = group.length > 1;
-        int invSize = BukkitUtil.invBase(serversCount + (oneGroup ? 18 : 9));
+        boolean shortMenu = serversCount < 9 && !oneGroup;
+        int invSize = menuSize();
         ItemStack[] items = new ItemStack[invSize];
 
         // Menu Bar
@@ -81,31 +126,37 @@ public class InvMenu {
             int count = -1;
 
             for (String item : group) {
-                ServerJson.Group group = APIManager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
-                items[++count] = createItemBar(count, group, code, (int) ping.stream().filter(s -> s.getGroup().getName().equals(item)).count());
+                ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
+                items[++count] = createItemBar(count, group, code, (int) manager.getServers().stream().filter(s -> s.getGroup().getName().equals(item)).count());
             }
 
             // Hub Icon
             if (Settings.get().isHub()) {
-                InvMenu hubs =  new InvMenu(true, false, Settings.get().getHubGroup());
-                ServerJson.Group group = APIManager.getGroups().stream().filter(g -> g.getName().equals(Settings.get().getHubGroup())).findAny().get();
+                InvMenu hubs = new InvMenu(manager, true, false, Settings.get().getHubGroup());
+                ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(Settings.get().getHubGroup())).findAny().get();
 
-                items[8] = createItemBar(7, group, code, hubs.serversCount);
-                items[8].removeEnchantment(Enchantment.LURE);
+                items[8] = createItemBar(ITEMS.size() - 1, group, code, hubs.serversCount);
             }
         }
 
         // Servers
         int servers = oneGroup ? 8 : -1;
 
-        for (ServerJson server : api) {
+        for (ServerJson server : getServers()) {
             items[++servers] = serverItem(code, server);
         }
 
-        items[invSize - 5] = ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(code).get("menu.close") + "'}}");
+        items[shortMenu ? 8 : invSize - 5] = ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(code).get("menu.close") + "'}}");
 
         menu.setContents(items);
     }
+
+    /** IS server size is not the same as the last one */
+    public boolean needNewInventory() {
+        return BukkitUtil.invBase(manager.getServers().size()) != BukkitUtil.invBase(serversCount);
+    }
+
+    // Create the menu items //
 
     /** Create the item in the menu bar */
     private ItemStack createItemBar(int count, ServerJson.Group menu, String code, int servers) {
@@ -113,23 +164,24 @@ public class InvMenu {
         ItemStack item = ItemUtil.makeItem(ITEMS.toArray(new Material[ITEMS.size()])[count].name());
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(MessageUtil.replaceColors("&a" + menu.getDisplay()));
+        meta.setDisplayName(MessageUtil.replaceColors("&a&l" + menu.getDisplay()));
         String menuName = this.menu;
         meta.setLore(new ArrayList<String>() {{
             add(locale.get("menu.servers", servers));
 
             if (!menu.getName().equals(menuName)) {
                 add("");
-                add(locale.get("menu.click", menu.getDisplay()));
+                add(locale.get("menu.click"));
             }
         }});
 
+        item.setItemMeta(meta);
+
         // glow
         if (this.menu.equals(menu.getName())) {
-            meta.addEnchant(Enchantment.LURE, 1, true);
+            return Common.addGlow(item);
         }
 
-        item.setItemMeta(meta);
         return item;
     }
 
@@ -145,7 +197,7 @@ public class InvMenu {
             int number = findNumber(server.getName());
             item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 5 : (short) 13);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(MessageUtil.replaceColors("&b" + server.getName()));
+            meta.setDisplayName(MessageUtil.replaceColors("&b&l" + server.getName()));
             meta.setLore(new ArrayList<String>() {{
                 // Message of the day.
                 if (motd) {
@@ -176,7 +228,7 @@ public class InvMenu {
             int number = findNumber(server.getName());
             item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 6 : (short) 14);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(MessageUtil.replaceColors("&b" + server.getName()));
+            meta.setDisplayName(MessageUtil.replaceColors("&b&l" + server.getName()));
             meta.setLore(Arrays.asList(locale.get("server.offline")));
             item.setItemMeta(meta);
         }

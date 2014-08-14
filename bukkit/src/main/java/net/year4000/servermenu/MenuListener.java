@@ -1,11 +1,12 @@
 package net.year4000.servermenu;
 
-import com.ewized.utilities.bukkit.util.FunEffectsUtil;
-import com.ewized.utilities.bukkit.util.ItemUtil;
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.servermenu.menus.MenuManager;
 import net.year4000.servermenu.message.Message;
+import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.FunEffectsUtil;
+import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,8 +15,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MenuListener implements Listener {
+    private Map<Player, BukkitTask> pendingMenu = new ConcurrentHashMap<>();
+
     /** Open the menu by hotbar */
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
@@ -26,9 +33,15 @@ public class MenuListener implements Listener {
             boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
             String item = MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName());
 
-            if (MenuManager.get().isMenu(item) && (rightBlock || rightAir)) {
-                player.sendMessage(locale.get("menu.open", player.getItemInHand().getItemMeta().getDisplayName()));
-                SchedulerUtil.runAsync(() -> MenuManager.get().openMenu(player, item));
+            if (MenuManager.get().isMenu(player, item) && (rightBlock || rightAir)) {
+                // pending task cancel it and start new one
+                if (pendingMenu.keySet().contains(player)) {
+                    pendingMenu.remove(player).cancel();
+                }
+
+                player.sendMessage(locale.get("menu.open", item));
+                generateOpenMenuTask(MenuManager.Type.NORMAL, player, item);
+
                 event.setCancelled(true);
             }
         } catch (NullPointerException e) {
@@ -53,15 +66,28 @@ public class MenuListener implements Listener {
                 event.setCancelled(true);
             }
 
-            if (i.getEnchants().size() == 0 && i.getLore().contains(locale.get("menu.click", nameStriped))) {
+            if (i.getEnchants().size() == 0 && i.getLore().contains(locale.get("menu.click"))) {
+                // pending task cancel it and start new one
+                if (pendingMenu.keySet().contains(player)) {
+                    pendingMenu.remove(player).cancel();
+                }
+
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                player.sendMessage(locale.get("menu.open", i.getDisplayName()));
-                SchedulerUtil.runAsync(() -> MenuManager.get().openMenu(player, nameStriped));
+                player.sendMessage(locale.get("menu.open", i.getDisplayName()).replaceAll(ChatColor.COLOR_CHAR + "l", ""));
+                generateOpenMenuTask(MenuManager.Type.RAW_MENU, player, nameStriped);
             }
         } catch (NullPointerException e) {
             // Left Blank as this will happen is its not a good item
             //e.printStackTrace();
         }
+    }
+
+    /** Generate the task to open the menu */
+    private void generateOpenMenuTask(MenuManager.Type type, Player player, String item) {
+        pendingMenu.put(player, SchedulerUtil.runAsync(() -> {
+            MenuManager.get().openMenu(type, player, item);
+            pendingMenu.remove(player);
+        }));
     }
 
     /** Connect to a server */
@@ -77,7 +103,7 @@ public class MenuListener implements Listener {
 
             if (i.getLore().contains(locale.get("server.click"))) {
                 FunEffectsUtil.playSound(player, Sound.ITEM_PICKUP);
-                player.sendMessage(locale.get("server.connect", i.getDisplayName()));
+                player.sendMessage(locale.get("server.connect", i.getDisplayName()).replaceAll(ChatColor.COLOR_CHAR + "l", ""));
                 new BungeeSender(MessageUtil.stripColors(i.getDisplayName())).send(player);
                 player.closeInventory();
             }
@@ -108,7 +134,7 @@ public class MenuListener implements Listener {
                 player.closeInventory();
                 event.setCancelled(true);
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             // only if item is not right
             //e.printStackTrace();
         }

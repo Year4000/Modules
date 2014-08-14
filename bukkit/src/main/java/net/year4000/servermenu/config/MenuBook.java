@@ -2,7 +2,7 @@ package net.year4000.servermenu.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cubespace.Yamler.Config.Config;
+import net.year4000.utilities.config.Config;
 
 import java.util.List;
 

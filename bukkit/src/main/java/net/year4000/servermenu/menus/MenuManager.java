@@ -1,30 +1,43 @@
 package net.year4000.servermenu.menus;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
+import net.year4000.servermenu.message.MenuMessage;
+import net.year4000.servermenu.message.MenuMessageManager;
+import net.year4000.utilities.bukkit.BukkitLocale;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Data
 public class MenuManager {
+    /** Menu Types */
+    public static enum Type {
+        RAW_MENU,
+        NORMAL
+    }
+
     private static MenuManager inst;
-    private Map<String, String> itemMenu = new ConcurrentHashMap<>();
+    private List<LocaleMenu> itemMenus = new CopyOnWriteArrayList<>();
     private Map<String, InvMenu> menus = new ConcurrentHashMap<>();
     private Collection<ServerJson> servers;
     private Collection<ServerJson.Group> groups;
 
     public MenuManager() {
-        //pullAPIData();
+        pullAPIData();
+        updateServers();
     }
 
     public void updateServers() {
         menus.clear();
-        itemMenu.clear();
+        itemMenus.clear();
 
         Settings.get().getMenus().forEach(menu -> {
             List<String> groups = menu.getGroups();
@@ -32,7 +45,7 @@ public class MenuManager {
                 String firstMenu = null;
 
                 for (String group : groups) {
-                    InvMenu inv = new InvMenu(menu.isPlayers(), menu.isMotd(), group, groups.toArray(new String[groups.size()]));
+                    InvMenu inv = new InvMenu(this, menu.isPlayers(), menu.isMotd(), group, groups.toArray(new String[groups.size()]));
 
                     if (firstMenu == null) {
                         firstMenu = inv.getMenuDisplay();
@@ -41,7 +54,13 @@ public class MenuManager {
                     menus.put(inv.getMenuDisplay(), inv);
                 }
 
-                itemMenu.put(menu.getTitle(), firstMenu);
+                // add all the locale values to the map
+                for (Locale locale : MenuMessageManager.get().getLocales().keySet()) {
+                    String menuTitle = MessageUtil.stripColors(new MenuMessage(locale.toString()).get(menu.getTitle()));
+                    //ServerMenu.debug("FirstMenu: " + firstMenu);
+                    //ServerMenu.debug("Registering server menu " + locale.toString() + " |" + menuTitle + "| " + menuTitle.hashCode());
+                    itemMenus.add(new LocaleMenu(locale, menuTitle, firstMenu));
+                }
             }
             else {
                 ServerMenu.debug(menu.getTitle() + " does not have any groups!");
@@ -64,23 +83,43 @@ public class MenuManager {
     }
 
     /** Open the menu */
-    public void openMenu(Player player, String title) {
-        if (isMenu(title)) {
-            player.openInventory(menus.get(itemMenu.get(title)).openMenu(player.getLocale()));
+    public void openMenu(Type type, Player player, String title) {
+        Locale locale = new Locale(MenuMessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : BukkitLocale.DEFAULT_LOCALE);
+        //ServerMenu.debug(locale.toString());
+
+        if (type == Type.NORMAL) {
+            String menu = itemMenus.stream()
+                .filter(m -> m.getLocale().equals(locale) && m.getConfigReplacedValue().equals(title))
+                .map(LocaleMenu::getMenu)
+                .collect(Collectors.toList()).get(0);
+            //ServerMenu.debug(player.getLocale());
+            player.openInventory(menus.get(menu).openMenu(locale.toString()));
         }
-        else if (isRawMenu(title)) {
-            player.openInventory(menus.get(title).openMenu(player.getLocale()));
+        else if (type == Type.RAW_MENU) {
+            player.openInventory(menus.get(title).openMenu(locale.toString()));
         }
         else {
-            ServerMenu.debug(title + " is not a menu item.");
+            throw new UnsupportedOperationException("|" + title + "| (" + title.hashCode() + ") is not a menu item.");
         }
     }
 
-    public boolean isMenu(String title) {
-        return itemMenu.get(title) != null;
+    public boolean isMenu(Player player, String title) {
+        Locale locale = new Locale(MenuMessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : BukkitLocale.DEFAULT_LOCALE);
+        int size = itemMenus.stream()
+            .filter(m -> m.getLocale().equals(locale) && m.getConfigReplacedValue().equals(title))
+            .map(LocaleMenu::getMenu)
+            .collect(Collectors.toList()).size();
+
+        //ServerMenu.debug("ServerMenu Item: " + size);
+
+        return size > 0;
     }
 
-    public boolean isRawMenu(String title) {
-        return menus.get(title) != null;
+    @Data
+    @AllArgsConstructor
+    private class LocaleMenu {
+        private Locale locale;
+        private String configReplacedValue;
+        private String menu;
     }
 }

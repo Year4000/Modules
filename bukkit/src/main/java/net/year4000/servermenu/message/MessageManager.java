@@ -1,9 +1,9 @@
 package net.year4000.servermenu.message;
 
-import com.ewized.utilities.core.util.cache.QuickCache;
-import com.ewized.utilities.core.util.locale.URLLocaleManager;
 import net.year4000.ducktape.bukkit.DuckTape;
 import net.year4000.servermenu.Settings;
+import net.year4000.utilities.cache.QuickCache;
+import net.year4000.utilities.locale.URLLocaleManager;
 
 public class MessageManager extends URLLocaleManager {
     private static QuickCache<MessageManager> inst = QuickCache.builder(MessageManager.class).build();
