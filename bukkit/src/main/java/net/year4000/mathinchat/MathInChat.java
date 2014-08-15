@@ -1,10 +1,10 @@
 package net.year4000.mathinchat;
 
-import com.ewized.utilities.bukkit.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,7 +47,7 @@ public class MathInChat extends BukkitModule {
         }
 
         private boolean isExpression(String message) {
-            if (message.startsWith("!")) return false;
+            if (message.startsWith("!") || message.matches("[a-zA-Z]+")) return false;
 
             for (Character ex : expressions) {
                 if (message.contains(ex.toString())) {
