@@ -32,7 +32,6 @@ public class InvMenu {
     private final boolean players;
     private final boolean motd;
     private final MenuManager manager;
-    private Map<Integer, Map<Locale, ItemStack[]>> pages;
     private Map<Locale, Inventory> views = new HashMap<>();
     private int serversCount;
 
@@ -53,22 +52,20 @@ public class InvMenu {
             this.menuDisplay = name;
         }
 
+        createMenus();
+    }
+
+    // Util Methods //
+
+    /** Create menus */
+    public void createMenus() {
         // create the menus for each locale
         String title = Ascii.truncate(MessageUtil.replaceColors("&8&l" + menuDisplay), 32, "...");
         Inventory invMenu = Bukkit.createInventory(null, menuSize(), title);
 
+        views.clear();
         MessageManager.get().getLocales().keySet().forEach(code -> views.put(code, invMenu));
         updateServers(true); // trigger update to show some servers on first view
-    }
-
-    /** Regenerate all the menus as we need to regenerate the menu size */
-    public void regenerateMenuViews() {
-        // get viewers
-
-        // update menus
-
-        // viewers get new views
-        updateServers();
     }
 
     /** Get servers that are specific to this list */
@@ -89,21 +86,40 @@ public class InvMenu {
         return views.get(new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE));
     }
 
-    // generate the menu size to use
+    /** The menu size to use for this view which includes top bar and close button */
     private int menuSize() {
         boolean oneGroup = group.length > 1;
         boolean shortMenu = serversCount < 9 && !oneGroup;
         return BukkitUtil.invBase(shortMenu ? serversCount : serversCount + (oneGroup ? 18 : 9));
     }
 
+    /** Is server size is not the same as the last one */
+    public boolean needNewInventory() {
+        return getServers().size() != serversCount;
+    }
+
     // Update Servers //
+
+    /** Regenerate all the menus as we need to regenerate the menu size */
+    public void regenerateMenuViews() {
+        // get viewers
+        Map<HumanEntity, Locale> pendingUpdate = new HashMap<>();
+        views.forEach((locale, inv) -> inv.getViewers().forEach(h -> pendingUpdate.put(h ,locale)));
+
+        // update menus
+        serversCount = getServers().size();
+        createMenus();
+
+        // viewers get new views
+        pendingUpdate.forEach((h, l) -> h.openInventory(openMenu(l.toString())));
+    }
 
     /** Update the inventory of the servers */
     public void updateServers() {
         updateServers(false);
     }
 
-        /** Update the inventory of the servers */
+    /** Update the inventory of the servers */
     public void updateServers(boolean force) {
         views.forEach((locale, menu) -> {
             if (menu.getViewers().size() != 0 || force) {
@@ -114,7 +130,6 @@ public class InvMenu {
 
     public void updateServers(Locale locale, Inventory menu) {
         String code = locale.toString();
-        //ServerMenu.debug("UPDATE SERVERS LOCALE: " + menu.getTitle() + " " + code);
         boolean oneGroup = group.length > 1;
         boolean shortMenu = serversCount < 9 && !oneGroup;
         int invSize = menuSize();
@@ -148,11 +163,6 @@ public class InvMenu {
         items[shortMenu ? 8 : invSize - 5] = ServerMenu.closeButton(new Locale(code));
 
         menu.setContents(items);
-    }
-
-    /** Is server size is not the same as the last one */
-    public boolean needNewInventory() {
-        return BukkitUtil.invBase(manager.getServers().size()) != BukkitUtil.invBase(serversCount);
     }
 
     // Create the menu items //

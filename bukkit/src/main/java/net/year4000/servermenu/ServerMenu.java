@@ -40,7 +40,8 @@ public class ServerMenu extends BukkitModule {
             manager.getMenus().values().parallelStream().forEach(menu -> {
                 if (menu.needNewInventory()) {
                     menu.regenerateMenuViews();
-                } else {
+                }
+                else {
                     menu.updateServers();
                 }
             });

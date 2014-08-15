@@ -80,21 +80,24 @@ public class MenuManager {
 
     /** Pull the servers from the api server */
     public void pullAPIData() {
-        servers = APIManager.getServers();
-        groups = APIManager.getGroups(servers);
+        try {
+            servers = APIManager.getServers();
+            groups = APIManager.getGroups(servers);
+        } catch (Exception e) {
+            ServerMenu.debug(e, true);
+        }
     }
 
     /** Open the menu */
     public void openMenu(Type type, Player player, String title) {
         Locale locale = new Locale(MenuMessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : BukkitLocale.DEFAULT_LOCALE);
-        //ServerMenu.debug(locale.toString());
 
         if (type == Type.NORMAL) {
             String menu = itemMenus.stream()
                 .filter(m -> m.getLocale().equals(locale) && m.getConfigReplacedValue().equals(title))
                 .map(LocaleMenu::getMenu)
                 .collect(Collectors.toList()).get(0);
-            //ServerMenu.debug(player.getLocale());
+
             player.openInventory(menus.get(menu).openMenu(locale.toString()));
         }
         else if (type == Type.RAW_MENU) {
