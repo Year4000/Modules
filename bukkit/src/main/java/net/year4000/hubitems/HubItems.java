@@ -1,5 +1,6 @@
 package net.year4000.hubitems;
 
+import com.google.gson.Gson;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
@@ -19,11 +20,13 @@ import net.year4000.hubitems.items.staffs.FireBallStaff;
 import net.year4000.hubitems.items.staffs.IceStaff;
 import net.year4000.hubitems.messages.Message;
 import net.year4000.hubitems.messages.MessageManager;
+import net.year4000.hubitems.utils.Common;
 import net.year4000.hubitems.utils.Tracker;
 import net.year4000.localewatchdog.PlayerChangeLocaleEvent;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.items.NBT;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -69,30 +72,35 @@ import java.util.concurrent.TimeUnit;
     FireworkShow.class
 })
 public class HubItems extends BukkitModule {
+    private static final Gson GSON = new Gson();
     private static final Map<Locale, Map<Integer, ItemStack>> HOT_BAR = new HashMap<Locale, Map<Integer, ItemStack>>() {{
         MessageManager.get().getLocales().forEach((l, p) -> {
             Message locale = new Message(l);
 
             // Game Servers
             put(l, new HashMap<Integer, ItemStack>() {{
-                String title = locale.get("gameservers.name");
-                String lore = locale.get("gameservers.click");
-                put(0, ItemUtil.makeItem("enchanted_book", String.format(
-                    "{'display':{'name':'%s', 'lore':['','%s']}}",
-                    title,
-                    lore
-                )));
+                String title = locale.get("gameservers.name") + " &7(" + locale.get("action.right") + ")";
+                String lore = locale.get("gameservers.description");
+                put(0, makeServerMenuIcon(title, lore));
 
-                title = locale.get("hubs.name");
-                lore = locale.get("hubs.click");
-                put(8, ItemUtil.makeItem("enchanted_book", String.format(
-                    "{'display':{'name':'%s', 'lore':['','%s']}}",
-                    title,
-                    lore
-                )));
+                title = locale.get("classicservers.name") + " &7(" + locale.get("action.right") + ")";
+                lore = locale.get("classicservers.description");
+                put(1, makeServerMenuIcon(title, lore));
+
+                title = locale.get("hubs.name") + " &7(" + locale.get("action.right") + ")";
+                lore = locale.get("hubs.description");
+                put(8, makeServerMenuIcon(title, lore));
             }});
         });
     }};
+
+    private static ItemStack makeServerMenuIcon(String title, String lore) {
+        NBT nbt = GSON.fromJson("{'display':{}}", NBT.class);
+        nbt.getDisplay().setName(title);
+        nbt.getDisplay().setLore(Common.loreDescription(lore));
+
+        return ItemUtil.makeItem("enchanted_book", GSON.toJson(nbt));
+    }
 
     @Override
     public void enable() {

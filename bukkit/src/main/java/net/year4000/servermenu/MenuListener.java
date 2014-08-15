@@ -2,10 +2,10 @@ package net.year4000.servermenu;
 
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.servermenu.menus.MenuManager;
+import net.year4000.servermenu.message.MenuMessage;
 import net.year4000.servermenu.message.Message;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
-import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -31,7 +31,8 @@ public class MenuListener implements Listener {
             Message locale = new Message(player);
             boolean rightBlock = event.getAction() == Action.RIGHT_CLICK_BLOCK;
             boolean rightAir = event.getAction() == Action.RIGHT_CLICK_AIR;
-            String item = MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName());
+            String item = MessageUtil.stripColors(player.getItemInHand().getItemMeta().getDisplayName())
+                .replace(" (" + new MenuMessage(player.getLocale()).get("action.right") + ")", "");
 
             if (MenuManager.get().isMenu(player, item) && (rightBlock || rightAir)) {
                 // pending task cancel it and start new one
