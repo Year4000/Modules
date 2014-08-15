@@ -61,10 +61,13 @@ public class InvMenu {
     public void createMenus() {
         // create the menus for each locale
         String title = Ascii.truncate(MessageUtil.replaceColors("&8&l" + menuDisplay), 32, "...");
-        Inventory invMenu = Bukkit.createInventory(null, menuSize(), title);
 
         views.clear();
-        MessageManager.get().getLocales().keySet().forEach(code -> views.put(code, invMenu));
+        MessageManager.get().getLocales().keySet().forEach(code -> {
+            // can not abstract inventory or the code will think its the same inv
+            Inventory inv = Bukkit.createInventory(null, menuSize(), title);
+            views.put(code, inv);
+        });
         updateServers(true); // trigger update to show some servers on first view
     }
 
