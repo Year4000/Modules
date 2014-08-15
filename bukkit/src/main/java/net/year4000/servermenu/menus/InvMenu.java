@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import lombok.Data;
 import net.year4000.servermenu.BungeeSender;
 import net.year4000.servermenu.Common;
+import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.Message;
 import net.year4000.servermenu.message.MessageManager;
@@ -13,6 +14,7 @@ import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -143,7 +145,7 @@ public class InvMenu {
             items[++servers] = serverItem(code, server);
         }
 
-        items[shortMenu ? 8 : invSize - 5] = ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(code).get("menu.close") + "'}}");
+        items[shortMenu ? 8 : invSize - 5] = ServerMenu.closeButton(new Locale(code));
 
         menu.setContents(items);
     }

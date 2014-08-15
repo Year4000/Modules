@@ -6,7 +6,12 @@ import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.servermenu.menus.MenuManager;
+import net.year4000.servermenu.message.Message;
+import net.year4000.utilities.bukkit.ItemUtil;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
@@ -40,5 +45,15 @@ public class ServerMenu extends BukkitModule {
                 }
             });
         }, 5, TimeUnit.SECONDS);
+    }
+
+    /** Generate the close button in the player's locale */
+    public static ItemStack closeButton(Player player) {
+        return closeButton(new Locale(player.getLocale()));
+    }
+
+    /** Generate the close button in the specified locale */
+    public static ItemStack closeButton(Locale locale) {
+        return ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(locale.toString()).get("menu.close") + "'}}");
     }
 }

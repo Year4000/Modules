@@ -62,7 +62,7 @@ public class MenuListener implements Listener {
             ItemMeta i = event.getCurrentItem().getItemMeta();
             String nameStriped = MessageUtil.stripColors(i.getDisplayName());
 
-            if (event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}"))) {
+            if (event.getInventory().contains(ServerMenu.closeButton(player))) {
                 event.setCancelled(true);
             }
 
@@ -109,7 +109,7 @@ public class MenuListener implements Listener {
             }
 
             // cancel the event
-            if (event.getInventory().contains(ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(player).get("menu.close") + "'}}"))) {
+            if (event.getInventory().contains(ServerMenu.closeButton(player))) {
                 event.setCancelled(true);
             }
 
