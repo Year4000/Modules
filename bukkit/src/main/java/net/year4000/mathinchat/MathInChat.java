@@ -30,13 +30,14 @@ public class MathInChat extends BukkitModule {
     public static class MathListener implements Listener {
         @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
         public void onChat(AsyncPlayerChatEvent event) {
-            String message = event.getMessage().replaceAll("( |,|;)", "");
+            String message = event.getMessage();
 
             if (message.startsWith("!")) {
                 event.setMessage(message.replace("!", ""));
             }
             else if (isExpression(message)) {
                 event.setCancelled(true);
+                message = message.replaceAll("( |,|;)", "");
 
                 try {
                     event.getPlayer().sendMessage(purty(message + "=" + engine.eval(message)));
@@ -47,7 +48,7 @@ public class MathInChat extends BukkitModule {
         }
 
         private boolean isExpression(String message) {
-            if (message.startsWith("!") || message.matches("[a-zA-Z]+")) return false;
+            if (message.matches(".*[a-zA-Z]+.*")) return false;
 
             for (Character ex : expressions) {
                 if (message.contains(ex.toString())) {
