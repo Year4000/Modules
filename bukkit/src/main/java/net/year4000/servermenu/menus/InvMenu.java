@@ -210,7 +210,7 @@ public class InvMenu {
             meta.setLore(new ArrayList<String>() {{
                 // Message of the day.
                 if (motd) {
-                    add(MessageUtil.replaceColors(server.getStatus().getDescription()));
+                    add(MessageUtil.replaceColors(Ascii.truncate(server.getStatus().getDescription(), 45, "&7...")));
                 }
 
                 // Player count.
