@@ -9,6 +9,7 @@ import net.year4000.hubitems.items.FunItemManager;
 import net.year4000.hubitems.items.bows.EggBow;
 import net.year4000.hubitems.items.bows.EnderBow;
 import net.year4000.hubitems.items.bows.TNTBow;
+import net.year4000.hubitems.items.passive.Auras;
 import net.year4000.hubitems.items.passive.Flight;
 import net.year4000.hubitems.items.passive.NightVision;
 import net.year4000.hubitems.items.passive.Speed;
@@ -57,6 +58,7 @@ import java.util.concurrent.TimeUnit;
     NightVision.class,
     Speed.class,
     Flight.class,
+    Auras.class,
     // Items
     IceStaff.class,
     FireBallStaff.class,
