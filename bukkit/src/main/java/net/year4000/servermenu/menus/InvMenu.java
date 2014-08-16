@@ -111,10 +111,15 @@ public class InvMenu {
 
         // update menus
         serversCount = getServers().size();
-        createMenus();
-
-        // viewers get new views
-        pendingUpdate.forEach((h, l) -> h.openInventory(openMenu(l.toString())));
+        if (serversCount == 0) {
+            pendingUpdate.keySet().forEach(HumanEntity::closeInventory);
+            MenuManager.get().updateServers();
+        }
+        else {
+            createMenus();
+            // viewers get new views
+            pendingUpdate.forEach((h, l) -> h.openInventory(openMenu(l.toString())));
+        }
     }
 
     /** Update the inventory of the servers */
@@ -143,6 +148,8 @@ public class InvMenu {
             int count = -1;
 
             for (String item : group) {
+                if (!manager.getGroups().stream().map(ServerJson.Group::getName).collect(Collectors.toSet()).contains(item)) continue;
+
                 ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
                 items[++count] = createItemBar(count, group, code, (int) manager.getServers().stream().filter(s -> s.getGroup().getName().equals(item)).count());
             }
