@@ -112,6 +112,14 @@ public class HubItems extends BukkitModule {
         return !player.getGameMode().equals(GameMode.CREATIVE) || !player.isOp();
     }
 
+    private static Locale getLocaleOrDefault(Player player) {
+        return new Locale(MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : Message.DEFAULT_LOCALE);
+    }
+
+    private static Locale getLocaleOrDefault(String code) {
+        return new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE);
+    }
+
     /** The listeners that control this module */
     public static class HubListener implements Listener {
         @EventHandler
@@ -132,14 +140,14 @@ public class HubItems extends BukkitModule {
 
                     if (!FunItemManager.get().getItemMaterials().contains(item.getType())) {
                         inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                        HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+                        HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
                         ItemActor.get(player).applyFunItem();
                     }
                     // Remove self then reset item contents
                     else {
                         ItemActor.get(player).setCurrentItem(null);
                         inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                        HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+                        HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
                     }
 
                     player.updateInventory();
@@ -157,8 +165,7 @@ public class HubItems extends BukkitModule {
                 try {
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                    Locale locale = new Locale(MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : Message.DEFAULT_LOCALE);
-                    HOT_BAR.get(locale).forEach(inv::setItem);
+                    HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
                     player.updateInventory();
                 } catch (Exception e) {
                     player.kickPlayer(e.getMessage());
@@ -172,7 +179,7 @@ public class HubItems extends BukkitModule {
 
             Inventory inv = player.getInventory();
             inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-            HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+            HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
             ItemActor.get(player).applyFunItem();
             player.updateInventory();
         }
@@ -183,7 +190,7 @@ public class HubItems extends BukkitModule {
 
             Inventory inv = player.getInventory();
             inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-            HOT_BAR.get(new Locale(event.getTo())).forEach(inv::setItem);
+            HOT_BAR.get(getLocaleOrDefault(event.getTo())).forEach(inv::setItem);
 
             ItemActor.get(player).applyFunItem();
             player.updateInventory();
@@ -209,7 +216,7 @@ public class HubItems extends BukkitModule {
 
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(player));
-                    HOT_BAR.get(new Locale(player.getLocale())).forEach(inv::setItem);
+                    HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
 
                     // apply the items
                     ItemActor.get(player).applyFunItem(info);

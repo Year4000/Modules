@@ -13,7 +13,7 @@ public class Message extends BukkitLocale {
 
     public Message(Locale localea) {
         super(null);
-        locale = localea.toString();
         localeManager = MessageManager.get();
+        locale = localeManager.isLocale(localea.toString()) ? localea.toString() : DEFAULT_LOCALE;
     }
 }

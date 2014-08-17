@@ -74,19 +74,23 @@ public class DressUp extends BukkitModule {
         return inv;
     }
 
+    private static Locale getLocaleOrDefault(Player player) {
+        return new Locale(net.year4000.hubitems.messages.MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : net.year4000.hubitems.messages.Message.DEFAULT_LOCALE);
+    }
+
     public static Inventory openHat(Player player) {
-        return hats.get(new Locale(player.getLocale()));
+        return hats.get(getLocaleOrDefault(player));
     }
 
     public static Inventory openChest(Player player) {
-        return shirts.get(new Locale(player.getLocale()));
+        return shirts.get(getLocaleOrDefault(player));
     }
 
     public static Inventory openPants(Player player) {
-        return pants.get(new Locale(player.getLocale()));
+        return pants.get(getLocaleOrDefault(player));
     }
 
     public static Inventory openBoots(Player player) {
-        return boots.get(new Locale(player.getLocale()));
+        return boots.get(getLocaleOrDefault(player));
     }
 }

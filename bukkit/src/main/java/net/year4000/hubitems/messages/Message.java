@@ -11,9 +11,9 @@ public class Message extends BukkitLocale {
         localeManager = MessageManager.get();
     }
 
-    public Message(Locale locale) {
+    public Message(Locale localea) {
         super(null);
-        this.locale = locale.toString();
         localeManager = MessageManager.get();
+        locale = localeManager.isLocale(localea.toString()) ? localea.toString() : DEFAULT_LOCALE;
     }
 }
