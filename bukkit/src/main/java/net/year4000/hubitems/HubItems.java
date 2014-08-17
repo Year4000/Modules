@@ -108,7 +108,7 @@ public class HubItems extends BukkitModule {
         SchedulerUtil.repeatSync(new Tracker.TrackerRunner(), (long) 0.1, TimeUnit.SECONDS);
     }
 
-    public static boolean mode(Player player) {
+    private static boolean mode(Player player) {
         return !player.getGameMode().equals(GameMode.CREATIVE) || !player.isOp();
     }
 
