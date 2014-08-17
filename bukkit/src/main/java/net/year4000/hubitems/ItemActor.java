@@ -66,11 +66,6 @@ public class ItemActor {
         // only show mana price
         meta.setLore(Arrays.asList(meta.getLore().get(0)));
 
-        // If item is bow make the item have infinity
-        if (item.getType().equals(Material.BOW)) {
-            //meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-        }
-
         item.setItemMeta(meta);
         player.getInventory().setItem(4, item);
     }

@@ -57,13 +57,6 @@ public class DressUp extends BukkitModule {
     private Inventory makeInv(String list, Locale locale) {
         List<ArmorItem> items = Settings.get().getItems().get(list);
         Inventory inv = Bukkit.createInventory(null, BukkitUtil.invBase(items.size()), Ascii.truncate(new Message(locale).get("inv." + list), 32, "..."));
-/*
-
-        ItemStack[] content = new ItemStack[items.size()];
-
-        for (int i = 0; i < items.size(); i++) {
-            content[i] = items.get(i).makeItem();
-        }*/
 
         inv.setContents(items.stream()
             .map(item -> item.makeItem(locale))
