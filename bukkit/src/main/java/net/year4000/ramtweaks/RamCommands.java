@@ -43,7 +43,7 @@ public final class RamCommands {
     }
 
     @Command(
-        aliases = {"info", "serverinfo"},
+        aliases = {"info", "serverinfo", "sinfo"},
         desc = "Get server information"
     )
     @CommandPermissions({"eramtweaks.info"})
