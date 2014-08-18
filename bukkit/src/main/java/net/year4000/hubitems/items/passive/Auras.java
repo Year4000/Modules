@@ -38,7 +38,8 @@ public class Auras extends FunItem {
     /** Send out the packet to allow for the potion effect */
     private void sendPacket(Player player, BadgeManager.Badges badge) {
         Vector loc = player.getLocation().toVector();
-        PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles("mobSpell", (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0.3F, 0.3F, 0.3F, badgeFromHex(badge), 3);
+        String type = player.getLocation().getBlock().isLiquid() ? "bubble" : "mobSpell";
+        PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(type, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0.3F, 0.3F, 0.3F, badgeFromHex(badge), 3);
         // BELLOW CODE IS TEST CODE FOR HACKING THE modSpell COLOR
         //PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles("instantSpell", (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0F, 0F, 0F, (float) badgeFromHex(badge), 3);
         //Effect e = Effect.POTION_BREAK;
