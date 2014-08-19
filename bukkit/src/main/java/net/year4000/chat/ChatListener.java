@@ -1,11 +1,13 @@
 package net.year4000.chat;
 
-import com.google.common.base.Ascii;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.events.MessageSentEvent;
 import net.year4000.chat.message.ChatMessage;
 import net.year4000.chat.message.Message;
 import net.year4000.chat.message.PlayerActor;
+import net.year4000.ducktape.bukkit.DuckTape;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,21 +17,27 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 public class ChatListener implements Listener, PluginMessageListener {
+    public ChatListener() {
+        Bukkit.getMessenger().registerIncomingPluginChannel(DuckTape.get(), "Chat", this);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
         ChatMessage message = new ChatMessage();
 
         message.setFormat(Settings.get().getChatFormat());
-        message.setActor(new PlayerActor(event.getPlayer()));
+        message.setActor(new PlayerActor(player));
         message.setMessage(event.getMessage());
         message.setServer(Bukkit.getServerName());
+        message.setChannel(UserActor.get(player).getSendingChannel());
 
         new MessageSentEvent(message).call();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChatSent(MessageSentEvent event) {
-        // todo when we send a message
+        MessageSender.get().send(event.getMessage());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -46,6 +54,12 @@ public class ChatListener implements Listener, PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        // todo check channel and create message recive event and create a new MessageReceiver
+        if (!channel.equals("Chat")) return;
+
+        ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
+
+        Message message = Chat.GSON.fromJson(in.readUTF(), Message.class);
+
+        new MessageReceiver(message).send();
     }
 }

@@ -34,11 +34,11 @@ public class UserActor {
 
     /** The messages from the channels that the player will receive */
     private Set<Channel> receivingChannels = new HashSet<Channel>() {{
-        add(new Channel("CHAT", Channel.Type.SERVER, ""));
+        add(new Channel("CHAT", Channel.Type.USER, ""));
     }};
 
     /** The channel that you are sending message to */
-    private Channel sendingChannel = new Channel("CHAT", Channel.Type.SERVER, "");
+    private Channel sendingChannel = new Channel("CHAT", Channel.Type.USER, "");
 
 
 }
