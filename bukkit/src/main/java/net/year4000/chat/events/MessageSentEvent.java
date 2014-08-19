@@ -1,4 +1,13 @@
 package net.year4000.chat.events;
 
-public class MessageSentEvent {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import net.year4000.chat.message.Message;
+
+@Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class MessageSentEvent extends ChatEvent {
+    private Message message;
 }
