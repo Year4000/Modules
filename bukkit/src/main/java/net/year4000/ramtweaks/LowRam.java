@@ -29,7 +29,7 @@ public class LowRam implements Runnable {
         }
 
         // shutdown the server when ram is too low
-        int limit = 256;
+        int limit = (int) max / 5; // example 2048mb / 4 = 512mb
         if (max - limit < total && free < limit) {
             RamTweaks.log("Server restarting as their is low ram.");
 
