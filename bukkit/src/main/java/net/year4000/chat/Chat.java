@@ -2,7 +2,7 @@ package net.year4000.chat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.year4000.chat.formatter.Formatter;
+import net.year4000.chat.addons.PlayerBadges;
 import net.year4000.chat.formatter.FormatterManager;
 import net.year4000.chat.message.Actor;
 import net.year4000.chat.message.Message;
@@ -11,7 +11,6 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.utilities.bukkit.MessageUtil;
-import org.bukkit.entity.Player;
 
 @ModuleInfo(
     name = "Chat",
@@ -21,8 +20,9 @@ import org.bukkit.entity.Player;
 )
 @ModuleListeners({
     // Built in
-    ChatListener.class
+    ChatListener.class,
     // Addons
+    PlayerBadges.class
 })
 public class Chat extends BukkitModule {
     public static final double CHAT_VERSION = 1.0;
