@@ -12,9 +12,12 @@ public interface Message {
     /** The message of this message the finished product */
     public String getMessage();
 
-    /** The raw message of this message the actual text of the message */
-    //public String getRawMessage();
-
     /** The channel that the message is sent to */
     public Channel getChannel();
+
+    /** Get a meta value from the message */
+    public String getMeta(String key);
+
+    /** Set a meta value for this message */
+    public String setMeta(String key, String value);
 }
