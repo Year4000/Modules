@@ -14,11 +14,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 public class ChatListener implements Listener, PluginMessageListener {
     public ChatListener() {
-        Bukkit.getMessenger().registerIncomingPluginChannel(DuckTape.get(), "Chat", this);
+        Bukkit.getMessenger().registerIncomingPluginChannel((Plugin) DuckTape.get(), "BungeeCord", this);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -33,11 +34,19 @@ public class ChatListener implements Listener, PluginMessageListener {
         message.setChannel(UserActor.get(player).getSendingChannel());
 
         new MessageSentEvent(message).call();
+
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChatSent(MessageSentEvent event) {
+        // send to server self
         MessageSender.get().send(event.getMessage());
+        // send through BungeeCord
+        MessageReceiver receiver = new MessageReceiver(event.getMessage());
+        receiver.send();
+        // show in console
+        onChatReceive(receiver.getEvent());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -54,9 +63,11 @@ public class ChatListener implements Listener, PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        if (!channel.equals("Chat")) return;
+        if (!channel.equals("BungeeCord")) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
+
+        if (!in.readUTF().equals("Chat")) return;
 
         Message message = Chat.GSON.fromJson(in.readUTF(), Message.class);
 

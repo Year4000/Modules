@@ -3,7 +3,9 @@ package net.year4000.chat.formatter;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import net.year4000.chat.message.ChatMessage;
 import net.year4000.chat.message.Message;
+import net.year4000.utilities.bukkit.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +25,39 @@ public class FormatterManager {
     }
 
     /** Add a formatter to the list of formats */
-    public void addFormatter(Formatter format) {
-        if (!formats.contains(format)) {
+    public boolean addFormatter(String key, FormatValue value) {
+        boolean success;
+        Formatter format = new Formatter(key) {
+            @Override
+            public String value(Message player) {
+                return value.value(player);
+            }
+        };
+
+        if (success = !formats.contains(format)) {
             formats.add(format);
         }
+
+        return  success;
     }
 
     /** Replace all keys with the intended values */
     public String replaceAll(Message message) {
-        String newMessage = message.getMessage();
+        String msg;
 
-        for (Formatter format : formats) {
-            newMessage = newMessage.replaceAll(format.key(), format.value(message));
+        // do it this way a ternary is too long
+        if (message instanceof ChatMessage) {
+            msg = MessageUtil.replaceColors(((ChatMessage) message).getFormat());
+        }
+        else {
+            msg = MessageUtil.replaceColors(message.getMessage());
         }
 
-        return newMessage;
+        // Replace vars with the results
+        for (Formatter format : formats) {
+            msg = msg.replaceAll(format.key(), format.value(message));
+        }
+
+        return msg;
     }
 }
