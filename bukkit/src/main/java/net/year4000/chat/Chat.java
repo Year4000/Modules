@@ -2,6 +2,7 @@ package net.year4000.chat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.year4000.chat.addons.Emoji;
 import net.year4000.chat.addons.PlayerBadges;
 import net.year4000.chat.formatter.FormatterManager;
 import net.year4000.chat.message.Actor;
@@ -22,7 +23,8 @@ import net.year4000.utilities.bukkit.MessageUtil;
     // Built in
     ChatListener.class,
     // Addons
-    PlayerBadges.class
+    PlayerBadges.class,
+    Emoji.class
 })
 public class Chat extends BukkitModule {
     public static final double CHAT_VERSION = 1.0;
