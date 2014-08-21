@@ -12,6 +12,11 @@ import java.util.Map;
 
 @Data
 public class BaseMessage implements Message {
+    /** The time the message was sent in millis */
+    @Since(1.0)
+    @Setter(AccessLevel.NONE)
+    private long time = System.currentTimeMillis();
+
     /** The actor that sent this message */
     @Since(1.0)
     private Actor actor;

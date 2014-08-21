@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.events.MessageSentEvent;
+import net.year4000.chat.message.BaseMessage;
 import net.year4000.chat.message.ChatMessage;
 import net.year4000.chat.message.Message;
 import net.year4000.chat.message.PlayerActor;
@@ -66,8 +67,11 @@ public class ChatListener implements Listener, PluginMessageListener {
 
         if (!in.readUTF().equals("Chat")) return;
 
-        Message message = Chat.GSON.fromJson(in.readUTF(), Message.class);
+        Message message = Chat.GSON.fromJson(in.readUTF(), BaseMessage.class);
 
-        new MessageReceiver(message).send();
+        // Check if the message is in sync before receiving it.
+        if (message.getTime() + 100 > System.currentTimeMillis()) {
+            new MessageReceiver(message).send();
+        }
     }
 }

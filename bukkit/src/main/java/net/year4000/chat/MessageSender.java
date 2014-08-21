@@ -26,7 +26,7 @@ public class MessageSender {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
         out.writeUTF("Forward");
-        out.writeUTF("ONLINE");
+        out.writeUTF("ALL");
         out.writeUTF("Chat");
         out.writeUTF(Chat.GSON.toJson(message));
 

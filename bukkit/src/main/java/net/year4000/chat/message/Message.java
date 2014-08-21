@@ -3,6 +3,9 @@ package net.year4000.chat.message;
 import net.year4000.chat.channel.Channel;
 
 public interface Message {
+    /** The time in mills the message was sent at */
+    public long getTime();
+
     /** The Actor that this message is from */
     public Actor getActor();
 
