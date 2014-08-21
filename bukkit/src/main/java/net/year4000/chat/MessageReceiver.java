@@ -1,6 +1,5 @@
 package net.year4000.chat;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.year4000.chat.channel.Channel;
 import net.year4000.chat.events.MessageReceiveEvent;
@@ -22,9 +21,13 @@ public class MessageReceiver {
         this.message = message;
     }
 
+    /**
+     * This will send the send the event but also contains the event also.
+     * This allows for you to create a custom event and resend it.
+     */
     private void sendEventAndReassign() {
-        event = new MessageReceiveEvent(false, message);
-        event.call();
+        event = new MessageReceiveEvent(message);
+        event.call(); // this is where the event could change
         message = event.getMessage();
     }
 
@@ -33,7 +36,8 @@ public class MessageReceiver {
         sendEventAndReassign();
 
         if (!event.isCancelled()) {
-            playersInChannel(message.getChannel()).forEach(p -> p.sendMessage(FormatterManager.get().replaceAll(message)));
+            Set<Player> players = playersInChannel(event.getMessage().getChannel());
+            players.forEach(p -> p.sendMessage(event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage()))));
         }
     }
 
