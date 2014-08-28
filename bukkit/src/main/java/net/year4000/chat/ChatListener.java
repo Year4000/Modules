@@ -40,8 +40,8 @@ public class ChatListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChatSent(MessageSentEvent event) {
-        // send through BungeeCord
-        MessageSender.get().send(event.getMessage());
+        // todo send through BungeeCord
+        // MessageSender.get().send(event.getMessage());
         // send to server self
         new MessageReceiver(event.getMessage()).send();
     }
