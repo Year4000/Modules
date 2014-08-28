@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import net.year4000.chat.Chat;
 import net.year4000.chat.events.MessageReceiveEvent;
-import net.year4000.chat.message.BaseMessage;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.commands.BukkitWrappedCommandSender;
 import net.year4000.utilities.bukkit.commands.Command;
@@ -72,9 +71,7 @@ public class Emoji implements Listener {
 
     @EventHandler
     public void onReceive(MessageReceiveEvent event) {
-        BaseMessage message = (BaseMessage) event.getMessage();
-
-        message.setMessage(replaceEmoji(message.getMessage()));
+        event.getMessage().setMessage(replaceEmoji(event.getMessage().getMessage()));
     }
 
     /** Replace all the Emoji indexes from the message */

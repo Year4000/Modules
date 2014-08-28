@@ -3,8 +3,8 @@ package net.year4000.chat.formatter;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import net.year4000.chat.message.ChatMessage;
-import net.year4000.chat.message.Message;
+import net.year4000.chat.Chat;
+import net.year4000.chat.Message;
 import net.year4000.utilities.bukkit.MessageUtil;
 
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ public class FormatterManager {
         String msg;
 
         // do it this way a ternary is too long
-        if (message instanceof ChatMessage) {
-            msg = MessageUtil.replaceColors(((ChatMessage) message).getFormat());
+        if (message.isMeta(Chat.CHAT_FORMAT)) {
+            msg = MessageUtil.replaceColors(message.getMeta(Chat.CHAT_FORMAT));
         }
         else {
             msg = MessageUtil.replaceColors(message.getMessage());

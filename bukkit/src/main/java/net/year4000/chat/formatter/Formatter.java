@@ -1,7 +1,7 @@
 package net.year4000.chat.formatter;
 
 import lombok.AllArgsConstructor;
-import net.year4000.chat.message.Message;
+import net.year4000.chat.Message;
 
 @AllArgsConstructor
 public abstract class Formatter implements FormatValue {

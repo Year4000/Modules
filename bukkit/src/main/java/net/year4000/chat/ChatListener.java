@@ -4,10 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.events.MessageSentEvent;
-import net.year4000.chat.message.BaseMessage;
-import net.year4000.chat.message.ChatMessage;
-import net.year4000.chat.message.Message;
-import net.year4000.chat.message.PlayerActor;
 import net.year4000.ducktape.bukkit.DuckTape;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,16 +16,19 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 public class ChatListener implements Listener, PluginMessageListener {
     public ChatListener() {
-        Bukkit.getMessenger().registerIncomingPluginChannel((Plugin) DuckTape.get(), "BungeeCord", this);
+        Bukkit.getMessenger().registerIncomingPluginChannel((Plugin) DuckTape.get(), Chat.PLUGIN_CHANNEL, this);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        ChatMessage message = new ChatMessage();
+        Message message = new Message();
 
-        message.setFormat(Settings.get().getChatFormat());
-        message.setActor(new PlayerActor(player));
+        message.setMeta(Chat.CHAT_FORMAT, Settings.get().getChatFormat());
+        message.setMeta(Chat.PLAYER_COLORS, player.hasPermission(Chat.COLOR_PERMISSION) ? "true" : "false");
+        message.setMeta(Chat.PLAYER_LOCALE, player.getLocale());
+        message.setActorName(player.getName());
+        message.setActorUUID(player.getUniqueId());
         message.setMessage(event.getMessage());
         message.setServer(Bukkit.getServerName());
         message.setChannel(UserActor.get(player).getSendingChannel());
@@ -53,7 +52,7 @@ public class ChatListener implements Listener, PluginMessageListener {
         String msg = String.format(
             "%s%s: %s",
             Bukkit.getServerName().equalsIgnoreCase(message.getServer()) ? "" : message.getServer() + " -> ",
-            message.getActor().getName(),
+            message.getActorName(),
             message.getMessage()
         );
         Bukkit.getConsoleSender().sendMessage(msg);
@@ -61,13 +60,14 @@ public class ChatListener implements Listener, PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        if (!channel.equals("BungeeCord")) return;
+        if (!channel.equals(Chat.PLUGIN_CHANNEL)) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
 
-        if (!in.readUTF().equals("Chat")) return;
+        // Is message for this plugin
+        if (!in.readUTF().equals(Chat.get().getModuleInfo().name())) return;
 
-        Message message = Chat.GSON.fromJson(in.readUTF(), BaseMessage.class);
+        Message message = Chat.GSON.fromJson(in.readUTF(), Message.class);
 
         // Check if the message is in sync before receiving it.
         if (message.getTime() + 100 > System.currentTimeMillis()) {

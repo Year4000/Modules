@@ -4,7 +4,6 @@ import lombok.Data;
 import net.year4000.chat.channel.Channel;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.formatter.FormatterManager;
-import net.year4000.chat.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

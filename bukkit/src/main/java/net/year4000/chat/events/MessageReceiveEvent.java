@@ -2,7 +2,7 @@ package net.year4000.chat.events;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.year4000.chat.message.Message;
+import net.year4000.chat.Message;
 import org.bukkit.event.Cancellable;
 
 @Data

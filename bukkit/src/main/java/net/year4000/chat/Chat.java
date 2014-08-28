@@ -6,9 +6,6 @@ import net.year4000.chat.addons.Emoji;
 import net.year4000.chat.addons.PlayerBadges;
 import net.year4000.chat.addons.PlayerNotice;
 import net.year4000.chat.formatter.FormatterManager;
-import net.year4000.chat.message.Actor;
-import net.year4000.chat.message.Message;
-import net.year4000.chat.message.PlayerActor;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
@@ -16,7 +13,7 @@ import net.year4000.utilities.bukkit.MessageUtil;
 
 @ModuleInfo(
     name = "Chat",
-    version = "1.6",
+    version = "2.0",
     description = "Chat formatting with features.",
     authors = {"Year4000"}
 )
@@ -30,6 +27,13 @@ import net.year4000.utilities.bukkit.MessageUtil;
 })
 public class Chat extends BukkitModule {
     public static final double CHAT_VERSION = 1.0;
+    public static final String PLUGIN_CHANNEL = "BungeeCord";
+    public static final String CHAT_FORMAT = "format";
+    public static final String PLAYER_DISPLAY = "display";
+    public static final String PLAYER_NAME = "player";
+    public static final String PLAYER_LOCALE = "player";
+    public static final String PLAYER_COLORS = "colors";
+    public static final String COLOR_PERMISSION = "echat.colors";
     public static final Gson GSON = new GsonBuilder().setVersion(CHAT_VERSION).create();
     private static Chat inst;
 
@@ -44,7 +48,7 @@ public class Chat extends BukkitModule {
 
     @Override
     public void enable() {
-        // todo register commands to allow users to change their channels
+        // todo register commands to allow users to manage their channels
 
         // Registered Formats lambdas are awesome
         registerDefaultFormats();
@@ -52,20 +56,10 @@ public class Chat extends BukkitModule {
 
     /** Register the default variables that are with the module */
     private void registerDefaultFormats() {
-        FormatterManager.get().addFormatter("player", m -> m.getActor().getName());
-        FormatterManager.get().addFormatter("locale", m -> {
-            Actor actor = m.getActor();
-            return actor instanceof PlayerActor ? ((PlayerActor) actor).getLocale() : "";
-        });
+        FormatterManager.get().addFormatter(Chat.PLAYER_NAME, Message::getActorName);
         FormatterManager.get().addFormatter("server", Message::getServer);
-        FormatterManager.get().addFormatter("message", m -> {
-            Actor actor = m.getActor();
-            boolean colors = actor instanceof PlayerActor && ((PlayerActor) actor).isUseColors();
-            return colors ? MessageUtil.replaceColors(m.getMessage()) : m.getMessage();
-        });
-        FormatterManager.get().addFormatter("display", m -> {
-            Actor actor = m.getActor();
-            return actor instanceof PlayerActor ? ((PlayerActor) actor).getDisplay() : actor.getName();
-        });
+        FormatterManager.get().addFormatter("message", m -> Boolean.parseBoolean(m.getMeta(Chat.PLAYER_COLORS)) ? MessageUtil.replaceColors(m.getMessage()) : m.getMessage());
+        FormatterManager.get().addFormatter(Chat.PLAYER_DISPLAY, m -> m.isMeta(Chat.PLAYER_DISPLAY) ? m.getMeta(Chat.PLAYER_DISPLAY) : m.getActorName());
+        FormatterManager.get().addFormatter(Chat.PLAYER_LOCALE, m -> m.isMeta(Chat.PLAYER_LOCALE) ? m.getMeta(Chat.PLAYER_LOCALE) : m.getActorName());
     }
 }

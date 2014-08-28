@@ -1,6 +1,6 @@
 package net.year4000.chat.events;
 
-import net.year4000.chat.message.Message;
+import net.year4000.chat.Message;
 import org.bukkit.entity.Player;
 
 public interface MessageSend {

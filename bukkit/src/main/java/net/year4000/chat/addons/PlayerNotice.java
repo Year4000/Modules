@@ -13,10 +13,10 @@ public class PlayerNotice implements Listener {
     @EventHandler
     public void onSent(MessageReceiveEvent event) {
         event.setSend((player, data, message) -> {
-            if (checkName(data.getActor().getName(), player.getName(), message)) {
+            if (checkName(data.getActorName(), player.getName(), message)) {
                 FunEffectsUtil.playSound(player, Sound.NOTE_PLING);
                 // Change the mention to current mention
-                String word = getWord(data.getActor().getName(), player.getName(), message);
+                String word = getWord(data.getActorName(), player.getName(), message);
 
                 return message.replaceAll(word, MessageUtil.message("&b@%s&r", player.getName()));
             }
