@@ -22,7 +22,7 @@ public class Emoji implements Listener {
         // Faces
         .put(keys(":)", "(:"), '\u263A')
         .put(keys(":(", "):"), '\u2639')
-        .put(keys(":P", ":p", "8)", ":D", ":d",";)", "(;", ":o", ":O", ":0", ";(", ");", ":|"), '\u263B')
+        .put(keys(":P", ":p", "8)", ":3", "`-`", "'-'", "=3", "=D", ":D", ":d",";)", "(;", ":o", ":O", ":0", ";(", ");", ":|"), '\u263B')
 
         // Chest
         .put(keys(":kink:"), '\u2654')
@@ -50,8 +50,7 @@ public class Emoji implements Listener {
         // Misc
         .put(keys(":yin:", ":yang:"), '\u262F')
         .put(keys(":peace:"), '\u262E')
-        .put(keys(":hourglass:"), '\u23F3')
-        .put(keys(":skull:"), '\u2620')
+        .put(keys(":skull:", ":death:"), '\u2620')
         .put(keys(":biohazard:"), '\u2623')
         .put(keys(":nuke:"), '\u2622')
         .put(keys(":star:"), '\u2605')
