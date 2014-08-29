@@ -77,10 +77,11 @@ public class IceStaff extends FunItem {
 
                 if (side.getType().isSolid() || side.getType() == Material.AIR) {
                     side.setType(icePatches.next());
-                }
 
-                for (Player online : Bukkit.getOnlinePlayers()) {
-                    online.playEffect(side.getLocation(), Effect.SNOWBALL_BREAK, 0);
+
+                    for (Player online : Bukkit.getOnlinePlayers()) {
+                        online.playEffect(side.getLocation(), Effect.SNOWBALL_BREAK, 0);
+                    }
                 }
             }
         }
