@@ -1,5 +1,6 @@
 package net.year4000.chat;
 
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.year4000.ducktape.bukkit.DuckTape;
@@ -29,6 +30,6 @@ public class MessageSender {
         out.writeUTF(Chat.get().getModuleInfo().name());
         out.writeUTF(Chat.GSON.toJson(message));
 
-        Bukkit.getOnlinePlayers()[0].sendPluginMessage((Plugin) DuckTape.get(), Chat.PLUGIN_CHANNEL, out.toByteArray());
+        Iterables.getFirst(Bukkit.getOnlinePlayers(), null).sendPluginMessage((Plugin) DuckTape.get(), Chat.PLUGIN_CHANNEL, out.toByteArray());
     }
 }

@@ -7,7 +7,6 @@ import net.year4000.chat.formatter.FormatterManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,7 @@ public class MessageReceiver {
 
     /** Return a set of all the players that have the channel */
     private Set<Player> playersInChannel(Channel channel) {
-        return Arrays.asList(Bukkit.getOnlinePlayers()).stream()
+        return Bukkit.getOnlinePlayers().stream()
             .map(UserActor::get)
             .filter(a -> a.getReceivingChannels().contains(channel))
             .map(UserActor::getPlayer)

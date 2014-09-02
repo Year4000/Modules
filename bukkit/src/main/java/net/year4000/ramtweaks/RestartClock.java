@@ -24,7 +24,7 @@ public class RestartClock implements Runnable {
         }
 
         // Check if last player online
-        if (Bukkit.getOnlinePlayers().length == 0) {
+        if (Bukkit.getOnlinePlayers().size() == 0) {
             new ShutdownMessage(10);
             task.cancel();
         }
