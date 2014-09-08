@@ -23,6 +23,7 @@ public class ServerHandler extends AbstractHandler {
     public void handle(String s, Request request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException, ServletException {
         httpResponse.setContentType("text/json;charset=utf-8");
         httpResponse.addHeader("Refresh", "30"); // let browsers update
+        httpResponse.addHeader("Access-Control-Allow-Origin", "*"); // Acess from *
         httpResponse.setStatus(HttpServletResponse.SC_OK);
         request.setHandled(true);
         gson.toJson(StatusCollection.get().getNonHiddenServers(), httpResponse.getWriter());
