@@ -120,6 +120,10 @@ public class MenuManager {
         return size > 0;
     }
 
+    public boolean isRawMenu(String title) {
+        return menus.get(title) != null;
+    }
+
     @Data
     @AllArgsConstructor
     private class LocaleMenu {

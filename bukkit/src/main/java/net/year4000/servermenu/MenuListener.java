@@ -40,7 +40,7 @@ public class MenuListener implements Listener {
                 Message locale = new Message(player);
                 String name = MessageUtil.stripColors(livingEntity.getCustomName());
 
-                if (MenuManager.get().isMenu(player, name)) {
+                if (MenuManager.get().isRawMenu(name)) {
                     // pending task cancel it and start new one
                     if (pendingMenu.keySet().contains(player)) {
                         pendingMenu.remove(player).cancel();
