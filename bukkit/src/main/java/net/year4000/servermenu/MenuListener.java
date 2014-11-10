@@ -36,7 +36,6 @@ public class MenuListener implements Listener {
             LivingEntity livingEntity = (LivingEntity) entity;
 
             try {
-                System.out.println(livingEntity.getCustomName());
                 Message locale = new Message(player);
                 String name = MessageUtil.stripColors(livingEntity.getCustomName());
 
