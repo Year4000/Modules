@@ -214,7 +214,14 @@ public class InvMenu {
 
         if (server.getStatus() != null) {
             int number = findNumber(server.getName());
-            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 5 : (short) 13);
+
+            if (server.getStatus().getPlayers().getOnline() > 0) {
+                item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 4 : (short) 1);
+            }
+            else {
+                item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, (short) 13);
+            }
+
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b&l" + server.getName()));
             meta.setLore(new ArrayList<String>() {{
@@ -245,7 +252,7 @@ public class InvMenu {
         //offline
         else {
             int number = findNumber(server.getName());
-            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 6 : (short) 14);
+            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 4 : (short) 14);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b&l" + server.getName()));
             meta.setLore(Arrays.asList(locale.get("server.offline")));
