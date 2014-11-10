@@ -8,11 +8,14 @@ import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,6 +25,38 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MenuListener implements Listener {
     private Map<Player, BukkitTask> pendingMenu = new ConcurrentHashMap<>();
+
+    /** Open the menu by an entity */
+    @EventHandler
+    public void onEntity(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+
+        if (entity instanceof LivingEntity) {
+            Player player = event.getPlayer();
+            LivingEntity livingEntity = (LivingEntity) entity;
+
+            try {
+                System.out.println(livingEntity.getCustomName());
+                Message locale = new Message(player);
+                String name = MessageUtil.stripColors(livingEntity.getCustomName());
+
+                if (MenuManager.get().isMenu(player, name)) {
+                    // pending task cancel it and start new one
+                    if (pendingMenu.keySet().contains(player)) {
+                        pendingMenu.remove(player).cancel();
+                    }
+
+                    player.sendMessage(locale.get("menu.open", name));
+                    generateOpenMenuTask(MenuManager.Type.RAW_MENU, player, name);
+
+                    event.setCancelled(true);
+                }
+            } catch (NullPointerException e) {
+                // item is not proper
+                //e.printStackTrace();
+            }
+        }
+    }
 
     /** Open the menu by hotbar */
     @EventHandler
