@@ -65,7 +65,7 @@ public class TNTBow extends FunItem {
             tnts.remove(event.getEntity().getEntityId());
         }
 
-        event.getEntity().getWorld().getEntities().stream()
+        event.getEntity().getWorld().getEntitiesByClass(Player.class).stream()
             .filter(entity -> entity.getLocation().distance(event.getLocation()) < 6)
             .forEach(entity -> entity.setVelocity(new Vector(rand.nextDouble(), 1.3 + rand.nextDouble(), rand.nextDouble())));
     }
