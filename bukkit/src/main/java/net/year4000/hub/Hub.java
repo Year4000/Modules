@@ -26,13 +26,16 @@ public class Hub extends BukkitModule {
         // Lock the world's state
         SchedulerUtil.repeatSync(() -> {
             main.setAutoSave(false);
-            main.setDifficulty(Difficulty.PEACEFUL);
+            main.setDifficulty(Difficulty.NORMAL);
             main.setThundering(false);
             main.setThunderDuration(Integer.MAX_VALUE);
             main.setStorm(false);
             main.setWeatherDuration(Integer.MAX_VALUE);
         }, 1, TimeUnit.HOURS);
-        SchedulerUtil.repeatSync(() -> main.setTime(14800), (long) 0.2, TimeUnit.SECONDS);
+        SchedulerUtil.repeatSync(() -> {
+            main.setTime(14800);
+            Bukkit.getOnlinePlayers().forEach(p -> p.setFoodLevel(20));
+        }, (long) 0.2, TimeUnit.SECONDS);
     }
 
     public static Location hubSpawn() {
