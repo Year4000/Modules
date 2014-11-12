@@ -35,7 +35,7 @@ public class Settings extends Config {
     }
 
     @Comment("The url to pull the locales from")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/servermenu/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/servermenu/locales/";
 
     @Comment("The api server that we will grab the servers from")
     private String api = "https://api.year4000.net/servers/";

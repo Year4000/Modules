@@ -34,7 +34,7 @@ public class Settings extends Config {
     }
 
     @Comment("The url to get the locales from.")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/dressup/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/dressup/locales/";
 
     @Comment("The location to store the armor db.")
     private String storage = ".";
