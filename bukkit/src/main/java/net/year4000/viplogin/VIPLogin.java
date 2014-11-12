@@ -21,7 +21,7 @@ public class VIPLogin extends BukkitModule {
     public static class LoginListener implements Listener {
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onLogin(PlayerLoginEvent event) {
-            if (event.getPlayer().hasPermission("theta")) {
+            if (!event.getPlayer().hasPermission("theta")) {
                 event.setKickMessage(MessageUtil.message(
                     "&eYou need VIP to login to &6%s \n %s",
                     Bukkit.getServerName(),
