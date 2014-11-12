@@ -32,5 +32,5 @@ public class Settings extends Config {
     }
 
     @Comment("The URL to grab the locale from")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/ramtweaks/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/ramtweaks/locales/";
 }

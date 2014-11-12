@@ -43,8 +43,8 @@ public class Settings extends Config {
         put("delay", 60);
         put("random", false);
         put("prefix", "&7[&6TIP&7]&r ");
-        put("messagesURL", "https://git.year4000.net/year4000/locales/raw/master/net/year4000/announcer/messages/");
-        put("internalURL", "https://git.year4000.net/year4000/locales/raw/master/net/year4000/announcer/locales/");
+        put("messagesURL", "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/announcer/messages/");
+        put("internalURL", "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/announcer/locales/");
     }};
 
     // Messages Setting

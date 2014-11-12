@@ -31,6 +31,6 @@ public class Config extends net.year4000.utilities.config.Config {
     }
 
     @Comment("Settings for default messages.")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/accounts/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/accounts/locales/";
     private String link = "&6&lyear4000.net/player/%player%/infractions/";
 }

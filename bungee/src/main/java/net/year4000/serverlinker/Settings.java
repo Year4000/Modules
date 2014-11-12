@@ -39,7 +39,7 @@ public class Settings extends Config {
     private int sampleSize = 100;
 
     @Comment("The url to grab the locales from")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/serverlinker/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/serverlinker/locales/";
 
     @Comment("The name of the network, used for messages.")
     private String network = "&3[&bYear4000 Network&3]";

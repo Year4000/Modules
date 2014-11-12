@@ -38,7 +38,7 @@ public class Settings extends Config {
     private int cache = 5;
 
     @Comment("The locales that have been added")
-    private String url = "https://git.year4000.net/year4000/locales/raw/master/net/year4000/serverlist/locales/";
+    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/serverlist/locales/";
 
     @Comment("The prefix for the to line.")
     private String prefix = "&3[&bY4K&3]&r ";
