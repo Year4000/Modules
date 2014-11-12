@@ -4,6 +4,7 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.commands.Command;
 import net.year4000.utilities.bukkit.commands.CommandContext;
 import net.year4000.utilities.bukkit.commands.CommandException;
+import net.year4000.utilities.bukkit.commands.CommandPermissions;
 import net.year4000.vanish.messages.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ public final class VanishCommands {
         aliases = {"vanish", "hide", "show", "v"},
         desc = "Hide your self from others."
     )
+    @CommandPermissions({"omega"})
     public static void vanish(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) throw new CommandException("Must be a player!");
 
