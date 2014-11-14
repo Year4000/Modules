@@ -68,7 +68,6 @@ public class InvMenu {
             Inventory inv = Bukkit.createInventory(null, menuSize(), title);
             views.put(code, inv);
         });
-        updateServers(true); // trigger update to show some servers on first view
     }
 
     /** Get servers that are specific to this list */
@@ -124,16 +123,7 @@ public class InvMenu {
 
     /** Update the inventory of the servers */
     public void updateServers() {
-        updateServers(false);
-    }
-
-    /** Update the inventory of the servers */
-    public void updateServers(boolean force) {
-        views.forEach((locale, menu) -> {
-            if (menu.getViewers().size() != 0 || force) {
-                updateServers(locale, menu);
-            }
-        });
+        views.forEach(this::updateServers);
     }
 
     public void updateServers(Locale locale, Inventory menu) {
