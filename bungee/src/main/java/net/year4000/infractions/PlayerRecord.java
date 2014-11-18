@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,7 +31,7 @@ public class PlayerRecord {
             if (r.getType() == 1) {
                 message = r.getMessage();
                 time = r.getTime();
-                return true;
+                return new Date().before(new Date(time));
             }
         }
 
