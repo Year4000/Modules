@@ -32,10 +32,10 @@ public final class Commands {
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
 
         // Check is player exists or force.
-        if (player == null /*&& !args.hasFlag('f')*/)
+        if (player == null && !Infractions.getStorage().hasUUID(name) /*&& !args.hasFlag('f')*/)
             throw new CommandException("&6" + name + " is not online.");
 
-        Player badguy = new Player(player);
+        Player badguy = new Player(player == null ? Infractions.getStorage().getUUID(name) : player.getUniqueId(), name);
 
         // If banned don't ban again.
         if (badguy.isBanned() || badguy.isLocked())
@@ -47,7 +47,7 @@ public final class Commands {
 
         // When no message is created use the default one.
         if (message.equals(""))
-            message = new Message(player).get("default.ban");
+            message = new Message(player == null ? sender : player).get("default.ban");
 
         // Update the database.
         ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());
@@ -79,10 +79,10 @@ public final class Commands {
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
 
         // Check is player exists or force
-        if (player == null /*&& !args.hasFlag('f')*/)
+        if (player == null && !Infractions.getStorage().hasUUID(name) /*&& !args.hasFlag('f')*/)
             throw new CommandException("&6" + name + " is not online.");
 
-        Player badguy = new Player(player);
+        Player badguy = new Player(player == null ? Infractions.getStorage().getUUID(name) : player.getUniqueId(), name);
 
         // If banned don't ban again.
         if (badguy.isBanned() || badguy.isLocked())
@@ -97,7 +97,7 @@ public final class Commands {
 
         // When no message is created use the default one.
         if (message.equals(""))
-            message = new Message(player).get("default.lock");
+            message = new Message(player == null ? sender : player).get("default.lock");
 
         // Update the database.
         ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());

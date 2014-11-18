@@ -23,6 +23,7 @@ public class JoinListener implements Listener {
             ProxiedPlayer player;
 
             CheckPlayer(ProxiedPlayer player) {
+                Infractions.getStorage().saveUUID(player);
                 this.player = player;
                 task = scheduler.schedule(DuckTape.get(), this, 1, 1, TimeUnit.SECONDS);
             }

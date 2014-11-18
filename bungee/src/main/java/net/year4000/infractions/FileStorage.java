@@ -2,12 +2,14 @@ package net.year4000.infractions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import lombok.Data;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class FileStorage {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -30,7 +32,6 @@ public class FileStorage {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void read(File storage) {
         try {
             Reader file = new FileReader(storage);
@@ -41,11 +42,11 @@ public class FileStorage {
 
     }
 
-    public PlayerRecord getPlayer(ProxiedPlayer player) {
+    public PlayerRecord getPlayer(UUID uuid) {
         //return players.containsKey(player.getUniqueId().toString()) ? players.get(player.getUniqueId().toString()) : new PlayerRecord();
-        if (db.getPlayers().containsKey(player.getUniqueId().toString())) {
+        if (db.getPlayers().containsKey(uuid.toString())) {
             PlayerRecord rec = new PlayerRecord();
-            rec.setRecords(db.getPlayers().get(player.getUniqueId().toString()));
+            rec.setRecords(db.getPlayers().get(uuid.toString()));
             return rec;
         }
         else {
@@ -54,15 +55,41 @@ public class FileStorage {
     }
 
     // replace the record
-    public void addPlayer(ProxiedPlayer player, PlayerRecord record) {
-        db.getPlayers().put(player.getUniqueId().toString(), record.getRecords());
+    public void addPlayer(UUID uuid, PlayerRecord record) {
+        db.getPlayers().put(uuid.toString(), record.getRecords());
 
         write(STORAGE);
+    }
+
+    public PlayerRecord getPlayer(ProxiedPlayer player) {
+        return getPlayer(player.getUniqueId());
+    }
+
+    // replace the record
+    public void addPlayer(ProxiedPlayer player, PlayerRecord record) {
+        addPlayer(player.getUniqueId(), record);
+    }
+
+    public void saveUUID(ProxiedPlayer player){
+        db.getPlayerUuids().put(player.getName().toLowerCase(), player.getUniqueId());
+
+        write(STORAGE);
+    }
+
+    public boolean hasUUID(String name) {
+        return db.getPlayerUuids().containsKey(name.toLowerCase());
+    }
+
+    public UUID getUUID(String name) {
+        if(!hasUUID(name))
+            return null;
+        return db.getPlayerUuids().get(name.toLowerCase());
     }
 
     @Data
     private class Storage {
         private HashMap<String, List<InfractionRecord>> players = new HashMap<>();
+        private HashMap<String, UUID> playerUuids = new HashMap<>();
 
     }
 }
