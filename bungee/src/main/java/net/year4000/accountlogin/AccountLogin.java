@@ -163,22 +163,24 @@ public class AccountLogin extends BungeeModule {
             try {
                 Statement statement = connection.createStatement();
                 ResultSet resultset = statement.executeQuery(sql);
-                Map<String, String> accountData = new HashMap<>();
-
-                accountData.put("username", player);
-                accountData.put("password", String.valueOf(player.hashCode()));
-                accountData.put("email", player + "@y4k.me");
-                accountData.put("joined", logintime);
-                accountData.put("login_time", logintime);
-                accountData.put("status", "READY");
-                accountData.put("code", "");
 
                 // Player Record does not exist create account
                 if (!resultset.next()) {
-                    String accountSql = "INSERT INTO `" + config.accounts_table + "`(`"+ Joiner.on("`, `").join(accountData.keySet())+"`) VALUES(`"+Joiner.on("`, `").join(accountData.values())+"`);";
-                }
+                    newAccount = false;
+                    Map<String, String> accountData = new HashMap<>();
 
-                newAccount = false;
+                    accountData.put("username", player);
+                    accountData.put("password", String.valueOf(player.hashCode()));
+                    accountData.put("email", player + "@y4k.me");
+                    accountData.put("joined", logintime);
+                    accountData.put("login_time", logintime);
+                    accountData.put("status", "READY");
+                    accountData.put("code", "");
+
+                    String accountSql = "INSERT INTO `accounts`(`"+ Joiner.on("`, `").join(accountData.keySet())+"`) VALUES('"+Joiner.on("', '").join(accountData.values())+"');";
+
+                    connection.createStatement().execute(accountSql);
+                }
             } catch (Exception e) {
                 event.getPlayer().disconnect(MessageUtil.message(e.getMessage()));
             }

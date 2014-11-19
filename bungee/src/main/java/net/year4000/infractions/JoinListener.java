@@ -17,13 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class JoinListener implements Listener {
-    private static List<ProxiedPlayer> pendingLocales = new CopyOnWriteArrayList<>();
-
-    @EventHandler
-    public void onConnecting(ServerConnectEvent event) {
-        while (pendingLocales.contains(event.getPlayer()));
-    }
-
     @EventHandler
     public void onJoin(PostLoginEvent event) {
         TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
@@ -43,7 +36,6 @@ public class JoinListener implements Listener {
                 Player iplayer = new Player(player);
 
                 if (iplayer.isBanned() || iplayer.isLocked()) {
-                    pendingLocales.add(player);
                     if (player.getLocale() == null) return;
 
                     Message locale = new Message(player);
@@ -64,7 +56,6 @@ public class JoinListener implements Listener {
             }
         }
 
-        pendingLocales.remove(event.getPlayer());
         new CheckPlayer(event.getPlayer());
     }
 
