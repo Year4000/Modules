@@ -178,6 +178,7 @@ public class AccountLogin extends BungeeModule {
                     String accountSql = "INSERT INTO `" + config.accounts_table + "`(`"+ Joiner.on("`, `").join(accountData.keySet())+"`) VALUES(`"+Joiner.on("`, `").join(accountData.values())+"`);";
                 }
 
+                newAccount = false;
             } catch (Exception e) {
                 event.getPlayer().disconnect(MessageUtil.message(e.getMessage()));
             }
