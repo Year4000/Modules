@@ -3,6 +3,7 @@ package net.year4000.infractions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -88,8 +89,8 @@ public class FileStorage {
 
     @Data
     private class Storage {
-        private HashMap<String, List<InfractionRecord>> players = new HashMap<>();
+        @SerializedName("uuids")
         private HashMap<String, UUID> playerUuids = new HashMap<>();
-
+        private HashMap<String, List<InfractionRecord>> players = new HashMap<>();
     }
 }
