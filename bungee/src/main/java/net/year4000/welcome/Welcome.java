@@ -44,7 +44,7 @@ public class Welcome extends BungeeModule {
         private Deque<ProxiedPlayer> players = new ConcurrentLinkedDeque<>();
 
         PlayerMessage() {
-            scheduler.schedule(DuckTape.get(), this, 1, 1, TimeUnit.SECONDS);
+            scheduler.schedule(DuckTape.get(), this, 250, 250, TimeUnit.MILLISECONDS);
         }
 
         public void addPlayer(ProxiedPlayer player) {

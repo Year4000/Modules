@@ -4,10 +4,7 @@ import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ProxyPingEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.event.ServerKickEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -20,6 +17,11 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class Listeners implements Listener {
     private List<ProxiedPlayer> login = new ArrayList<>();
+
+    @EventHandler
+    public void onServerSwith(ServerSwitchEvent event) {
+        event.getPlayer().setTabHeader(MessageUtil.message("&3[&bYear4000&3]"), MessageUtil.message("&bmc&7.&byear4000&7.&bnet"));
+    }
 
     @EventHandler
     public void onConnectionLoss(ServerKickEvent event) {

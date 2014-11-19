@@ -1,20 +1,22 @@
 package net.year4000.accountlogin;
 
+import com.google.common.base.Joiner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.api.event.ProxyPingEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.ducktape.bungee.module.BungeeModule;
 import net.year4000.ducktape.bungee.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bungee.MessageUtil;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.MessageDigest;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @ModuleInfo(
     name = "AccountLogin",
@@ -26,7 +28,7 @@ import java.sql.Statement;
 public class AccountLogin extends BungeeModule {
     private static final String PLUGIN = "[AccountLogin] ";
     private static Configuration config;
-    private static Connection connection = null;
+    public static Connection connection = null;
     private static String loginip;
     private static String logintime;
 
@@ -40,6 +42,8 @@ public class AccountLogin extends BungeeModule {
         catch (Exception e) {
             System.out.println(PLUGIN + e.getMessage());
         }
+
+        registerCommand(RegisterCommand.class);
     }
     /**
      * Log the user in.
@@ -90,7 +94,7 @@ public class AccountLogin extends BungeeModule {
         /**
          * Set the max player count to the size of the accounts.
          */
-        @EventHandler
+/*        @EventHandler
         public void onPing(ProxyPingEvent event) {
             // If not enabled return.
             if (!config.accounts_playercount) return;
@@ -109,7 +113,7 @@ public class AccountLogin extends BungeeModule {
                 ping.getPlayers().setMax(maxPlayers);
             }
             catch (Exception e) {}
-        }
+        }*/
 
         /**
          * Check the user with the account.
@@ -129,7 +133,13 @@ public class AccountLogin extends BungeeModule {
                 check(resultset);
 
                 // Log the user in
-                event.getConnection().setOnlineMode(login(resultset, loginip, logintime, player));
+                try (Socket socket = new Socket("sessionserver.mojang.com", 443)) {
+                    if (socket.isConnected()) {
+                        AccountLogin.debug("Session servers online!");
+                    }
+                } catch (Exception e) {
+                    event.getConnection().setOnlineMode(login(resultset, loginip, logintime, player));
+                }
             }
             catch (Exception e) {
                 String color = ChatColor.translateAlternateColorCodes('&', e.getMessage());
@@ -145,16 +155,45 @@ public class AccountLogin extends BungeeModule {
         @EventHandler
         public void onJoin(PostLoginEvent event) {
             String player = event.getPlayer().getName();
-            String updateSQL = "UPDATE `"+config.accounts_table+"`";
-            updateSQL += "SET `"+config.accounts_login_time+"`='"+logintime+"',`"+config.accounts_login_ip+"`='"+loginip+"'";
-            updateSQL += "WHERE `"+config.accounts_user+"`='"+player+"'";
+            String sql = "SELECT * FROM `"+config.accounts_table+"` WHERE `"+config.accounts_user+"`='"+player+"'";
+            logintime = new java.sql.Timestamp(System.currentTimeMillis()).toString();
+            loginip = event.getPlayer().getPendingConnection().getAddress().getAddress().toString().substring(1);
+            boolean newAccount = false;
+
             try {
                 Statement statement = connection.createStatement();
+                ResultSet resultset = statement.executeQuery(sql);
+                Map<String, String> accountData = new HashMap<>();
 
-                // Update the ip for the user
-                statement.execute(updateSQL);
+                accountData.put("username", player);
+                accountData.put("password", String.valueOf(player.hashCode()));
+                accountData.put("email", player + "@y4k.me");
+                accountData.put("joined", logintime);
+                accountData.put("login_time", logintime);
+                accountData.put("status", "READY");
+                accountData.put("code", "");
+
+                // Player Record does not exist create account
+                if (!resultset.next()) {
+                    String accountSql = "INSERT INTO `" + config.accounts_table + "`(`"+ Joiner.on("`, `").join(accountData.keySet())+"`) VALUES(`"+Joiner.on("`, `").join(accountData.values())+"`);";
+                }
+
+            } catch (Exception e) {
+                event.getPlayer().disconnect(MessageUtil.message(e.getMessage()));
             }
-            catch (Exception e) {}
+
+            if (!newAccount) {
+                String updateSQL = "UPDATE `"+config.accounts_table+"`";
+                updateSQL += "SET `"+config.accounts_login_time+"`='"+logintime+"',`"+config.accounts_login_ip+"`='"+loginip+"'";
+                updateSQL += "WHERE `"+config.accounts_user+"`='"+player+"'";
+                try {
+                    Statement statement = connection.createStatement();
+
+                    // Update the ip for the user
+                    statement.execute(updateSQL);
+                }
+                catch (Exception e) {}
+            }
         }
     }
 }

@@ -3,14 +3,12 @@ package net.year4000.infractions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PlayerRecord {
-    private List<InfractionRecord> records = new ArrayList<>();
+    private List<InfractionRecord> records = new LinkedList<>();
     private String message = "";
     private String time = "";
 
@@ -27,7 +25,10 @@ public class PlayerRecord {
     }
 
     public boolean isLocked() {
-        for (InfractionRecord r : records) {
+        List<InfractionRecord> list = new LinkedList<>(records);
+        Collections.reverse(list);
+
+        for (InfractionRecord r : list) {
             if (r.getType() == 1) {
                 message = r.getMessage();
                 time = r.getTime();

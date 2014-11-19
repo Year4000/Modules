@@ -99,10 +99,16 @@ public final class Commands {
         if (message.equals(""))
             message = new Message(player == null ? sender : player).get("default.lock");
 
-        // Update the database.
-        ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());
-        if (!badguy.lock(judge, message, args.getString(1))) {
-            sender.sendMessage(MessageUtil.message("Infraction could not be added to database."));
+        // Update the database, catch exception from Time Duration
+        try {
+            TimeDuration duration = TimeDuration.getFromString(args.getString(1));
+            ProxiedPlayer judge = ProxyServer.getInstance().getPlayer(sender.getName());
+
+            if (!badguy.lock(judge, message, duration.toSecs())) {
+                sender.sendMessage(MessageUtil.message("Infraction could not be added to database."));
+            }
+        } catch (Exception e) {
+            throw new CommandException("The time duration could not be parsed.");
         }
 
         // Kick the player from the server

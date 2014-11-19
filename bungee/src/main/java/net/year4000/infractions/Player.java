@@ -49,10 +49,10 @@ public class Player {
         return true;
     }
 
-    public boolean lock(ProxiedPlayer judge, String message, String length) {
+    public boolean lock(ProxiedPlayer judge, String message, int secs) {
         if (isBanned()) return false;
         String date = new Date().toString();
-        length = new Date(System.currentTimeMillis() + Integer.valueOf(length)).toString();
+        String length = new Date(System.currentTimeMillis() + (secs * 1000)).toString();
 
         record.getRecords().add(new InfractionRecord(1, name, judge == null ? "Console" : judge.getName(), message, date, length));
         Infractions.getStorage().addPlayer(uuid, record);
