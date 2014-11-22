@@ -47,13 +47,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>tc.oc</groupId>
-            <artifactId>sportbukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>tc.oc</groupId>
-            <artifactId>sportbukkit-api</artifactId>
+            <groupId>net.year4000</groupId>
+            <artifactId>firecast</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
