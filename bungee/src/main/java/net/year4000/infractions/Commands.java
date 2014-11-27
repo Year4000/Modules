@@ -11,11 +11,40 @@ import net.year4000.utilities.bungee.commands.CommandException;
 import net.year4000.utilities.bungee.commands.CommandPermissions;
 
 public final class Commands {
+
+    private static String[] recordTypes = new String[]{
+            "Ban", "Lock", "Kick"
+    };
+
     @Command(aliases = {"bans"}, desc = "")
     @CommandPermissions({"infractions.staff", "infractions.ban"})
     public static void bans(CommandContext args, CommandSender sender) throws CommandException {
         Infractions.getStorage().read(FileStorage.STORAGE);
         sender.sendMessage(MessageUtil.message("&6Infractions storage file is reloaded."));
+    }
+
+    @Command(
+            aliases = {"infractions", "infrac"},
+            usage = "[player]",
+            desc = "Get all the infractions of a player",
+            min = 1
+    )
+    @CommandPermissions({"infractions.staff", "infractions.infractions"})
+    public static void infractions(CommandContext args, CommandSender sender) throws CommandException {
+        String name = args.getString(0);
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
+
+        if(player == null && !Infractions.getStorage().hasUUID(name))
+            throw new CommandException("&6" + name + " is not online");
+
+        Player badguy = new Player(player == null ? Infractions.getStorage().getUUID(name) : player.getUniqueId(), name);
+
+        if(badguy.getRecord().getRecords().size() == 0)
+            throw new CommandException("&6" + name + " has no infractions");
+
+        sender.sendMessage(MessageUtil.message("&6---- &e" + name + "&6's records ----"));
+        for(InfractionRecord record : badguy.getRecord().getRecords())
+            sender.sendMessage(MessageUtil.message("&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &eat &6" + record.getTime()));
     }
 
     @Command(
