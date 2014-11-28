@@ -5,10 +5,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.utilities.bungee.MessageUtil;
-import net.year4000.utilities.bungee.commands.Command;
-import net.year4000.utilities.bungee.commands.CommandContext;
-import net.year4000.utilities.bungee.commands.CommandException;
-import net.year4000.utilities.bungee.commands.CommandPermissions;
+import net.year4000.utilities.bungee.commands.*;
+import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
 
 public final class Commands {
 
@@ -42,9 +40,17 @@ public final class Commands {
         if(badguy.getRecord().getRecords().size() == 0)
             throw new CommandException("&6" + name + " has no infractions");
 
-        sender.sendMessage(MessageUtil.message("&6---- &e" + name + "&6's records ----"));
-        for(InfractionRecord record : badguy.getRecord().getRecords())
-            sender.sendMessage(MessageUtil.message("&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &eat &6" + record.getTime()));
+        final int MAX_PER_PAGE = 8;
+        new SimplePaginatedResult<InfractionRecord>("&6---- &e" + name + "&6's records ----", MAX_PER_PAGE){
+            @Override
+            public String format(InfractionRecord record, int index){
+                return "&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &eat &6" + record.getTime();
+            }
+        }.display(
+                new BungeeWrappedCommandSender(sender),
+                badguy.getRecord().getRecords(),
+                args.argsLength() == 2 ? args.getInteger(1) : 1
+        );
     }
 
     @Command(
