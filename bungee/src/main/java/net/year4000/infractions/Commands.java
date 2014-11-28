@@ -23,7 +23,7 @@ public final class Commands {
 
     @Command(
             aliases = {"infractions", "infrac"},
-            usage = "[player]",
+            usage = "[player] [page]",
             desc = "Get all the infractions of a player",
             min = 1
     )
@@ -41,7 +41,7 @@ public final class Commands {
             throw new CommandException("&6" + name + " has no infractions");
 
         final int MAX_PER_PAGE = 8;
-        new SimplePaginatedResult<InfractionRecord>("&6---- &e" + name + "&6's records ----", MAX_PER_PAGE){
+        new SimplePaginatedResult<InfractionRecord>("&e" + name + "&6's records", MAX_PER_PAGE){
             @Override
             public String format(InfractionRecord record, int index){
                 return "&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &eat &6" + record.getTime();
