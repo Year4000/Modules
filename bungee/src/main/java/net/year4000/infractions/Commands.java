@@ -41,10 +41,10 @@ public final class Commands {
             throw new CommandException("&6" + name + " has no infractions");
 
         final int MAX_PER_PAGE = 8;
-        new SimplePaginatedResult<InfractionRecord>("&e" + name + "&6's records", MAX_PER_PAGE){
+        new SimplePaginatedResult<InfractionRecord>(name + "'s records", MAX_PER_PAGE){
             @Override
             public String format(InfractionRecord record, int index){
-                return "&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &eat &6" + record.getTime();
+                return MessageUtil.replaceColors("&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &efor &6" + record.getMessage());
             }
         }.display(
                 new BungeeWrappedCommandSender(sender),
