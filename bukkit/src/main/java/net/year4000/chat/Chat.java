@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import net.year4000.chat.addons.Emoji;
 import net.year4000.chat.addons.PlayerBadges;
 import net.year4000.chat.addons.PlayerNotice;
+import net.year4000.chat.addons.Translator;
 import net.year4000.chat.formatter.FormatterManager;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
@@ -23,7 +24,8 @@ import net.year4000.utilities.bukkit.MessageUtil;
     // Addons
     PlayerBadges.class,
     Emoji.class,
-    PlayerNotice.class
+    PlayerNotice.class,
+    Translator.class
 })
 public class Chat extends BukkitModule {
     public static final double CHAT_VERSION = 1.0;
