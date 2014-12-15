@@ -1,10 +1,14 @@
 package net.year4000.chat;
 
 import lombok.Data;
+import net.minecraft.server.v1_7_R4.ChatSerializer;
+import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
 import net.year4000.chat.channel.Channel;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.formatter.FormatterManager;
+import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -35,8 +39,26 @@ public class MessageReceiver {
 
         if (!event.isCancelled()) {
             Set<Player> players = playersInChannel(event.getMessage().getChannel());
-            players.forEach(p -> p.sendMessage(event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage()))));
+            players.forEach(p -> sendRawMessage(event, p));
         }
+    }
+
+    private void sendRawMessage(MessageReceiveEvent event, Player p) {
+        if (wasTranslatedFor(p, event)) {
+            String message = event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage()));
+            char color = message.charAt(0);
+            String[] split = message.split(": " + color + "f", 2);
+            String json = "{text:\"" + split[0] + ": \",extra:[{text:\"" + split[1] + "\",italic:true,hoverEvent:{action:show_text,value:{text:\"" + MessageUtil.replaceColors(LocaleManager.get().getLocale(p.getLocale()).get("translator.original").toString()) + " " + event.getMessage().getMessage() + "\"}}}]}";
+            PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(json));
+            ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+        }
+        else {
+            p.sendMessage(event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage())));
+        }
+    }
+
+    private boolean wasTranslatedFor(Player p, MessageReceiveEvent event) {
+        return !event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage())).contains(event.getMessage().getMessage());
     }
 
     /** Return a set of all the players that have the channel */

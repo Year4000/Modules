@@ -5,17 +5,52 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.utilities.bungee.MessageUtil;
-import net.year4000.utilities.bungee.commands.Command;
-import net.year4000.utilities.bungee.commands.CommandContext;
-import net.year4000.utilities.bungee.commands.CommandException;
-import net.year4000.utilities.bungee.commands.CommandPermissions;
+import net.year4000.utilities.bungee.commands.*;
+import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
 
 public final class Commands {
+
+    private static String[] recordTypes = new String[]{
+            "Ban", "Lock", "Kick"
+    };
+
     @Command(aliases = {"bans"}, desc = "")
     @CommandPermissions({"infractions.staff", "infractions.ban"})
     public static void bans(CommandContext args, CommandSender sender) throws CommandException {
         Infractions.getStorage().read(FileStorage.STORAGE);
         sender.sendMessage(MessageUtil.message("&6Infractions storage file is reloaded."));
+    }
+
+    @Command(
+            aliases = {"infractions", "infrac"},
+            usage = "[player] [page]",
+            desc = "Get all the infractions of a player",
+            min = 1
+    )
+    @CommandPermissions({"infractions.staff", "infractions.infractions"})
+    public static void infractions(CommandContext args, CommandSender sender) throws CommandException {
+        String name = args.getString(0);
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
+
+        if(player == null && !Infractions.getStorage().hasUUID(name))
+            throw new CommandException("&6" + name + " is not online");
+
+        Player badguy = new Player(player == null ? Infractions.getStorage().getUUID(name) : player.getUniqueId(), name);
+
+        if(badguy.getRecord().getRecords().size() == 0)
+            throw new CommandException("&6" + name + " has no infractions");
+
+        final int MAX_PER_PAGE = 8;
+        new SimplePaginatedResult<InfractionRecord>(name + "'s records", MAX_PER_PAGE){
+            @Override
+            public String format(InfractionRecord record, int index){
+                return MessageUtil.replaceColors("&6" + recordTypes[record.getType()] + " &eby &6" + record.getJudge() + " &efor &6" + record.getMessage());
+            }
+        }.display(
+                new BungeeWrappedCommandSender(sender),
+                badguy.getRecord().getRecords(),
+                args.argsLength() == 2 ? args.getInteger(1) : 1
+        );
     }
 
     @Command(
