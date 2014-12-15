@@ -124,7 +124,8 @@ public class ListListener implements Listener {
         if (server != null) {
             event.setResponse(server);
 
-            if (server.getPlayers().getOnline() > 5) {
+            // todo re-enable when lag is fixed
+            /*if (server.getPlayers().getOnline() > 5) {
                 ProxyPingEvent.AnimatedPing ping = new ProxyPingEvent.AnimatedPing();
                 ping.setDelay(120);
 
@@ -134,7 +135,7 @@ public class ListListener implements Listener {
                 }
 
                 event.setAnimatedPing(ping);
-            }
+            }*/
         }
     }
 }
