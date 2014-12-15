@@ -85,7 +85,7 @@ public class ListListener implements Listener {
                 // Set the animated ping if enabled
                 ProxyPingEvent.AnimatedPing ping = null;
 
-                if (config.isAnimated()) {
+                if (config.isAnimated() && pingServer.getPlayer(ip) != null) {
                     ping = new ProxyPingEvent.AnimatedPing();
                     int count = pingServer.getResponse().getPlayers().getOnline();
                     int randCount = (new Random().nextInt(10) + 1);
