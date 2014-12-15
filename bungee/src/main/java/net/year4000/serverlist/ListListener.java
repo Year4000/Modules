@@ -20,6 +20,7 @@ import net.year4000.serverlist.messages.MessageFactory;
 import net.year4000.utilities.bungee.MessageUtil;
 
 import java.net.InetSocketAddress;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.utilities.bungee.MessageUtil.replaceColors;
@@ -122,6 +123,18 @@ public class ListListener implements Listener {
         ServerPing server = ping.getUnchecked(new PingServer(event.getConnection(), event.getResponse()));
         if (server != null) {
             event.setResponse(server);
+
+            if (server.getPlayers().getOnline() > 5) {
+                ProxyPingEvent.AnimatedPing ping = new ProxyPingEvent.AnimatedPing();
+                ping.setDelay(120);
+
+                for (int i = 0; i < server.getPlayers().getOnline(); i += (new Random().nextInt(2) + 1)) {
+                    int count = i == 0 ? server.getPlayers().getOnline() : i > server.getPlayers().getOnline() ? server.getPlayers().getOnline() : i;
+                    ping.getResponses().add(new ServerPing(server.getVersion(), new ServerPing.Players(server.getPlayers().getMax(), count, server.getPlayers().getSample()), server.getDescription(), server.getFaviconObject()));
+                }
+
+                event.setAnimatedPing(ping);
+            }
         }
     }
 }
