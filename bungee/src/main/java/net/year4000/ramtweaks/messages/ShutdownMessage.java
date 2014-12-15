@@ -1,5 +1,6 @@
 package net.year4000.ramtweaks.messages;
 
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -36,7 +37,7 @@ public class ShutdownMessage implements Runnable {
             console.sendMessage(MessageUtil.message(new Message(console).get(type, countdown)));
             proxy.getPlayers().stream()
                 .filter(p -> p != null && p.getLocale() != null && p.getServer() != null)
-                .forEach(player -> player.sendMessage(MessageUtil.message(new Message(player).get(type, countdown))));
+                .forEach(player -> player.sendMessage(ChatMessageType.ACTION_BAR, MessageUtil.message(new Message(player).get(type, countdown))));
         }
         countdown--;
     }
