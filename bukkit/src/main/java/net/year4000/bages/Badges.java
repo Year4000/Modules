@@ -52,8 +52,8 @@ public class Badges extends BukkitModule {
 
                     // register team if not exists
                     if (team == null) {
-                        scoreboard.registerNewTeam(uuid);
-                        team = scoreboard.getTeam(uuid);
+                        scoreboard.registerNewTeam(id);
+                        team = scoreboard.getTeam(id);
                     }
 
                     String playerColor = MessageUtil.replaceColors("&" + random.next());
