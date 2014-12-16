@@ -1,5 +1,6 @@
 package net.year4000.bages;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
@@ -46,7 +47,8 @@ public class Badges extends BukkitModule {
 
                 try {
                     String uuid = player.getName();
-                    Team team = scoreboard.getTeam(uuid);
+                    String id = "tab:" + (BadgeManager.MAX_RANK - manager.findBadge(player).getRank()) + (chars(player.getName()) >> 4);
+                    Team team = scoreboard.getTeam(id);
 
                     // register team if not exists
                     if (team == null) {
@@ -64,6 +66,18 @@ public class Badges extends BukkitModule {
                     player.kickPlayer(e.getMessage());
                 }
             }, 1, TimeUnit.SECONDS);
+        }
+
+        public static int chars(String string) {
+            String finalString = "";
+
+            for (int i = 0; i < string.toCharArray().length ; i++) {
+                if (finalString.length() > 4) break;
+
+                finalString += (int) Ascii.toUpperCase(string.toCharArray()[i]);
+            }
+
+            return Integer.valueOf(finalString);
         }
     }
 }
