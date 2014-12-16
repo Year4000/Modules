@@ -1,8 +1,10 @@
 package net.year4000.chat;
 
 import net.year4000.ducktape.bukkit.DuckTape;
+import net.year4000.utilities.bukkit.BukkitLocale;
 import net.year4000.utilities.cache.QuickCache;
 import net.year4000.utilities.locale.URLLocaleManager;
+import org.bukkit.entity.Player;
 
 public class LocaleManager extends URLLocaleManager {
     private static QuickCache<LocaleManager> inst = QuickCache.builder(LocaleManager.class).build();
@@ -14,5 +16,12 @@ public class LocaleManager extends URLLocaleManager {
 
     public static LocaleManager get() {
         return inst.get();
+    }
+
+    public static class Msg extends BukkitLocale {
+        public Msg(Player player) {
+            super(player);
+            localeManager = LocaleManager.get();
+        }
     }
 }

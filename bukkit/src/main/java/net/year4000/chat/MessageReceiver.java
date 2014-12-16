@@ -48,7 +48,7 @@ public class MessageReceiver {
             String message = event.getSend().send(p, event.getMessage(), FormatterManager.get().replaceAll(event.getMessage()));
             char color = message.charAt(0);
             String[] split = message.split(": " + color + "f", 2);
-            String json = "{text:\"" + split[0] + ": \",extra:[{text:\"" + split[1] + "\",italic:true,hoverEvent:{action:show_text,value:{text:\"" + MessageUtil.replaceColors(LocaleManager.get().getLocale(p.getLocale()).get("translator.original").toString()) + " " + event.getMessage().getMessage() + "\"}}}]}";
+            String json = "{text:\"" + split[0] + ": \",extra:[{text:\"" + split[1] + "\",italic:true,hoverEvent:{action:show_text,value:{text:\"" + MessageUtil.replaceColors(new LocaleManager.Msg(p).get("translator.original")) + " " + event.getMessage().getMessage() + "\"}}}]}";
             PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(json));
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
         }
