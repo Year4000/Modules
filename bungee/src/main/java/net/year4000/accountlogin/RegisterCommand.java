@@ -2,12 +2,13 @@ package net.year4000.accountlogin;
 
 import com.google.gson.Gson;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.bungee.commands.Command;
 import net.year4000.utilities.bungee.commands.CommandContext;
 import net.year4000.utilities.bungee.commands.CommandException;
-import sun.misc.IOUtils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,23 +24,27 @@ public class RegisterCommand {
     )
     public static void register(CommandContext args, CommandSender sender) throws CommandException {
         if (sender instanceof ProxiedPlayer) {
-            String name = sender.getName();
-            String email = args.getString(0);
-            String password = password(args.getString(1));
+            final String name = sender.getName();
+            final String email = args.getString(0);
 
-            String updateSQL = "UPDATE `accounts`";
-            updateSQL += "SET `email`='"+email+"',`password`='"+password+"'";
-            updateSQL += "WHERE `username`='"+name+"'";
-            try {
-                Statement statement = AccountLogin.connection.createStatement();
+            sender.sendMessage(MessageUtil.message("&6Contacting API server&7..."));
+            ProxyServer.getInstance().getScheduler().runAsync(DuckTape.get(), () -> {
+                final String password = password(args.getString(1));
+                String updateSQL = "UPDATE `accounts`";
+                updateSQL += "SET `email`='"+email+"',`password`='"+password+"'";
+                updateSQL += "WHERE `username`='"+name+"'";
 
-                // Update the ip for the user
-                statement.execute(updateSQL);
-                sender.sendMessage(MessageUtil.message("&6You have updated your email and password you may login."));
-            }
-            catch (Exception e) {
-                throw new CommandException("Could not update email and password, report at github.com/Year4000/Meta");
-            }
+                try {
+                    Statement statement = AccountLogin.connection.createStatement();
+
+                    // Update the ip for the user
+                    statement.execute(updateSQL);
+                    sender.sendMessage(MessageUtil.message("&6You have updated your email and password you may login."));
+                }
+                catch (Exception e) {
+                    sender.sendMessage(MessageUtil.message("&6Could not update email and password, report at github.com/Year4000/Meta"));
+                }
+            });
         }
     }
 
