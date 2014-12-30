@@ -89,6 +89,7 @@ public class Dashboard extends BukkitModule {
         team.add(split[0]);
 
         // Player settings
+        player.setDisplayName(MessageUtil.replaceColors(color + player.getName() + "&f"));
         player.setPlayerListName(split[0]);
         player.setPlayerListDisplayName(MessageUtil.replaceColors(badge) + player.getName());
 
