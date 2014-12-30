@@ -25,7 +25,7 @@ public class ReplaceWords extends BukkitModule {
     private static final Random random = new Random();
 
     private static final HashMap<Pattern, String[]> replaces = new HashMap<Pattern, String[]>(){{
-        put(toPattern("l|1|7,a|4,g,?y|i|n|g"), new String[]{
+        put(toPattern("l|1|7,a,3,e|4,g,?y|i|n|g"), new String[]{
            "awesome", "fun", "incredible", "amazing", "cool", "wow"
         });
         put(toPattern("e|3|i|1,z,?i|1"), new String[]{
