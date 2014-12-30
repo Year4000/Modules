@@ -25,11 +25,29 @@ public class ReplaceWords extends BukkitModule {
     private static final Random random = new Random();
 
     private static final HashMap<Pattern, String[]> replaces = new HashMap<Pattern, String[]>(){{
-        put(toPattern("l|1|7,a,3,e|4,g,?y|i|n|g"), new String[]{
+        put(toPattern("l|1|7,a|4|e|3,g,?y|i|n|g"), new String[]{
            "awesome", "fun", "incredible", "amazing", "cool", "wow"
         });
         put(toPattern("e|3|i|1,z,?i|1"), new String[]{
             "gg"
+        });
+        put(toPattern("f,u,c,k,?i|n|g,?e|r"), new String[]{
+            "fantastic", "fantasy"
+        });
+        put(toPattern("m,o,t,h,e,r,?f,u,c,k,?i|n|g,?e|r"), new String[]{
+            "fantastic", "fantasy"
+        });
+        put(toPattern("s,h,i,t,?y|i|n|g"), new String[]{
+            "poop"
+        });
+        put(toPattern("b,i,t,c,h,?y|i|n|g"), new String[]{
+            "dog"
+        });
+        put(toPattern("a,s,s"), new String[]{
+            "butt"
+        });
+        put(toPattern("d,a,m,n"), new String[]{
+            "darn"
         });
     }};
 
@@ -64,8 +82,12 @@ public class ReplaceWords extends BukkitModule {
                 Matcher matcher = pattern.matcher(e.getMessage());
 
                 if (matcher.find()) {
-                    boolean allCaps = caps.matcher(matcher.group(1)).matches();
-                    e.setMessage(matcher.replaceAll(getRandomPositiveWord(allCaps, pattern)));
+                    try {
+                        boolean allCaps = caps.matcher(matcher.group(1)).matches();
+                        e.setMessage(matcher.replaceAll(getRandomPositiveWord(allCaps, pattern)));
+                    } catch (IllegalArgumentException ex) {
+                        log(ex, true);
+                    }
                 }
             }
         }
