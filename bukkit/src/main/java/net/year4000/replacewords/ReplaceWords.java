@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @ModuleListeners({ReplaceWords.WordListener.class})
 public class ReplaceWords extends BukkitModule {
 
-    private static final String ANY_LETTER = "(?:\\\\W|_)*";
+    private static final String ANY_LETTER = "(?:\\\\W|\\.)*";
     private static final Pattern caps = Pattern.compile("^[A-Z]{2,}");
     private static final Random random = new Random();
 
@@ -28,7 +28,7 @@ public class ReplaceWords extends BukkitModule {
         put(toPattern("l|1|7,a|4,g,?y|i|n|g"), new String[]{
            "awesome", "fun", "incredible", "amazing", "cool", "wow"
         });
-        put(toPattern("e|3,z"), new String[]{
+        put(toPattern("e|3|i|1,z,?i|1"), new String[]{
             "gg"
         });
     }};
@@ -48,7 +48,7 @@ public class ReplaceWords extends BukkitModule {
                     continue;
                 }
                 t += group;
-                pattern += t + (num == '*' ? "|\\\\W)*" : ")+" + ANY_LETTER);
+                pattern += t + (num == '*' ? "|\\\\W|\\.)*" : ")+" + ANY_LETTER);
             }
             if (i == 0) {
                 pattern += "|(?<!.)(?i)" + ANY_LETTER;
