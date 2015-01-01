@@ -5,12 +5,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.Setter;
 import net.minecraft.server.v1_7_R4.Packet;
-import net.year4000.bages.BadgeManager;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.bukkit.MessageUtil;
+import net.year4000.utilities.bukkit.MessagingChannel;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
@@ -52,7 +53,7 @@ public class Dashboard extends BukkitModule {
     private static BadgeManager manager = new BadgeManager();
 
     // Network
-    public static BungeeConnector connector = new BungeeConnector();
+    public static MessagingChannel connector = new MessagingChannel();
 
     @Override
     public void enable() {
