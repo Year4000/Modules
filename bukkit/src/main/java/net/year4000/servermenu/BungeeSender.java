@@ -1,67 +1,31 @@
 package net.year4000.servermenu;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.year4000.ducktape.bukkit.DuckTape;
-import org.bukkit.Bukkit;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
-@AllArgsConstructor
-public class BungeeSender implements Listener, PluginMessageListener {
+public class BungeeSender implements Listener {
     @Getter
+    @Setter
     private static String currentServer = null;
     private String server;
 
-    public BungeeSender() {
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(DuckTape.get(), "BungeeCord");
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(DuckTape.get(), "BungeeCord", this);
+    public BungeeSender(String server) {
+        this.server = server;
     }
 
     public void send(Player player) {
-        try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(baos)
-        ) {
-            dos.writeUTF("Connect");
-            dos.writeUTF(server);
-            player.sendPluginMessage(DuckTape.get(), "BungeeCord", baos.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        if (!channel.equals("BungeeCord")) return;
-
-        ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        if (in.readUTF().equals("GetServer")) {
-            currentServer = in.readUTF();
-        }
+        ServerMenu.getInst().getConnector().sendToPlayer(player, new String[]{"Connect", server});
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(PlayerInteractEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         if (currentServer != null) return;
 
-        try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(baos)
-        ) {
-            dos.writeUTF("GetServer");
-            event.getPlayer().sendPluginMessage(DuckTape.get(), "BungeeCord", baos.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ServerMenu.getInst().getConnector().send(new String[]{"GetServer"}, (date, error) -> setCurrentServer(date.readUTF()));
     }
 }

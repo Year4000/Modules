@@ -1,11 +1,11 @@
 package net.year4000.hubitems.items.passive;
 
 import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
-import net.year4000.bages.BadgeManager;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.items.PassiveState;
 import net.year4000.utilities.ChatColor;
+import net.year4000.utilities.bukkit.BadgeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;

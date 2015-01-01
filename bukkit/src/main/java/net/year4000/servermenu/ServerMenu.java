@@ -8,6 +8,7 @@ import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.servermenu.menus.MenuManager;
 import net.year4000.servermenu.message.Message;
 import net.year4000.utilities.bukkit.ItemUtil;
+import net.year4000.utilities.bukkit.MessagingChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class ServerMenu extends BukkitModule {
     @Getter
     private static ServerMenu inst;
+    @Getter
+    private MessagingChannel connector;
 
     @Override
     public void load() {
@@ -46,6 +49,8 @@ public class ServerMenu extends BukkitModule {
                 }
             });
         }, 5, TimeUnit.SECONDS);
+
+        connector = MessagingChannel.get();
     }
 
     /** Generate the close button in the player's locale */
