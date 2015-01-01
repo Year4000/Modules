@@ -155,10 +155,41 @@ public class InvMenu {
 
         // Servers
         int servers = oneGroup ? 8 : -1;
+        boolean mapNodes = getServers().stream()
+            .filter(s -> s.getStatus() != null)
+            .filter(s -> s.getStatus().getDescription().contains("|"))
+            .count() > 0L;
 
-        for (ServerJson server : getServers()) {
-            items[++servers] = serverItem(code, server);
+        if (mapNodes) {
+            String[] targets = new String[]{"ENDING", "WAITING", "STARTING", "PLAYING", null};
+
+            for (int i = 0; i < targets.length ; i++) {
+                final int j = i;
+                List<ServerJson> sortedServers;
+
+                if (targets[j] == null) {
+                    sortedServers = getServers().stream()
+                        .filter(s -> s.getStatus() == null)
+                        .collect(Collectors.toList());
+                }
+                else {
+                    sortedServers = getServers().stream()
+                        .filter(s -> s.getStatus() != null)
+                        .filter(s -> s.getStatus().getDescription().contains(targets[j]))
+                        .collect(Collectors.toList());
+                }
+
+                for (ServerJson server : sortedServers) {
+                    items[++servers] = serverItem(code, server);
+                }
+            }
         }
+        else {
+            for (ServerJson server : getServers()) {
+                items[++servers] = serverItem(code, server);
+            }
+        }
+
 
         items[shortMenu ? 8 : invSize - 5] = ServerMenu.closeButton(new Locale(code));
 
@@ -204,12 +235,10 @@ public class InvMenu {
 
         if (server.getStatus() != null) {
             int number = findNumber(server.getName());
+            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, getMapNodesStatus(server.getStatus().getDescription()));
 
-            if (server.getStatus().getPlayers().getOnline() > 0) {
-                item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 4 : (short) 1);
-            }
-            else {
-                item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, (short) 13);
+            if (self) {
+                item = Common.addGlow(item);
             }
 
             ItemMeta meta = item.getItemMeta();
@@ -242,7 +271,12 @@ public class InvMenu {
         //offline
         else {
             int number = findNumber(server.getName());
-            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), number, self ? (short) 4 : (short) 14);
+            item = ItemUtil.makeItem(Material.STAINED_CLAY.name(), -number, (short) 14);
+
+            if (self) {
+                item = Common.addGlow(item);
+            }
+
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtil.replaceColors("&b&l" + server.getName()));
             meta.setLore(Arrays.asList(locale.get("server.offline")));
@@ -250,6 +284,23 @@ public class InvMenu {
         }
 
         return item;
+    }
+
+    private short getMapNodesStatus(String motd) {
+        if (motd.contains("WAITING")) {
+            return 4;
+        }
+        else if (motd.contains("STARTING")) {
+            return 13;
+        }
+        else if (motd.contains("PLAYING")) {
+            return 5;
+        }
+        else if (motd.contains("ENDING")) {
+            return 6;
+        }
+
+        return 13;
     }
 
     /** Find the server's number */
