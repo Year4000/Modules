@@ -1,9 +1,9 @@
 package net.year4000.chat.addons;
 
-import net.year4000.bages.BadgeManager;
 import net.year4000.chat.events.MessageSentEvent;
 import net.year4000.chat.formatter.FormatterManager;
 import net.year4000.chat.Message;
+import net.year4000.utilities.bukkit.BadgeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
