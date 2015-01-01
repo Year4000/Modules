@@ -53,14 +53,14 @@ public class Dashboard extends BukkitModule {
     private static BadgeManager manager = new BadgeManager();
 
     // Network
-    public static MessagingChannel connector = new MessagingChannel();
+    public static MessagingChannel connector;
 
     @Override
     public void enable() {
-        connector.register();
+        connector = MessagingChannel.get();
         color = forever.iterator();
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        SchedulerUtil.repeatSync(() -> {
+        SchedulerUtil.repeatAsync(() -> {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (isEight(player)) {
                     setTabListHeadFoot(player, getTabHeader(), getTabFooter());
