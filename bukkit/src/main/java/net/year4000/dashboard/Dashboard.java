@@ -13,6 +13,7 @@ import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.menus.APIManager;
 import net.year4000.servermenu.menus.ServerJson;
 import net.year4000.utilities.AbstractBadgeManager;
+import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.Pinger;
 import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -82,7 +83,7 @@ public class Dashboard extends BukkitModule {
                     BossBar.setMessage(player, header + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
                 }
 
-                player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(header);
+                player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(fcolor(ChatColor.BOLD, header));
             });
         }, 1, TimeUnit.SECONDS);
 
@@ -116,6 +117,10 @@ public class Dashboard extends BukkitModule {
         }, 2, TimeUnit.SECONDS);
     }
 
+    public static String fcolor(ChatColor color, String message) {
+        return MessageUtil.replaceColors(message.replaceAll(ChatColor.COLOR_CHAR + "([0-9a-fA-F])", "&$1" + color.toString()));
+    }
+
     public static boolean isEight(Player player) {
         return ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion() >= 47;
     }
@@ -130,7 +135,7 @@ public class Dashboard extends BukkitModule {
         sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
         sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
 
-        sidebar.buildSidebar(scoreboard, getTabHeader());
+        sidebar.buildSidebar(scoreboard, fcolor(ChatColor.BOLD, getTabHeader()));
     }
 
     public static Team createUpdateTeam(Player player, Scoreboard scoreboard) {
