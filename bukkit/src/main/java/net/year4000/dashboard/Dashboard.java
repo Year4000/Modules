@@ -9,6 +9,11 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.servermenu.ServerMenu;
+import net.year4000.servermenu.menus.APIManager;
+import net.year4000.servermenu.menus.ServerJson;
+import net.year4000.utilities.AbstractBadgeManager;
+import net.year4000.utilities.Pinger;
 import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
@@ -20,13 +25,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.spigotmc.ProtocolInjector;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ModuleInfo(
     name = "Dashboard",
@@ -49,27 +58,61 @@ public class Dashboard extends BukkitModule {
     // Badges
     private static Set<String> colors = ImmutableSet.of("2", "3", "5", "6", "a", "b", "c", "d", "e");
     private static Iterator<String> random = Iterables.cycle(colors).iterator();
-    private static Scoreboard scoreboard;
+    private static Map<Player, String> nameColors = new WeakHashMap<>();
+    private static Map<Player, Scoreboard> scoreboards = new HashMap<>();
     private static BadgeManager manager = new BadgeManager();
 
     // Network
     public static MessagingChannel connector;
+    @Setter
+    private static AtomicInteger size = new AtomicInteger();
 
     @Override
     public void enable() {
         connector = MessagingChannel.get();
         color = forever.iterator();
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         SchedulerUtil.repeatAsync(() -> {
+            String header = getTabHeader();
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (isEight(player)) {
-                    setTabListHeadFoot(player, getTabHeader(), getTabFooter());
+                    setTabListHeadFoot(player, header, getTabFooter());
                 }
                 else {
                     String ip = "&b" + IP.replaceAll("\\.", "&3.&b");
-                    BossBar.setMessage(player, getTabHeader() + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
+                    BossBar.setMessage(player, header + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
                 }
+
+                player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(header);
             });
+        }, 1, TimeUnit.SECONDS);
+
+        SchedulerUtil.repeatAsync(() -> {
+            if (Bukkit.getOnlinePlayers().size() > 0) {
+                int api = 0;
+
+                for (ServerJson s : APIManager.getServers()) {
+                    Pinger.StatusResponse status = s.getStatus();
+
+                    if (status != null && status.getPlayers().getSample() != null) {
+                        api += status.getPlayers().getOnline() < status.getPlayers().getSample().size() ? status.getPlayers().getSample().size() : status.getPlayers().getOnline();
+                    }
+                    else if (status != null) {
+                        api += status.getPlayers().getOnline();
+                    }
+                }
+
+                if (size.get() != api) {
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        Scoreboard scoreboard = scoreboards.get(player);
+
+                        if (scoreboard != null) {
+                            createSidebar(player, scoreboard);
+                        }
+                    });
+                }
+
+                size.set(api);
+            }
         }, 1, TimeUnit.SECONDS);
     }
 
@@ -77,13 +120,27 @@ public class Dashboard extends BukkitModule {
         return ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion() >= 47;
     }
 
-    public static Team createUpdateTeam(Scoreboard scoreboard, Player player) {
+    public static void createSidebar(Player player, Scoreboard scoreboard) {
+        SidebarManager sidebar = new SidebarManager();
+        AbstractBadgeManager.Badges badge = manager.findBadge(player);
+        String badgeName = badge.name().substring(0, 1) + badge.name().toLowerCase().substring(1);
+
+        sidebar.addBlank();
+        sidebar.addLine("&6Online&7: &a" + size.get());
+        sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
+        sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
+
+        sidebar.buildSidebar(scoreboard, getTabHeader());
+    }
+
+    public static Team createUpdateTeam(Player player, Scoreboard scoreboard) {
         String[] split = split(player);
         String teamId = "tab:" + (BadgeManager.MAX_RANK - manager.findBadge(player).getRank()) + (chars(player.getName()) >> 4);
         Team team = scoreboard.getTeam(teamId) == null ? scoreboard.registerNewTeam(teamId) : scoreboard.getTeam(teamId);
 
         // Team settings
-        String color = "&" + random.next();
+        nameColors.putIfAbsent(player, random.next());
+        String color = "&" + nameColors.get(player);
         String badge = manager.getBadge(player) + " " + color;
         team.setPrefix(MessageUtil.replaceColors(color));
         team.setSuffix(MessageUtil.replaceColors(split[1] + "&f"));
@@ -203,11 +260,18 @@ public class Dashboard extends BukkitModule {
         public void onJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
 
+            if (!scoreboards.containsKey(player)) {
+                scoreboards.put(player, Bukkit.getScoreboardManager().getNewScoreboard());
+            }
+
+            // Scoreboard things
+            Scoreboard scoreboard = scoreboards.get(player);
             player.setScoreboard(scoreboard);
-            createUpdateTeam(scoreboard, player);
+            scoreboards.forEach(Dashboard::createUpdateTeam);
+            SchedulerUtil.runSync(() -> scoreboards.forEach(Dashboard::createUpdateTeam), 1500, TimeUnit.MILLISECONDS);
+            createSidebar(player, scoreboard);
 
-            SchedulerUtil.runSync(() -> createUpdateTeam(scoreboard, player), 1500, TimeUnit.MILLISECONDS);
-
+            // Other
             if (isEight(player)) {
                 setTabListHeadFoot(player, getTabHeader(), getTabFooter());
             }
@@ -216,14 +280,15 @@ public class Dashboard extends BukkitModule {
                 BossBar.setMessage(player, getTabHeader() + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
             }
 
+            // Get Server name
             if (server.equals(UNKNOWN)) {
                 String[] header = new String[] {"GetServer"};
 
-                Dashboard.connector.send(header, (data, error) -> {
+                SchedulerUtil.runSync(() -> Dashboard.connector.send(header, (data, error) -> {
                     if (error == null) {
                         Dashboard.setServer(data.readUTF());
                     }
-                });
+                }), 2, TimeUnit.SECONDS);
             }
         }
     }
