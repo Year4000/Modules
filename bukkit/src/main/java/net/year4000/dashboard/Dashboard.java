@@ -272,8 +272,18 @@ public class Dashboard extends BukkitModule {
             // Scoreboard things
             Scoreboard scoreboard = scoreboards.get(player);
             player.setScoreboard(scoreboard);
-            scoreboards.forEach(Dashboard::createUpdateTeam);
-            SchedulerUtil.runSync(() -> scoreboards.forEach(Dashboard::createUpdateTeam), 1500, TimeUnit.MILLISECONDS);
+            Bukkit.getOnlinePlayers().forEach(other -> {
+                Scoreboard otherScoreboard = scoreboards.get(other);
+                createUpdateTeam(other, scoreboard);
+                createUpdateTeam(player, otherScoreboard);
+            });
+            SchedulerUtil.runSync(() -> {
+                Bukkit.getOnlinePlayers().forEach(other -> {
+                    Scoreboard otherScoreboard = scoreboards.get(other);
+                    createUpdateTeam(other, scoreboard);
+                    createUpdateTeam(player, otherScoreboard);
+                });
+            }, 1500, TimeUnit.MILLISECONDS);
             createSidebar(player, scoreboard);
 
             // Other
