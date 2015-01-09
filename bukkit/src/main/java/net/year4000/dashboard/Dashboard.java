@@ -113,7 +113,7 @@ public class Dashboard extends BukkitModule {
 
                 size.set(api);
             }
-        }, 1, TimeUnit.SECONDS);
+        }, 2, TimeUnit.SECONDS);
     }
 
     public static boolean isEight(Player player) {

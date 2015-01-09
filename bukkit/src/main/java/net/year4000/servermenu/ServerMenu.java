@@ -48,7 +48,7 @@ public class ServerMenu extends BukkitModule {
                     menu.updateServers();
                 }
             });
-        }, 5, TimeUnit.SECONDS);
+        }, 2, TimeUnit.SECONDS);
 
         connector = MessagingChannel.get();
     }
