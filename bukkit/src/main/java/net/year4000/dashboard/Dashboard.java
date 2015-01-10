@@ -277,14 +277,17 @@ public class Dashboard extends BukkitModule {
                 createUpdateTeam(other, scoreboard);
                 createUpdateTeam(player, otherScoreboard);
             });
+            createSidebar(player, scoreboard);
+
+            // Scoreboard things
             SchedulerUtil.runSync(() -> {
                 Bukkit.getOnlinePlayers().forEach(other -> {
                     Scoreboard otherScoreboard = scoreboards.get(other);
                     createUpdateTeam(other, scoreboard);
                     createUpdateTeam(player, otherScoreboard);
                 });
+                createSidebar(player, scoreboard);
             }, 1500, TimeUnit.MILLISECONDS);
-            createSidebar(player, scoreboard);
 
             // Other
             if (isEight(player)) {
