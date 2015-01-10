@@ -83,9 +83,9 @@ public class HubItems extends BukkitModule {
                 String lore = locale.get("gameservers.description");
                 put(0, makeServerMenuIcon(title, lore));
 
-                title = locale.get("classicservers.name") + " &7(" + locale.get("action.right") + ")";
-                lore = locale.get("classicservers.description");
-                put(1, makeServerMenuIcon(title, lore));
+                //title = locale.get("classicservers.name") + " &7(" + locale.get("action.right") + ")";
+                //lore = locale.get("classicservers.description");
+                //put(1, makeServerMenuIcon(title, lore));
 
                 title = locale.get("hubs.name") + " &7(" + locale.get("action.right") + ")";
                 lore = locale.get("hubs.description");
