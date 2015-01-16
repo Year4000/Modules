@@ -72,10 +72,17 @@ public final class APIManager {
         return servers.values();
     }
 
-    /** Get the collection of all the servers */
+    /** Get the map of all players in a group */
     public static Map<String, ServerJson.Count> getServerPlayerCount() {
         ServerJson.PlayerCount count = gson.fromJson(getCountAPI(), ServerJson.PlayerCount.class);
 
         return count.getGroups();
+    }
+
+    /** Get the count of all the players */
+    public static ServerJson.Count getNetworkPlayerCount() {
+        ServerJson.PlayerCount count = gson.fromJson(getCountAPI(), ServerJson.PlayerCount.class);
+
+        return count.getNetwork();
     }
 }

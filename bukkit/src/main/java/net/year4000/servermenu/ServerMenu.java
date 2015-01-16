@@ -7,11 +7,14 @@ import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.servermenu.menus.MenuManager;
 import net.year4000.servermenu.message.Message;
+import net.year4000.utilities.Callback;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +30,23 @@ public class ServerMenu extends BukkitModule {
     private static ServerMenu inst;
     @Getter
     private MessagingChannel connector;
+    private final Callback<MenuManager> callbackData = (data, error) -> {
+        if (error == null) {
+            data.getMenus().values().parallelStream().forEach(menu -> {
+                if (menu.needNewInventory()) {
+                    menu.regenerateMenuViews();
+                }
+                else {
+                    menu.updateServers();
+                }
+            });
+        }
+        else {
+            ServerMenu.log(new Exception(error), true);
+        }
+
+        loopData();
+    };
 
     @Override
     public void load() {
@@ -36,21 +56,25 @@ public class ServerMenu extends BukkitModule {
     @Override
     public void enable() {
         // async thread that pull the data and updates the menus
-        SchedulerUtil.repeatAsync(() -> {
-            MenuManager manager = MenuManager.get();
-
-            manager.pullAPIData();
-            manager.getMenus().values().parallelStream().forEach(menu -> {
-                if (menu.needNewInventory()) {
-                    menu.regenerateMenuViews();
-                }
-                else {
-                    menu.updateServers();
-                }
-            });
-        }, 2, TimeUnit.SECONDS);
+        loopData();
 
         connector = MessagingChannel.get();
+    }
+
+    public void loopData() {
+        SchedulerUtil.runAsync(() -> {
+            MenuManager manager = MenuManager.get();
+
+            try {
+                manager.pullAPIData();
+            } catch (Throwable t) {
+                callbackData.callback(null, t);
+            } finally {
+                callbackData.callback(manager, null);
+            }
+
+            ServerMenu.debug("API for ServerMenu received at: " + new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis())));
+        });
     }
 
     /** Generate the close button in the player's locale */
