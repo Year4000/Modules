@@ -141,15 +141,18 @@ public class InvMenu {
                 if (!manager.getGroups().stream().map(ServerJson.Group::getName).collect(Collectors.toSet()).contains(item)) continue;
 
                 ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
-                items[++count] = createItemBar(count, group, code, (int) manager.getServers().stream().filter(s -> s.getGroup().getName().equals(item)).count());
+                ServerJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new ServerJson.Count());
+
+                items[++count] = createItemBar(count, group, code, (int) manager.getServers().stream().filter(s -> s.getGroup().getName().equals(item)).count(), playerCounter.getOnline(), playerCounter.getMax());
             }
 
             // Hub Icon
             if (Settings.get().isHub()) {
                 InvMenu hubs = new InvMenu(manager, true, false, Settings.get().getHubGroup());
                 ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(Settings.get().getHubGroup())).findAny().get();
+                ServerJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new ServerJson.Count());
 
-                items[8] = createItemBar(ITEMS.size() - 1, group, code, hubs.serversCount);
+                items[8] = createItemBar(ITEMS.size() - 1, group, code, hubs.serversCount, playerCounter.getOnline(), playerCounter.getMax());
             }
         }
 
@@ -199,7 +202,7 @@ public class InvMenu {
     // Create the menu items //
 
     /** Create the item in the menu bar */
-    private ItemStack createItemBar(int count, ServerJson.Group menu, String code, int servers) {
+    private ItemStack createItemBar(int count, ServerJson.Group menu, String code, int servers, int players, int max) {
         Message locale = new Message(code);
         ItemStack item = ItemUtil.makeItem(ITEMS.toArray(new Material[ITEMS.size()])[count].name());
         ItemMeta meta = item.getItemMeta();
@@ -208,6 +211,7 @@ public class InvMenu {
         String menuName = this.menu;
         meta.setLore(new ArrayList<String>() {{
             add(locale.get("menu.servers", servers));
+            add(locale.get("menu.players", players, max));
 
             if (!menu.getName().equals(menuName)) {
                 add("");

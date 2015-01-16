@@ -38,7 +38,10 @@ public class Settings extends Config {
     private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/servermenu/locales/";
 
     @Comment("The api server that we will grab the servers from")
-    private String api = "https://api.year4000.net/servers/";
+    private String serversApi = "https://api.year4000.net/servers";
+
+    @Comment("The api server that we will grab the player count from")
+    private String playerCountApi = "https://api.year4000.net/player-count";
 
     @Comment("Should the menus have a return to hub button.")
     private boolean hub = false;

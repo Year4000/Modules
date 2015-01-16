@@ -10,10 +10,7 @@ import net.year4000.utilities.bukkit.BukkitLocale;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -31,6 +28,7 @@ public class MenuManager {
     private Map<String, InvMenu> menus = new ConcurrentHashMap<>();
     private Collection<ServerJson> servers;
     private Collection<ServerJson.Group> groups;
+    private Map<String, ServerJson.Count> playerCountGroups = new HashMap<>();
 
     public MenuManager() {
         pullAPIData();
@@ -83,6 +81,7 @@ public class MenuManager {
         try {
             servers = APIManager.getServers();
             groups = APIManager.getGroups(servers);
+            playerCountGroups = APIManager.getServerPlayerCount();
         } catch (Exception e) {
             ServerMenu.debug(e, true);
         }
