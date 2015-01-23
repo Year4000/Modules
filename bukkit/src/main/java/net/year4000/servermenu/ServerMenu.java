@@ -74,7 +74,7 @@ public class ServerMenu extends BukkitModule {
             }
 
             ServerMenu.debug("API for ServerMenu received at: " + new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis())));
-        });
+        }, 1, TimeUnit.SECONDS);
     }
 
     /** Generate the close button in the player's locale */
