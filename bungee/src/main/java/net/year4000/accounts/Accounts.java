@@ -1,8 +1,11 @@
 package net.year4000.accounts;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -121,6 +124,26 @@ public class Accounts extends BungeeModule {
                     event.setCancelReason(e.getMessage());
                     event.setCancelled(true);
                 }
+            }
+        }
+
+        @EventHandler
+        public void onLogin(PostLoginEvent event) {
+            String ip = BASE_URL + "accounts/" + event.getPlayer().getUniqueId() + "?key=" + MASTER_KEY;
+
+            // Get player account
+            try {
+                URL url = new URL(ip);
+                JsonObject object = gson.fromJson(new InputStreamReader(url.openStream()), JsonObject.class);
+                JsonArray permissions = object.get("permissions").getAsJsonArray();
+                permissions.forEach(element -> {
+                    event.getPlayer().addGroups(element.getAsString());
+                    event.getPlayer().setPermission(element.getAsString(), true);
+                });
+            }
+            // Account does not exist
+            catch (IOException ioe) {
+                Accounts.debug(ioe, false);
             }
         }
     }

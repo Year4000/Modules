@@ -10,6 +10,6 @@ public final class LinkerBaseCommand {
         desc = "Base command to manage servers."
     )
     @NestedCommand(LinkerCommands.class)
-    @CommandPermissions("serverlinker.admin")
+    @CommandPermissions("omega", "serverlinker.admin")
     public static void linker(final CommandContext args, CommandSender sender) throws CommandException {}
 }

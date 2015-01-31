@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
     name = "eggbow.name",
     icon = Material.BOW,
     description = "eggbow.description",
-    permission = {"mu" , "eggbow.permission"},
+    permission = {"mu", "pi", "sigma", "phi", "delta", "sigma", "eggbow.permission"},
     mana = 0.05F,
     action = Action.RIGHT
 )

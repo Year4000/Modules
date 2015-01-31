@@ -21,7 +21,7 @@ public final class AnnouncerSub {
         min = 0,
         max = 1
     )
-    @CommandPermissions({"announcer.admin", "announcer.reload"})
+    @CommandPermissions({"omega", "announcer.admin", "announcer.reload"})
     public static void reload(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         InMessage locale = new InMessage(player);
@@ -38,7 +38,7 @@ public final class AnnouncerSub {
         min = 1,
         max = 2
     )
-    @CommandPermissions({"announcer.admin", "announcer.list"})
+    @CommandPermissions({"omega", "announcer.admin", "announcer.list"})
     public static void list(final CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         InMessage locale = new InMessage(player);
@@ -72,7 +72,7 @@ public final class AnnouncerSub {
         usage = "[server|global] [messages]",
         min = 2
     )
-    @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.add"})
+    @CommandPermissions({"omega", "announcer.admin", "announcer.edit", "announcer.add"})
     public static void add(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         InMessage locale = new InMessage(player);
@@ -94,7 +94,7 @@ public final class AnnouncerSub {
         min = 2,
         max = 2
     )
-    @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.remove"})
+    @CommandPermissions({"omega", "announcer.admin", "announcer.edit", "announcer.remove"})
     public static void remove(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         InMessage locale = new InMessage(player);
@@ -119,7 +119,7 @@ public final class AnnouncerSub {
         usage = "[setting] [option]",
         min = 1
     )
-    @CommandPermissions({"announcer.admin", "announcer.edit", "announcer.setting"})
+    @CommandPermissions({"omega", "announcer.admin", "announcer.edit", "announcer.setting"})
     public static void setting(CommandContext args, CommandSender sender) throws CommandException {
         ProxiedPlayer player = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
         InMessage locale = new InMessage(player);

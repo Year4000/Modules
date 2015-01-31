@@ -9,7 +9,7 @@ public final class ListBase {
         desc = "ServerList base command."
     )
     @NestedCommand({ListSub.class})
-    @CommandPermissions({"serverlist.admin", "serverlist.list"})
+    @CommandPermissions({"omega", "serverlist.admin", "serverlist.list"})
     public static void announcer(CommandContext args, CommandSender sender) throws CommandException {
         // empty
     }

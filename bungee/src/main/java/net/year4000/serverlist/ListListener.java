@@ -29,8 +29,7 @@ import static net.year4000.utilities.bungee.MessageUtil.replaceColors;
 public class ListListener implements Listener {
     private static final int MOTD_MAX = 55; // 50 + 5 for indicator size
     private final LoadingCache<PingServer, AbstractMap.Entry<ServerPing, ProxyPingEvent.AnimatedPing>> ping = CacheBuilder.newBuilder()
-        .maximumSize(1000)
-        .expireAfterWrite(new Settings().getCache(), TimeUnit.SECONDS)
+        .expireAfterAccess(new Settings().getCache(), TimeUnit.SECONDS)
         .build(new CacheLoader<PingServer, AbstractMap.Entry<ServerPing, ProxyPingEvent.AnimatedPing>>() {
             @Override
             public AbstractMap.Entry<ServerPing, ProxyPingEvent.AnimatedPing> load(PingServer pingServer) throws Exception {
@@ -88,7 +87,8 @@ public class ListListener implements Listener {
                 if (config.isAnimated() && pingServer.getPlayer(ip) != null) {
                     ping = new ProxyPingEvent.AnimatedPing();
                     int count = pingServer.getResponse().getPlayers().getOnline();
-                    int randCount = (new Random().nextInt(10) + 1);
+                    int log = (int) Math.log(count) * 10;
+                    int randCount = (new Random().nextInt(log) + 1);
                     ping.setDelay(config.getAnimatedDelay());
                     char[] original = pingServer.getResponse().getDescription().toCharArray();
                     String type = "";
@@ -107,7 +107,7 @@ public class ListListener implements Listener {
 
                             ping.getResponses().add(new ServerPing(pingServer.getResponse().getVersion(), new ServerPing.Players(pingServer.getResponse().getPlayers().getMax(), online, pingServer.getResponse().getPlayers().getSample()), type, pingServer.getResponse().getFaviconObject()));
                         }
-                        randCount = (new Random().nextInt(10) + 1);
+                        randCount = (new Random().nextInt(log) + 1);
                     }
                 }
 

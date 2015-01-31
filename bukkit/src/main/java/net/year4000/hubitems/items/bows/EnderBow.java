@@ -24,7 +24,7 @@ import java.util.WeakHashMap;
     name = "enderbow.name",
     icon = Material.BOW,
     description = "enderbow.description",
-    permission = {"theta" , "enderbow.permission"},
+    permission = {"theta", "mu", "pi", "sigma", "phi", "delta", "sigma", "enderbow.permission"},
     mana = 0.15F,
     action = Action.RIGHT
 )

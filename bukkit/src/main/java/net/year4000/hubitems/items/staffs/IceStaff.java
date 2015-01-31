@@ -28,7 +28,7 @@ import java.util.*;
     name = "icestaff.name",
     icon = Material.DIAMOND_HOE,
     description = "icestaff.description",
-    //permission = {"mu" , "icestaff.permission"},
+    permission = {"mu", "pi", "sigma", "phi", "delta", "sigma", "icestaff.permission"},
     mana = 0.08F,
     action = Action.LEFT
 )

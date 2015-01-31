@@ -1,5 +1,6 @@
 package net.year4000.chat;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.year4000.chat.addons.Emoji;
@@ -11,6 +12,9 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
 import net.year4000.utilities.bukkit.MessageUtil;
+import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 @ModuleInfo(
     name = "Chat",
@@ -35,7 +39,7 @@ public class Chat extends BukkitModule {
     public static final String PLAYER_NAME = "player";
     public static final String PLAYER_LOCALE = "player";
     public static final String PLAYER_COLORS = "colors";
-    public static final String COLOR_PERMISSION = "echat.colors";
+    private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
     public static final Gson GSON = new GsonBuilder().setVersion(CHAT_VERSION).create();
     private static Chat inst;
 
@@ -63,5 +67,16 @@ public class Chat extends BukkitModule {
         FormatterManager.get().addFormatter("message", m -> Boolean.parseBoolean(m.getMeta(Chat.PLAYER_COLORS)) ? MessageUtil.replaceColors(m.getMessage()) : m.getMessage());
         FormatterManager.get().addFormatter(Chat.PLAYER_DISPLAY, m -> m.isMeta(Chat.PLAYER_DISPLAY) ? m.getMeta(Chat.PLAYER_DISPLAY) : m.getActorName());
         FormatterManager.get().addFormatter(Chat.PLAYER_LOCALE, m -> m.isMeta(Chat.PLAYER_LOCALE) ? m.getMeta(Chat.PLAYER_LOCALE) : m.getActorName());
+    }
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(Player player) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

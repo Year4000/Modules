@@ -1,5 +1,6 @@
 package net.year4000.dressup;
 
+import com.google.common.collect.ImmutableSet;
 import net.year4000.dressup.message.Message;
 import net.year4000.utilities.bukkit.FunEffectsUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
@@ -62,7 +63,7 @@ public class DressListener implements Listener {
         }
 
         if (lastOpened.get(player) != null && !playerItems.contains(event.getCurrentItem())) {
-            if (player.hasPermission("theta")) {
+            if (isVIP(player)) {
                 // Hat
                 if (lastOpened.get(player).equals(Settings.HAT)) {
                     player.sendMessage(locale.get("set.hat"));
@@ -120,5 +121,18 @@ public class DressListener implements Listener {
         if (event.getPlayer() instanceof Player) {
             lastOpened.remove(event.getPlayer());
         }
+    }
+
+    private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(Player player) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

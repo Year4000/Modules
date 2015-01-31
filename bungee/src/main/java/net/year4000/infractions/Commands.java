@@ -15,7 +15,7 @@ public final class Commands {
     };
 
     @Command(aliases = {"bans"}, desc = "")
-    @CommandPermissions({"infractions.staff", "infractions.ban"})
+    @CommandPermissions({"omega", "infractions.staff", "infractions.ban"})
     public static void bans(CommandContext args, CommandSender sender) throws CommandException {
         Infractions.getStorage().read(FileStorage.STORAGE);
         sender.sendMessage(MessageUtil.message("&6Infractions storage file is reloaded."));
@@ -27,7 +27,7 @@ public final class Commands {
             desc = "Get all the infractions of a player",
             min = 1
     )
-    @CommandPermissions({"infractions.staff", "infractions.infractions"})
+    @CommandPermissions({"omega", "infractions.staff", "infractions.infractions"})
     public static void infractions(CommandContext args, CommandSender sender) throws CommandException {
         String name = args.getString(0);
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
@@ -60,7 +60,7 @@ public final class Commands {
         flags = "fs",
         min = 1
     )
-    @CommandPermissions({"infractions.staff", "infractions.ban"})
+    @CommandPermissions({"omega", "infractions.staff", "infractions.ban"})
     public static void ban(CommandContext args, CommandSender sender) throws CommandException {
         // Set up the fields.
         String name = args.getString(0), message = "";
@@ -106,7 +106,7 @@ public final class Commands {
             flags = "fs",
             min = 1
     )
-    @CommandPermissions({"infractions.staff", "infractions.lock"})
+    @CommandPermissions({"omega", "infractions.staff", "infractions.lock"})
     public static void lock(CommandContext args, CommandSender sender) throws CommandException {
         //throw new CommandException("Currently Disabled util Account System is out");
         // Set up the fields.
@@ -161,7 +161,7 @@ public final class Commands {
             flags = "s",
             min = 1
     )
-    @CommandPermissions({"infractions.staff", "infractions.kick"})
+    @CommandPermissions({"omega", "infractions.staff", "infractions.kick"})
     public static void kick(CommandContext args, CommandSender sender) throws CommandException {
         // Set up the fields.
         String name = args.getString(0), message = "";

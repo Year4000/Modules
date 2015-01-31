@@ -23,7 +23,7 @@ public final class RamCommands {
         flags = "t:",
         max = 1
     )
-    @CommandPermissions({"eramtweaks.restart"})
+    @CommandPermissions({"omega", "eramtweaks.restart"})
     public static void restart(CommandContext args, CommandSender sender) throws CommandException {
         new ShutdownMessage(args.hasFlag('t') ? args.getFlagInteger('t') : 10);
     }
@@ -32,7 +32,7 @@ public final class RamCommands {
         aliases = {"uptime"},
         desc = "Get the uptime of the server."
     )
-    @CommandPermissions({"eramtweaks.uptime"})
+    @CommandPermissions({"omega", "eramtweaks.uptime"})
     public static void uptime(CommandContext args, CommandSender sender) throws CommandException {
         long starttime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
@@ -46,7 +46,7 @@ public final class RamCommands {
         aliases = {"info", "serverinfo", "sinfo"},
         desc = "Get server information"
     )
-    @CommandPermissions({"eramtweaks.info"})
+    @CommandPermissions({"omega", "eramtweaks.info"})
     public static void serverInfo(CommandContext args, CommandSender sender) throws CommandException {
         Message locale = new Message(sender);
         Runtime rt = Runtime.getRuntime();
@@ -94,7 +94,7 @@ public final class RamCommands {
         aliases = {"unload"},
         desc = "Unloads all loaded chunks."
     )
-    @CommandPermissions({"eramtweaks.unload"})
+    @CommandPermissions({"omega", "eramtweaks.unload"})
     public static void unloadChunks(CommandContext args, CommandSender sender) throws CommandException {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(MessageUtil.message(new Message(player).get("unload.notice")));
@@ -121,7 +121,7 @@ public final class RamCommands {
         aliases = {"chunks", "mem"},
         desc = "Get chunk data on each loaded world."
     )
-    @CommandPermissions({"eramtweaks.chunks"})
+    @CommandPermissions({"omega", "eramtweaks.chunks"})
     public static void loadedChunks(CommandContext args, CommandSender sender) throws CommandException {
         Message locale = new Message(sender);
         int totalChunks = 0;

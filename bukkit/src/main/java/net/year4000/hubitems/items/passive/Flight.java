@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
     name = "flight.name",
     icon = Material.ARROW,
     description = "flight.description",
-    permission = {"pi", "flight.permission"},
+    permission = {"pi", "sigma", "phi", "delta", "sigma", "flight.permission"},
     passive = PassiveState.ALLWAYS_ON
 )
 public class Flight extends FunItem {
