@@ -19,7 +19,7 @@ public final class RamCommands {
         flags = "t:",
         max = 1
     )
-    @CommandPermissions({"eramtweaks.restart"})
+    @CommandPermissions({"omega", "eramtweaks.restart"})
     public static void restart(CommandContext args, CommandSender sender) throws CommandException {
         new ShutdownMessage(args.hasFlag('t') ? args.getFlagInteger('t') : 10);
     }
@@ -28,7 +28,7 @@ public final class RamCommands {
         aliases = {"guptime"},
         desc = "Get the uptime of the network."
     )
-    @CommandPermissions({"eramtweaks.uptime"})
+    @CommandPermissions({"omega", "eramtweaks.uptime"})
     public static void uptime(CommandContext args, CommandSender sender) throws CommandException {
         long starttime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
@@ -42,7 +42,7 @@ public final class RamCommands {
         aliases = {"ginfo"},
         desc = "Get server information"
     )
-    @CommandPermissions({"eramtweaks.info"})
+    @CommandPermissions({"omega", "eramtweaks.info"})
     public static void serverInfo(CommandContext args, CommandSender sender) throws CommandException {
         Message locale = new Message(sender);
         Runtime rt = Runtime.getRuntime();

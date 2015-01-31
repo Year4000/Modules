@@ -3,6 +3,7 @@ package net.year4000.serverlinker;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
@@ -19,6 +20,7 @@ import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
 import java.net.InetSocketAddress;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
@@ -35,6 +37,7 @@ public class ServerLinker extends BungeeModule {
     @Getter
     @Setter
     private ScheduledTask updateclock;
+    private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta", "omega");
     private LoadingCache<String, ServerInfo> lowestHub = CacheBuilder.newBuilder()
         .maximumSize(1)
         .expireAfterAccess(5, TimeUnit.SECONDS)
@@ -118,7 +121,18 @@ public class ServerLinker extends BungeeModule {
 
     /** Would the command sender have permissions. */
     public static boolean hasPerms(CommandSender sender) {
-        return sender.hasPermission("serverlinker.admin") || sender.hasPermission("serverlinker.*");
+        return isVIP(sender) || sender.hasPermission("serverlinker.admin") || sender.hasPermission("serverlinker.*");
+    }
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(CommandSender player) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
