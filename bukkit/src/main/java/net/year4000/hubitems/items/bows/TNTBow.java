@@ -27,7 +27,8 @@ import java.util.WeakHashMap;
     name = "tntbow.name",
     icon = Material.BOW,
     description = "tntbow.description",
-    permission = {"pi", "sigma", "phi", "delta", "omega", "tntbow.permission"},
+    permissionLocale = "tntbow.permission",
+    permission = {"pi", "sigma", "phi", "delta", "omega"},
     mana = 0.25F,
     action = Action.RIGHT
 )

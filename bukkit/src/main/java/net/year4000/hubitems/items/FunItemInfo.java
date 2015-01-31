@@ -22,6 +22,9 @@ public @interface FunItemInfo {
     /** The permission required to use this item */
     public String[] permission() default {};
 
+    /** The permission locale message */
+    public String permissionLocale() default "";
+
     /** Is this ability passive */
     public PassiveState passive() default PassiveState.NONE;
 

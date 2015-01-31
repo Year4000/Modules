@@ -77,7 +77,7 @@ public class FunItemManager {
             // permission if needed
             if (!isVIP(player, item.permission())) {
                 add("");
-                for (String string : Common.loreDescription(locale.get(item.permission()[item.permission().length - 1]))) {
+                for (String string : Common.loreDescription(locale.get(item.permissionLocale()))) {
                     add(MessageUtil.replaceColors("&6" + string));
                 }
             }

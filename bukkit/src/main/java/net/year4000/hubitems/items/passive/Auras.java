@@ -18,7 +18,8 @@ import org.bukkit.util.Vector;
     name = "auras.name",
     icon = Material.BLAZE_ROD,
     description = "auras.description",
-    permission = {"theta", "mu", "pi", "sigma", "phi", "delta", "omega", "auras.permission"},
+    permissionLocale = "auras.permission",
+    permission = {"theta", "mu", "pi", "sigma", "phi", "delta", "omega"},
     passive = PassiveState.ALLWAYS_ON
 )
 public class Auras extends FunItem {
