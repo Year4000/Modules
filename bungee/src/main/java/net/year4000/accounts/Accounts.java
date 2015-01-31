@@ -136,12 +136,10 @@ public class Accounts extends BungeeModule {
                 URL url = new URL(ip);
                 JsonObject object = gson.fromJson(new InputStreamReader(url.openStream()), JsonObject.class);
                 JsonArray permissions = object.get("permissions").getAsJsonArray();
-                Accounts.log(permissions.toString());
                 permissions.forEach(element -> {
                     event.getPlayer().addGroups(element.getAsString());
                     event.getPlayer().setPermission(element.getAsString(), true);
                 });
-                Accounts.log(event.getPlayer().getPermissions().toString());
             }
             // Account does not exist
             catch (IOException ioe) {
