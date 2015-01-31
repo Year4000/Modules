@@ -41,7 +41,10 @@ public class Accounts extends BungeeModule {
             try {
                 URL url = new URL(ip);
                 JsonObject object = gson.fromJson(new InputStreamReader(url.openStream()), JsonObject.class);
-                ip = object.get("last_ip").getAsString();
+
+                if (object.get("last_ip") != null) {
+                    ip = object.get("last_ip").getAsString();
+                }
             }
             // Account does not exist
             catch (IOException ioe) {
@@ -135,11 +138,13 @@ public class Accounts extends BungeeModule {
             try {
                 URL url = new URL(ip);
                 JsonObject object = gson.fromJson(new InputStreamReader(url.openStream()), JsonObject.class);
-                JsonArray permissions = object.get("permissions").getAsJsonArray();
-                permissions.forEach(element -> {
-                    event.getPlayer().addGroups(element.getAsString());
-                    event.getPlayer().setPermission(element.getAsString(), true);
-                });
+                if (object.get("permissions") != null) {
+                    JsonArray permissions = object.get("permissions").getAsJsonArray();
+                    permissions.forEach(element -> {
+                        event.getPlayer().addGroups(element.getAsString());
+                        event.getPlayer().setPermission(element.getAsString(), true);
+                    });
+                }
             }
             // Account does not exist
             catch (IOException ioe) {
