@@ -78,6 +78,7 @@ public class Accounts extends BungeeModule {
                     login.addProperty("ip", event.getConnection().getAddress().getAddress().getHostAddress());
                     JsonObject meta = new JsonObject();
                     meta.addProperty("username", event.getConnection().getName());
+                    meta.addProperty("version", event.getConnection().getVersion());
                     login.add("meta", meta);
 
                     gson.toJson(login, writer);
