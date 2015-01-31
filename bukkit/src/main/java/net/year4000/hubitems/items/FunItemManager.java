@@ -1,5 +1,6 @@
 package net.year4000.hubitems.items;
 
+import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
 import net.year4000.hubitems.HubItems;
 import net.year4000.hubitems.ItemActor;
@@ -74,12 +75,10 @@ public class FunItemManager {
             }
 
             // permission if needed
-            if (item.permission().length == 2) {
-                if (!player.hasPermission(item.permission()[0])) {
-                    add("");
-                    for (String string : Common.loreDescription(locale.get(item.permission()[1]))) {
-                        add(MessageUtil.replaceColors("&6" + string));
-                    }
+            if (!isVIP(player, item.permission())) {
+                add("");
+                for (String string : Common.loreDescription(locale.get(item.permission()[item.permission().length - 1]))) {
+                    add(MessageUtil.replaceColors("&6" + string));
                 }
             }
         }});
@@ -99,7 +98,7 @@ public class FunItemManager {
             FunItemInfo info = itemInfo.get(i - 9);
             items[i] = makeItem(player, info);
 
-            if (info.permission().length == 2 && !player.hasPermission(info.permission()[0])) continue;
+            if (!isVIP(player, info.permission())) continue;
 
             boolean pendingGlow = info.passive().isActive();
 
@@ -125,5 +124,16 @@ public class FunItemManager {
         }
 
         return items;
+    }
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(Player player, String... VIPS) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

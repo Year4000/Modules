@@ -28,7 +28,7 @@ import java.util.*;
     name = "corruptedstaff.name",
     icon = Material.IRON_HOE,
     description = "corruptedstaff.description",
-    permission = {"sigma", "phi", "delta", "sigma", "corruptedstaff.permission"},
+    permission = {"sigma", "phi", "delta", "omega", "corruptedstaff.permission"},
     mana = 0.2F,
     action = Action.LEFT
 )

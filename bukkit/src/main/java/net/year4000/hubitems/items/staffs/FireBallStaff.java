@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
     name = "fireballstaff.name",
     icon = Material.STONE_HOE,
     description = "fireballstaff.description",
-    permission = {"mu", "pi", "sigma", "phi", "delta", "sigma", "fireballstaff.permission"},
+    permission = {"mu", "pi", "sigma", "phi", "delta", "omega", "fireballstaff.permission"},
     mana = 0.1F,
     action = Action.LEFT
 )
