@@ -3,6 +3,7 @@ package net.year4000.hubitems.items.passive;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
+import net.year4000.hubitems.items.FunItemManager;
 import net.year4000.hubitems.items.PassiveState;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,10 +28,10 @@ public class Flight extends FunItem {
             Player player = event.getPlayer();
 
             try {
-                player.setAllowFlight(player.hasPermission(info.permission()[0]));
+                player.setAllowFlight(FunItemManager.isVIP(player, info.permission()));
             } catch (Exception e) {
                 player.kickPlayer(e.getMessage());
             }
-        }, 1, TimeUnit.SECONDS);
+        }, 10, TimeUnit.SECONDS);
     }
 }
