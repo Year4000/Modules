@@ -113,6 +113,7 @@ public class Accounts extends BungeeModule {
                         JsonObject minecraft = new JsonObject();
                         minecraft.addProperty("username", event.getConnection().getName());
                         minecraft.addProperty("uuid", event.getConnection().getUniqueId().toString());
+                        minecraft.addProperty("version", event.getConnection().getVersion());
                         create.add("minecraft", minecraft);
 
                         gson.toJson(create, writer);
