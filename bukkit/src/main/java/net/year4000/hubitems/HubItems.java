@@ -10,10 +10,7 @@ import net.year4000.hubitems.items.FunItemManager;
 import net.year4000.hubitems.items.bows.EggBow;
 import net.year4000.hubitems.items.bows.EnderBow;
 import net.year4000.hubitems.items.bows.TNTBow;
-import net.year4000.hubitems.items.passive.Auras;
-import net.year4000.hubitems.items.passive.Flight;
-import net.year4000.hubitems.items.passive.NightVision;
-import net.year4000.hubitems.items.passive.Speed;
+import net.year4000.hubitems.items.passive.*;
 import net.year4000.hubitems.items.shows.FireworkShow;
 import net.year4000.hubitems.items.staffs.CorruptedStaff;
 import net.year4000.hubitems.items.staffs.FireBallStaff;
@@ -28,7 +25,9 @@ import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.items.NBT;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,6 +40,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,6 +62,7 @@ import java.util.concurrent.TimeUnit;
     Speed.class,
     Flight.class,
     Auras.class,
+    Dress.class,
     // Items
     IceStaff.class,
     FireBallStaff.class,
@@ -83,13 +84,16 @@ public class HubItems extends BukkitModule {
                 String lore = locale.get("gameservers.description");
                 put(0, makeServerMenuIcon(title, lore));
 
-                //title = locale.get("classicservers.name") + " &7(" + locale.get("action.right") + ")";
-                //lore = locale.get("classicservers.description");
-                //put(1, makeServerMenuIcon(title, lore));
-
                 title = locale.get("hubs.name") + " &7(" + locale.get("action.right") + ")";
                 lore = locale.get("hubs.description");
-                put(8, makeServerMenuIcon(title, lore));
+                put(1, makeServerMenuIcon(title, lore));
+
+                NBT nbt = GSON.fromJson("{'display':{}}", NBT.class);
+                nbt.getDisplay().setName("&a&lPLAYER_NAME &7(" + locale.get("action.right") + ")");
+                nbt.getDisplay().setLore(Common.loreDescription(locale.get("player.description")));
+                ItemStack head = ItemUtil.makeItem("skull_item", 1, (short) 3);
+                head.setItemMeta(ItemUtil.addMeta(head, GSON.toJson(nbt)));
+                put(8, head);
             }});
         });
     }};
@@ -120,6 +124,23 @@ public class HubItems extends BukkitModule {
         return new Locale(MessageManager.get().isLocale(code) ? code : Message.DEFAULT_LOCALE);
     }
 
+    private static void updateHotBar(Player player, Inventory inv) {
+        HOT_BAR.get(getLocaleOrDefault(player)).forEach((index, item) -> {
+            ItemStack cloned = item.clone();
+            ItemMeta meta = cloned.getItemMeta();
+            meta.setDisplayName(meta.getDisplayName().replace("PLAYER_NAME", player.getName()));
+            cloned.setItemMeta(meta);
+
+            if (cloned.getType() == Material.SKULL_ITEM || cloned.getType() == Material.SKULL) {
+                SkullMeta skull = (SkullMeta) cloned.getItemMeta();
+                skull.setOwner(player.getUniqueId().toString());
+                cloned.setItemMeta(skull);
+            }
+
+            inv.setItem(index, cloned);
+        });
+    }
+
     /** The listeners that control this module */
     public static class HubListener implements Listener {
         @EventHandler
@@ -140,14 +161,14 @@ public class HubItems extends BukkitModule {
 
                     if (!FunItemManager.get().getItemMaterials().contains(item.getType())) {
                         inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                        HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
+                        updateHotBar(player, inv);
                         ItemActor.get(player).applyFunItem();
                     }
                     // Remove self then reset item contents
                     else {
                         ItemActor.get(player).setCurrentItem(null);
                         inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                        HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
+                        updateHotBar(player, inv);
                     }
 
                     player.updateInventory();
@@ -165,7 +186,7 @@ public class HubItems extends BukkitModule {
                 try {
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-                    HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
+                    updateHotBar(player, inv);
                     player.updateInventory();
                 } catch (Exception e) {
                     player.kickPlayer(e.getMessage());
@@ -179,7 +200,7 @@ public class HubItems extends BukkitModule {
 
             Inventory inv = player.getInventory();
             inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-            HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
+            updateHotBar(player, inv);
             ItemActor.get(player).applyFunItem();
             player.updateInventory();
         }
@@ -190,7 +211,7 @@ public class HubItems extends BukkitModule {
 
             Inventory inv = player.getInventory();
             inv.setContents(FunItemManager.get().loadItems(event.getPlayer()));
-            HOT_BAR.get(getLocaleOrDefault(event.getTo())).forEach(inv::setItem);
+            updateHotBar(player, inv);
 
             ItemActor.get(player).applyFunItem();
             player.updateInventory();
@@ -216,7 +237,7 @@ public class HubItems extends BukkitModule {
 
                     Inventory inv = player.getInventory();
                     inv.setContents(FunItemManager.get().loadItems(player));
-                    HOT_BAR.get(getLocaleOrDefault(player)).forEach(inv::setItem);
+                    updateHotBar(player, inv);
 
                     // apply the items
                     ItemActor.get(player).applyFunItem(info);
