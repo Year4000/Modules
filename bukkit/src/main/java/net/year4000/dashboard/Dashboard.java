@@ -79,8 +79,12 @@ public class Dashboard extends BukkitModule {
                     setTabListHeadFoot(player, header, getTabFooter());
                 }
                 else {
-                    String ip = "&b" + IP.replaceAll("\\.", "&3.&b");
-                    BossBar.setMessage(player, header + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
+                    try {
+                        String ip = "&b" + IP.replaceAll("\\.", "&3.&b");
+                        BossBar.setMessage(player, header + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
+                    } catch (NullPointerException e) {
+                        Dashboard.debug(e, false);
+                    }
                 }
 
                 player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(fcolor(ChatColor.BOLD, header));
