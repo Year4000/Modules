@@ -64,13 +64,14 @@ public class ServerMenu extends BukkitModule {
     public void loopData() {
         SchedulerUtil.runAsync(() -> {
             MenuManager manager = MenuManager.get();
+            Throwable throwable = null;
 
             try {
                 manager.pullAPIData();
             } catch (Throwable t) {
-                callbackData.callback(null, t);
+                throwable = t;
             } finally {
-                callbackData.callback(manager, null);
+                callbackData.callback(manager, throwable);
             }
 
             ServerMenu.debug("API for ServerMenu received at: " + new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis())));

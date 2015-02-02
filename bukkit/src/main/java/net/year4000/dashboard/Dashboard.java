@@ -89,19 +89,24 @@ public class Dashboard extends BukkitModule {
 
         SchedulerUtil.repeatAsync(() -> {
             if (Bukkit.getOnlinePlayers().size() > 0) {
-                int api = APIManager.getNetworkPlayerCount().getOnline();
+                try {
+                    int api = APIManager.getNetworkPlayerCount().getOnline();
 
-                if (size.get() != api) {
-                    Bukkit.getOnlinePlayers().forEach(player -> {
-                        Scoreboard scoreboard = scoreboards.get(player);
+                    if (size.get() != api) {
+                        Bukkit.getOnlinePlayers().forEach(player -> {
+                            Scoreboard scoreboard = scoreboards.get(player);
 
-                        if (scoreboard != null) {
-                            createSidebar(player, scoreboard);
-                        }
-                    });
+                            if (scoreboard != null) {
+                                createSidebar(player, scoreboard);
+                            }
+                        });
+                    }
+
+                    size.set(api);
                 }
-
-                size.set(api);
+                catch (Exception e) {
+                    Dashboard.debug(e, false);
+                }
             }
         }, 2, TimeUnit.SECONDS);
     }
