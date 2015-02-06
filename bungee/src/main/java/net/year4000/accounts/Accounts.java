@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.util.UUID;
 
 @ModuleInfo(
     name = "Accounts",
@@ -36,6 +37,7 @@ public class Accounts extends BungeeModule {
         public void onLogin(PreLoginEvent event) {
             String ip = BASE_URL + "accounts/" + event.getConnection().getName() + "?key=" + MASTER_KEY;
             String connectingIp = event.getConnection().getAddress().getAddress().getHostAddress();
+            String uuid = null;
 
             // Get player account
             try {
@@ -44,6 +46,10 @@ public class Accounts extends BungeeModule {
 
                 if (object.get("last_ip") != null) {
                     ip = object.get("last_ip").getAsString();
+                }
+
+                if (object.get("minecraft") != null && object.get("minecraft").getAsJsonObject().get("uuid") != null) {
+                    uuid = object.get("minecraft").getAsJsonObject().get("uuid").getAsString();
                 }
             }
             // Account does not exist
@@ -58,7 +64,10 @@ public class Accounts extends BungeeModule {
                 }
             }
             catch (Exception e) {
-                event.getConnection().setOnlineMode(!connectingIp.equals(ip));
+                if (connectingIp.equals(ip) && uuid != null) {
+                    event.getConnection().setOnlineMode(false);
+                    event.getConnection().setUniqueId(UUID.fromString(uuid));
+                }
             }
         }
 
