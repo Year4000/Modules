@@ -64,6 +64,10 @@ public class Accounts extends BungeeModule {
                     event.getConnection().setOnlineMode(false);
                     event.getConnection().setUniqueId(UUID.fromString(uuid));
                 }
+                else {
+                    event.setCancelled(true);
+                    event.setCancelReason(se.getMessage());
+                }
             }
             // Account does not exist
             catch (IOException ioe) {
