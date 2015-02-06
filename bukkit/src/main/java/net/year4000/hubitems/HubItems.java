@@ -1,6 +1,8 @@
 package net.year4000.hubitems;
 
 import com.google.gson.Gson;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.NBTTagList;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
@@ -28,6 +30,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Skull;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -132,9 +135,24 @@ public class HubItems extends BukkitModule {
             cloned.setItemMeta(meta);
 
             if (cloned.getType() == Material.SKULL_ITEM || cloned.getType() == Material.SKULL) {
-                SkullMeta skull = (SkullMeta) cloned.getItemMeta();
-                skull.setOwner(player.getUniqueId().toString());
-                cloned.setItemMeta(skull);
+                net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(cloned);
+                NBTTagCompound tag = nms.getTag();
+                NBTTagCompound owner = new NBTTagCompound();
+                NBTTagCompound prop = new NBTTagCompound();
+                NBTTagList textures = new NBTTagList();
+                NBTTagCompound skin = new NBTTagCompound();
+
+                owner.setString("Id", player.getUniqueId().toString());
+                owner.setString("Name", player.getName());
+                skin.setString("Value", player.getSkin().getData());
+                skin.setString("Signature", player.getSkin().getSignature());
+                textures.add(skin);
+                prop.set("textures", textures);
+                owner.set("Properties", prop);
+                tag.set("SkullOwner", owner);
+                nms.setTag(tag);
+
+                cloned = CraftItemStack.asBukkitCopy(nms);
             }
 
             inv.setItem(index, cloned);
