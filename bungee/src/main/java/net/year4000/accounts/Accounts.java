@@ -51,24 +51,23 @@ public class Accounts extends BungeeModule {
                 if (object.get("minecraft") != null && object.get("minecraft").getAsJsonObject().get("uuid") != null) {
                     uuid = object.get("minecraft").getAsJsonObject().get("uuid").getAsString();
                 }
-            }
-            // Account does not exist
-            catch (IOException ioe) {
-                Accounts.debug(ioe, false);
-                return;
-            }
 
-            // Check session server for offline connection
-            try (Socket socket = new Socket("sessionserver.mojang.com", 443)) {
-                if (socket.isConnected()) {
-                    Accounts.debug("Session servers online!");
+                try (Socket socket = new Socket("sessionserver.mojang.com", 443)) {
+                    if (socket.isConnected()) {
+                        Accounts.debug("Session servers online!");
+                    }
                 }
             }
-            catch (Exception e) {
+            // Session servers offline
+            catch (SocketException se) {
                 if (connectingIp.equals(ip) && uuid != null) {
                     event.getConnection().setOnlineMode(false);
                     event.getConnection().setUniqueId(UUID.fromString(uuid));
                 }
+            }
+            // Account does not exist
+            catch (IOException ioe) {
+                Accounts.debug(ioe, false);
             }
         }
 
