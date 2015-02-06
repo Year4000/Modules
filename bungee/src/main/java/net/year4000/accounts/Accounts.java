@@ -55,6 +55,7 @@ public class Accounts extends BungeeModule {
             // Account does not exist
             catch (IOException ioe) {
                 Accounts.debug(ioe, false);
+                return;
             }
 
             // Check session server for offline connection
