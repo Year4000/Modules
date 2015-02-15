@@ -43,9 +43,6 @@ public class ReplaceWords extends BukkitModule {
         put(toPattern("b,i,t,c,h,?y|i|n|g"), new String[]{
             "dog"
         });
-        put(toPattern("a,s,s"), new String[]{
-            "butt"
-        });
         put(toPattern("d,a,m,n"), new String[]{
             "darn"
         });
