@@ -30,23 +30,6 @@ public class ServerMenu extends BukkitModule {
     private static ServerMenu inst;
     @Getter
     private MessagingChannel connector;
-    private final Callback<MenuManager> callbackData = (data, error) -> {
-        if (error == null) {
-            data.getMenus().values().parallelStream().forEach(menu -> {
-                if (menu.needNewInventory()) {
-                    menu.regenerateMenuViews();
-                }
-                else {
-                    menu.updateServers();
-                }
-            });
-        }
-        else {
-            ServerMenu.log(new Exception(error), true);
-        }
-
-        loopData();
-    };
 
     @Override
     public void load() {
@@ -56,26 +39,9 @@ public class ServerMenu extends BukkitModule {
     @Override
     public void enable() {
         // async thread that pull the data and updates the menus
-        loopData();
+        SchedulerUtil.runAsync(new APIFetcher());
 
         connector = MessagingChannel.get();
-    }
-
-    public void loopData() {
-        SchedulerUtil.runAsync(() -> {
-            MenuManager manager = MenuManager.get();
-            Throwable throwable = null;
-
-            try {
-                manager.pullAPIData();
-            } catch (Throwable t) {
-                throwable = t;
-            } finally {
-                callbackData.callback(manager, throwable);
-            }
-
-            ServerMenu.debug("API for ServerMenu received at: " + new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis())));
-        }, 1, TimeUnit.SECONDS);
     }
 
     /** Generate the close button in the player's locale */

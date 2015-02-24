@@ -78,13 +78,9 @@ public class MenuManager {
 
     /** Pull the servers from the api server */
     public void pullAPIData() {
-        try {
-            servers = APIManager.getServers();
-            groups = APIManager.getGroups(servers);
-            playerCountGroups = APIManager.getServerPlayerCount();
-        } catch (Exception e) {
-            ServerMenu.debug(e, true);
-        }
+        servers = APIManager.getServers();
+        groups = APIManager.getGroups(servers);
+        playerCountGroups = APIManager.getServerPlayerCount();
     }
 
     /** Open the menu */
