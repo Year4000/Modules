@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class APIFetcher implements Runnable {
-    private AtomicLong lastRun = new AtomicLong(System.currentTimeMillis());
     private final MenuManager manager = MenuManager.get();
     private final Callback<MenuManager> callbackData = (data, error) -> {
         if (error == null) {
@@ -33,9 +32,6 @@ public class APIFetcher implements Runnable {
         Throwable throwable = null;
 
         try {
-            long time = System.currentTimeMillis() - lastRun.getAndSet(System.currentTimeMillis());
-            TimeUnit.MILLISECONDS.sleep(time < 1000 ? 720L : 250L);
-
             manager.pullAPIData();
         } catch (Throwable t) {
             throwable = t;
