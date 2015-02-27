@@ -1,5 +1,6 @@
 package net.year4000.servermenu;
 
+import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.servermenu.menus.MenuManager;
 import net.year4000.utilities.Callback;
 
@@ -29,22 +30,21 @@ public class APIFetcher implements Runnable {
 
     @Override
     public void run() {
-        while (ServerMenu.getInst().enabled) {
-            Throwable throwable = null;
+        Throwable throwable = null;
 
-            try {
-                long time = System.currentTimeMillis() - lastRun.getAndSet(System.currentTimeMillis());
-                TimeUnit.MILLISECONDS.sleep(time < 1000 ? 720L : 250L);
+        try {
+            long time = System.currentTimeMillis() - lastRun.getAndSet(System.currentTimeMillis());
+            TimeUnit.MILLISECONDS.sleep(time < 1000 ? 720L : 250L);
 
-                manager.pullAPIData();
-            } catch (Throwable t) {
-                throwable = t;
-            } finally {
-                callbackData.callback(manager, throwable);
-            }
-
-            String timestamp = new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis()));
-            ServerMenu.debug("ServerMenu " + (throwable == null ? "pulled" : "erred") + " at: " + timestamp);
+            manager.pullAPIData();
+        } catch (Throwable t) {
+            throwable = t;
+        } finally {
+            Throwable throwing = throwable;
+            SchedulerUtil.runAsync(() -> callbackData.callback(manager, throwing));
         }
+
+        String timestamp = new SimpleDateFormat("hh:mm:ss").format(new Date(System.currentTimeMillis()));
+        ServerMenu.debug("ServerMenu " + (throwable == null ? "pulled" : "erred") + " at: " + timestamp);
     }
 }

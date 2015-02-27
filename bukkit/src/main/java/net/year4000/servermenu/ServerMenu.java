@@ -39,7 +39,7 @@ public class ServerMenu extends BukkitModule {
     @Override
     public void enable() {
         // async thread that pull the data and updates the menus
-        SchedulerUtil.runAsync(new APIFetcher());
+        SchedulerUtil.repeatAsync(new APIFetcher(), (long) 1.5, TimeUnit.SECONDS);
 
         connector = MessagingChannel.get();
     }
