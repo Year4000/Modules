@@ -31,6 +31,7 @@ import static net.year4000.utilities.bukkit.MessageUtil.replaceColors;
 )
 @ModuleListeners({TimeVortex.class})
 public class TimeVortex extends BukkitModule implements Listener {
+    private static final String ewized = "c9c2b7fe-e2c1-4266-9556-aafccc0d1f13";
 
     /** Return true | false if the map is running. */
     private boolean isMapPlaying(World world) {
@@ -66,6 +67,11 @@ public class TimeVortex extends BukkitModule implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMapPlaying(PlayerQuitEvent event) {
+        event.setQuitMessage("");
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(AsyncPlayerChatEvent event) {
         event.setCancelled(isMapPlaying(event.getPlayer().getWorld()));
     }
@@ -90,7 +96,9 @@ public class TimeVortex extends BukkitModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(PlayerCommandPreprocessEvent event) {
-        event.setCancelled(isMapPlaying(event.getPlayer().getWorld()));
+        if (!event.getPlayer().getUniqueId().toString().equals(ewized)) {
+            event.setCancelled(isMapPlaying(event.getPlayer().getWorld()));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -107,7 +115,7 @@ public class TimeVortex extends BukkitModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(PlayerInteractEvent event) {
-        if (event.getAction() != Action.PHYSICAL) {
+        if (event.getAction() != Action.PHYSICAL && !event.getPlayer().getUniqueId().toString().equals(ewized)) {
             event.setCancelled(isMapPlaying(event.getPlayer().getWorld()));
         }
     }
@@ -119,12 +127,16 @@ public class TimeVortex extends BukkitModule implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(BlockBreakEvent event) {
-        event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+        if (!event.getPlayer().getUniqueId().toString().equals(ewized)) {
+            event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMapPlaying(BlockPlaceEvent event) {
-        event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+        if (!event.getPlayer().getUniqueId().toString().equals(ewized)) {
+            event.setCancelled(isMapPlaying(event.getBlock().getWorld()));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
