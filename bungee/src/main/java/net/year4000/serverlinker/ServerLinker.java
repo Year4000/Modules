@@ -154,11 +154,9 @@ public class ServerLinker extends BungeeModule {
 
         for (Map.Entry<String, ServerInfo> server : shuffle) {
             if (server.getKey().contains("vortex") || server.getKey().contains("Vortex")) {
-                System.out.println(server.getKey());
                 return server.getValue();
             }
         }
-        System.out.println("NO SERVER");
 
         return null;
     }
