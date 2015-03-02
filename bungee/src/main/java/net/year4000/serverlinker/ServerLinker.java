@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "ServerLinker",
-    version = "1.7",
+    version = "1.8",
     description = "The core system that handles everything about the servers.",
     authors = {"Year4000"}
 )
@@ -112,7 +112,7 @@ public class ServerLinker extends BungeeModule {
         updateclock = StatusCollection.get().updateClock();
 
         // the web server
-        //ServerHandler.startWebServer();
+        // ServerHandler.startWebServer();
     }
 
     @Override
