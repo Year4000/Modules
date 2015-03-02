@@ -21,11 +21,12 @@ public final class Listeners implements Listener {
     @EventHandler
     public void onServerSwith(ServerSwitchEvent event) {
         event.getPlayer().setTabHeader(MessageUtil.message("&3[&bYear4000&3]"), MessageUtil.message("&bmc&7.&byear4000&7.&bnet"));
+        event.getPlayer().setReconnectServer(ServerLinker.getVortex());
     }
 
     @EventHandler
     public void onConnectionLoss(ServerKickEvent event) {
-        if (event.getCancelServer() == null) return;
+        ServerInfo vortex = ServerLinker.getVortex();
 
         // Message from being kicked from server
         if (event.getState() == ServerKickEvent.State.CONNECTED) {
@@ -41,6 +42,10 @@ public final class Listeners implements Listener {
                 event.setCancelServer(server);
                 event.setCancelled(true);
             }
+            else if (vortex != null) {
+                event.setCancelServer(vortex);
+                event.setCancelled(true);
+            }
             else {
                 ServerLinker.log("Their could be no online hub servers!");
             }
@@ -54,6 +59,10 @@ public final class Listeners implements Listener {
             BaseComponent[] message = event.getKickReasonComponent();
             event.getPlayer().sendMessage(MessageUtil.merge(server, message));
             event.setCancelServer(event.getPlayer().getServer().getInfo());
+            event.setCancelled(true);
+        }
+        else if (event.getState() == ServerKickEvent.State.UNKNOWN && vortex != null) {
+            event.setCancelServer(vortex);
             event.setCancelled(true);
         }
     }
@@ -73,8 +82,13 @@ public final class Listeners implements Listener {
         if (login.contains(event.getPlayer())) {
 
             ServerInfo server = ServerLinker.getInstance().getLowestHub();
+            ServerInfo vortex = ServerLinker.getVortex();
+
             if (server != null) {
                 event.setTarget(server);
+            }
+            else if (vortex != null) {
+                event.setTarget(vortex);
             }
             else {
                 ServerLinker.log("Their could be no online hub servers!");

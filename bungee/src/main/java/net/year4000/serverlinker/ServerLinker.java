@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.module.BungeeModule;
@@ -20,7 +21,7 @@ import net.year4000.serverlinker.webserver.ServerStatus;
 import net.year4000.serverlinker.webserver.StatusCollection;
 
 import java.net.InetSocketAddress;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
@@ -44,7 +45,8 @@ public class ServerLinker extends BungeeModule {
         .build(new CacheLoader<String, ServerInfo>() {
             @Override
             public ServerInfo load(String s) throws Exception {
-                ServerInfo lowestServer = null;
+                boolean first = true;
+                ServerInfo lowestServer = getVortex();
 
                 for (Server serverName : Settings.get().getServers()) {
                     //System.out.println(serverName);
@@ -60,7 +62,8 @@ public class ServerLinker extends BungeeModule {
                     try {
                         ServerStatus server = StatusCollection.get().getServers().get(serverName.getName());
 
-                        if (lowestServer == null) {
+                        if (first) {
+                            first = false;
                             lowestServer = current;
                         }
 
@@ -109,7 +112,7 @@ public class ServerLinker extends BungeeModule {
         updateclock = StatusCollection.get().updateClock();
 
         // the web server
-        ServerHandler.startWebServer();
+        //ServerHandler.startWebServer();
     }
 
     @Override
@@ -141,5 +144,22 @@ public class ServerLinker extends BungeeModule {
      */
     public ServerInfo getLowestHub() {
         return lowestHub.getUnchecked("ServerInfo");
+    }
+
+    /** Get the vortex this is a fallback server system to keep players connected */
+    public static ServerInfo getVortex() {
+        Set<Map.Entry<String, ServerInfo>> servers = ProxyServer.getInstance().getServers().entrySet();
+        List<Map.Entry<String, ServerInfo>> shuffle = new ArrayList<>(servers);
+        Collections.shuffle(shuffle);
+
+        for (Map.Entry<String, ServerInfo> server : shuffle) {
+            if (server.getKey().contains("vortex") || server.getKey().contains("Vortex")) {
+                System.out.println(server.getKey());
+                return server.getValue();
+            }
+        }
+        System.out.println("NO SERVER");
+
+        return null;
     }
 }
