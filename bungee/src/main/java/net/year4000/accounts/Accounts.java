@@ -105,7 +105,8 @@ public class Accounts extends BungeeModule {
 
                 if (connection.getResponseCode() != 200) {
                     throw new IOException(connection.getResponseMessage());
-                }            }
+                }
+            }
             catch (IOException ioe) {
                 Accounts.log(ioe, true);
 
