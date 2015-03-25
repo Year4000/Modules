@@ -4,14 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.ducktape.bungee.module.BungeeModule;
 import net.year4000.ducktape.bungee.module.ModuleListeners;
 import net.year4000.ducktape.module.ModuleInfo;
+import net.year4000.utilities.scheduler.SchedulerManager;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -19,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "Accounts",
@@ -31,6 +35,15 @@ public class Accounts extends BungeeModule {
     private static final String MASTER_KEY = "97be6c1b-0d4a-4e01-9b13-8ff923a8a5cd";
     private static final String BASE_URL = "https://api.year4000.net/";
     private static final Gson gson = new Gson();
+    // Give players ex per hour of play time
+    static {
+        ProxyServer server = ProxyServer.getInstance();
+        server.getScheduler().schedule(DuckTape.get(), () -> {
+            server.getPlayers().forEach(player -> {
+
+            });
+        },0, 30, TimeUnit.SECONDS);
+    }
 
     public static class LoginListener implements Listener {
         @EventHandler

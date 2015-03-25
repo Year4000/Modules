@@ -1,6 +1,9 @@
 package net.year4000.dashboard;
 
 import com.google.common.base.Ascii;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.Setter;
@@ -9,16 +12,14 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
-import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.menus.APIManager;
-import net.year4000.servermenu.menus.ServerJson;
 import net.year4000.utilities.AbstractBadgeManager;
 import net.year4000.utilities.ChatColor;
-import net.year4000.utilities.Pinger;
 import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
 import net.year4000.utilities.bukkit.bossbar.BossBar;
+import net.year4000.utilities.sdk.API;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -27,16 +28,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.spigotmc.ProtocolInjector;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 @ModuleInfo(
     name = "Dashboard",
@@ -46,6 +44,9 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 @ModuleListeners({Dashboard.Listeners.class})
 public class Dashboard extends BukkitModule {
+    // API
+    private static API api = new API();
+
     // Shimmer
     private static Set<String> shimmer = ImmutableSet.of("3", "b", "8", "7", "2", "a", "4", "c", "5", "d", "6", "e", "1", "9");
     private static final String NAME = "Year4000";
@@ -62,6 +63,14 @@ public class Dashboard extends BukkitModule {
     private static Map<Player, String> nameColors = new WeakHashMap<>();
     private static Map<Player, Scoreboard> scoreboards = new HashMap<>();
     private static BadgeManager manager = new BadgeManager();
+    private static LoadingCache<Class<?>, Map.Entry<String, String>> SHIMMERS = CacheBuilder.<Class<?>, Map.Entry<String, String>>newBuilder()
+        .expireAfterAccess(1, TimeUnit.SECONDS)
+        .build(new CacheLoader<Class<?>, Map.Entry<String, String>>() {
+            @Override
+            public Map.Entry<String, String> load(Class<?> dashboard) throws Exception {
+                return new AbstractMap.SimpleImmutableEntry<>(color.next(), color.next());
+            }
+        });
 
     // Network
     public static MessagingChannel connector;
@@ -124,16 +133,20 @@ public class Dashboard extends BukkitModule {
     }
 
     public static void createSidebar(Player player, Scoreboard scoreboard) {
-        SidebarManager sidebar = new SidebarManager();
         AbstractBadgeManager.Badges badge = manager.findBadge(player);
         String badgeName = badge.name().substring(0, 1) + badge.name().toLowerCase().substring(1);
 
-        sidebar.addBlank();
-        sidebar.addLine("&6Online&7: &a" + size.get());
-        sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
-        sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
+        api.getAccountAsync(player.getUniqueId().toString(), (data, error) -> {
+            SidebarManager sidebar = new SidebarManager();
 
-        sidebar.buildSidebar(scoreboard, fcolor(ChatColor.BOLD, getTabHeader()));
+            sidebar.addBlank();
+            sidebar.addLine("&6Online&7: &a" + size.get());
+            sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
+            sidebar.addLine("&6Credits&7: &a" + data.getCredits());
+            sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
+
+            sidebar.buildSidebar(scoreboard, fcolor(ChatColor.BOLD, getTabHeader()));
+        });
     }
 
     public static Team createUpdateTeam(Player player, Scoreboard scoreboard) {
@@ -169,8 +182,8 @@ public class Dashboard extends BukkitModule {
     }
 
     public static String getTabHeader() {
-        String b = "&" + color.next();
-        String name = b + "[&" + color.next() + NAME + b + "]";
+        String b = "&" + SHIMMERS.getUnchecked(Dashboard.class).getKey();
+        String name = b + "[&" + SHIMMERS.getUnchecked(Dashboard.class).getValue() + NAME + b + "]";
 
         return MessageUtil.replaceColors(name);
     }
