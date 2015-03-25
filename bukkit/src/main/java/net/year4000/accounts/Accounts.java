@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 @ModuleListeners({Accounts.LoginListener.class})
 public class Accounts extends BukkitModule {
     private static final String MASTER_KEY = "97be6c1b-0d4a-4e01-9b13-8ff923a8a5cd";
-    private static final String BASE_URL = "http://api.y4k.me/";
+    private static final String BASE_URL = "https://api.year4000.net/";
     private static final Gson gson = new Gson();
     private static final ConcurrentMap<String, Callback<Player>> accounts = new ConcurrentHashMap<>();
 
