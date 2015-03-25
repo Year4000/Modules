@@ -1,19 +1,12 @@
 package net.year4000.servermenu.menus;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.year4000.servermenu.Settings;
+import net.year4000.utilities.sdk.API;
+import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
+import net.year4000.utilities.sdk.routes.servers.ServerJson;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,30 +14,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class APIManager {
-    @Setter
-    private static String serversApi = Settings.get().getServersApi();
-    private static String playerCountApi = Settings.get().getPlayerCountApi();
-    private static final Gson gson = new Gson();
-
-    /** Get the data from the website */
-    public static Reader getAPI() {
-        try {
-            InputStream url = new URI(serversApi).toURL().openStream();
-            return new InputStreamReader(url);
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /** Get the data from the website */
-    public static Reader getCountAPI() {
-        try {
-            InputStream url = new URI(playerCountApi).toURL().openStream();
-            return new InputStreamReader(url);
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static final API api = new API();
 
     /** Get the list of groups */
     public static Collection<ServerJson.Group> getGroups() {
@@ -68,21 +38,16 @@ public final class APIManager {
 
     /** Get the collection of all the servers */
     public static Collection<ServerJson> getServers() {
-        Map<String, ServerJson> servers = gson.fromJson(getAPI(), new TypeToken<Map<String, ServerJson>>(){}.getType());
-        return servers.values();
+        return api.getServers().getServersCollection();
     }
 
     /** Get the map of all players in a group */
-    public static Map<String, ServerJson.Count> getServerPlayerCount() {
-        ServerJson.PlayerCount count = gson.fromJson(getCountAPI(), ServerJson.PlayerCount.class);
-
-        return count.getGroups();
+    public static Map<String, PlayerCountJson.Count> getServerPlayerCount() {
+        return api.getPlayerCount().getGroupsPlayerCount();
     }
 
     /** Get the count of all the players */
-    public static ServerJson.Count getNetworkPlayerCount() {
-        ServerJson.PlayerCount count = gson.fromJson(getCountAPI(), ServerJson.PlayerCount.class);
-
-        return count.getNetwork();
+    public static PlayerCountJson.Count getNetworkPlayerCount() {
+        return api.getPlayerCount().getNetworkPlayerCount();
     }
 }

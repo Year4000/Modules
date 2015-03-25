@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "ServerMenu",
-    version = "1.0",
+    version = "2.0",
     description = "The menu that lets you connect to the servers",
     authors = {"Year4000"}
 )

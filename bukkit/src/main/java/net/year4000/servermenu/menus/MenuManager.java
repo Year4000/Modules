@@ -6,9 +6,13 @@ import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.MenuMessage;
 import net.year4000.servermenu.message.MenuMessageManager;
+import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
+import net.year4000.utilities.sdk.routes.servers.ServerJson;
 import net.year4000.utilities.bukkit.BukkitLocale;
 import net.year4000.utilities.bukkit.MessageUtil;
 import org.bukkit.entity.Player;
+
+
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +32,7 @@ public class MenuManager {
     private Map<String, InvMenu> menus = new ConcurrentHashMap<>();
     private Collection<ServerJson> servers;
     private Collection<ServerJson.Group> groups;
-    private Map<String, ServerJson.Count> playerCountGroups = new HashMap<>();
+    private Map<String, PlayerCountJson.Count> playerCountGroups = new HashMap<>();
 
     public MenuManager() {
         pullAPIData();

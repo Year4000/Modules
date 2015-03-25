@@ -9,6 +9,8 @@ import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.message.Message;
 import net.year4000.servermenu.message.MessageManager;
+import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
+import net.year4000.utilities.sdk.routes.servers.ServerJson;
 import net.year4000.utilities.bukkit.BukkitUtil;
 import net.year4000.utilities.bukkit.ItemUtil;
 import net.year4000.utilities.bukkit.MessageUtil;
@@ -141,7 +143,7 @@ public class InvMenu {
                 if (!manager.getGroups().stream().map(ServerJson.Group::getName).collect(Collectors.toSet()).contains(item)) continue;
 
                 ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(item)).findAny().get();
-                ServerJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new ServerJson.Count());
+                PlayerCountJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new PlayerCountJson.Count(0, 0));
 
                 items[++count] = createItemBar(count, group, code, (int) manager.getServers().stream().filter(s -> s.getGroup().getName().equals(item)).count(), playerCounter.getOnline(), playerCounter.getMax());
             }
@@ -150,7 +152,7 @@ public class InvMenu {
             if (Settings.get().isHub()) {
                 InvMenu hubs = new InvMenu(manager, true, false, Settings.get().getHubGroup());
                 ServerJson.Group group = manager.getGroups().stream().filter(g -> g.getName().equals(Settings.get().getHubGroup())).findAny().get();
-                ServerJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new ServerJson.Count());
+                PlayerCountJson.Count playerCounter = manager.getPlayerCountGroups().getOrDefault(group.getName(), new PlayerCountJson.Count(0, 0));
 
                 items[8] = createItemBar(ITEMS.size() - 1, group, code, hubs.serversCount, playerCounter.getOnline(), playerCounter.getMax());
             }
