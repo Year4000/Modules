@@ -37,12 +37,6 @@ public class Settings extends Config {
     @Comment("The cache time in sec")
     private int cache = 5;
 
-    @Comment("Is the server ping animated")
-    private boolean animated = true;
-
-    @Comment("Is the server ping animated")
-    private int animatedDelay = 150;
-
     @Comment("The locales that have been added")
     private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/serverlist/locales/";
 
