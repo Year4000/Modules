@@ -21,7 +21,6 @@ import net.year4000.serverlist.messages.MessageFactory;
 import net.year4000.utilities.bungee.MessageUtil;
 
 import java.net.InetSocketAddress;
-import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static net.year4000.utilities.bungee.MessageUtil.replaceColors;
@@ -152,8 +151,7 @@ public class ListListener implements Listener {
     public void onServerPing(ProxyPingEvent event) throws Exception {
         AbstractMap.Entry<ServerPing, ProxyPingEvent.AnimatedPing> server = ping.getUnchecked(new PingServer(event.getConnection(), event.getResponse()));
         if (server != null) {
-            event.setResponse(server.getKey());
-            event.setAnimatedPing(server.getValue());
+            event.setResponse(server);
         }
     }
 }
