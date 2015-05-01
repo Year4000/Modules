@@ -46,8 +46,8 @@ public class LinkerListener implements Listener {
         // Message while connecting to server.
         else if (event.getState() == ServerKickEvent.State.CONNECTING) {
             BaseComponent[] server = MessageUtil.message(String.format(
-                    "&6%s &7>> &f",
-                    event.getPlayer().getName()
+                "&6%s &7>> &f",
+                event.getPlayer().getName()
             ));
             BaseComponent[] message = event.getKickReasonComponent();
             event.getPlayer().sendMessage(MessageUtil.merge(server, message));
@@ -75,6 +75,7 @@ public class LinkerListener implements Listener {
         if (login.contains(event.getPlayer())) {
 
             ServerInfo server = Linker.instance.getHub();
+            Linker.log(server.toString());
 
             if (server != null) {
                 event.setTarget(server);
@@ -97,8 +98,8 @@ public class LinkerListener implements Listener {
         ping.getPlayers().setOnline(playerCount.getOnline());
         ping.getPlayers().setMax(playerCount.getMax());
         List<ServerPing.PlayerInfo> sample = Linker.proxy.getPlayers().stream()
-                .map(p -> new ServerPing.PlayerInfo(p.getDisplayName(), p.getUniqueId().toString()))
-                .collect(Collectors.toList());
+            .map(p -> new ServerPing.PlayerInfo(p.getDisplayName(), p.getUniqueId().toString()))
+            .collect(Collectors.toList());
 
         int size = sample.size() > 100 ? 100 : sample.size();
         if (size > 0) {
