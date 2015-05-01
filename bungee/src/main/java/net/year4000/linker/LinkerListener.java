@@ -7,7 +7,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.year4000.serverlinker.ServerLinker;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
 
@@ -21,7 +20,7 @@ public class LinkerListener implements Listener {
     @EventHandler
     public void onServerSwith(ServerSwitchEvent event) {
         event.getPlayer().setTabHeader(MessageUtil.message("&3[&bYear4000&3]"), MessageUtil.message("&bmc&7.&byear4000&7.&bnet"));
-        event.getPlayer().setReconnectServer(ServerLinker.getVortex());
+        event.getPlayer().setReconnectServer(Linker.instance.getHub());
     }
 
     @EventHandler
@@ -41,7 +40,7 @@ public class LinkerListener implements Listener {
                 event.setCancelled(true);
             }
             else {
-                ServerLinker.log("Their could be no online hub servers!");
+                Linker.log("Their could be no online hub servers!");
             }
         }
         // Message while connecting to server.
@@ -81,7 +80,7 @@ public class LinkerListener implements Listener {
                 event.setTarget(server);
             }
             else {
-                ServerLinker.log("Their could be no online hub servers!");
+                Linker.log("Their could be no online hub servers!");
             }
 
             login.remove(event.getPlayer());

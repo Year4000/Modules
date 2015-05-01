@@ -1,6 +1,8 @@
 package net.year4000.linker;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.reflect.TypeToken;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.year4000.ducktape.bungee.DuckTape;
@@ -13,6 +15,7 @@ import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -28,7 +31,9 @@ public class Linker extends BungeeModule {
     public static Linker instance;
     private static String API_KEY = System.getProperty("Y4K_KEY");
     public API api = new API(API_KEY);
-    private Map<String, ServerRoute.ServerJsonKey> servers;
+    public Map<String, ServerRoute.ServerJsonKey> servers;
+    private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta");
+    private static Set<String> STAFF = ImmutableSet.of("omega");
 
     @Override
     public void enable() {
@@ -38,6 +43,7 @@ public class Linker extends BungeeModule {
             throw new RuntimeException("Year4000 API key is null, this cant happen");
         }
 
+        registerCommand(LinkerCommands.class);
         proxy.getScheduler().schedule(DuckTape.get(), this::fetchAndUpdateServers, 0, 2, TimeUnit.SECONDS);
     }
 
@@ -67,9 +73,9 @@ public class Linker extends BungeeModule {
 
     public ServerInfo getHub() {
         List<ServerRoute.ServerJsonKey> hubs = servers.values().stream()
-                .filter(info -> info.getGroup().getName().contains("hub"))
-                .filter(info -> info.getStatus() != null)
-                .collect(Collectors.toList());
+            .filter(info -> info.getGroup().getName().toLowerCase().contains("hub"))
+            .filter(info -> info.getStatus() != null)
+            .collect(Collectors.toList());
 
         ServerRoute.ServerJsonKey last = null;
 
@@ -86,5 +92,27 @@ public class Linker extends BungeeModule {
         }
 
         return createServerInfo(last);
+    }
+
+    /** Is the selected player a VIP */
+    public static boolean isVIP(CommandSender player) {
+        for (String permission : VIPS) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** Is the selected player a STAFF */
+    public static boolean isStaff(CommandSender player) {
+        for (String permission : STAFF) {
+            if (player.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
