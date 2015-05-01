@@ -77,7 +77,7 @@ public class Linker extends BungeeModule {
             .filter(info -> info.getStatus() != null)
             .collect(Collectors.toList());
 
-        ServerRoute.ServerJsonKey last = null;
+        ServerRoute.ServerJsonKey last = servers.values().iterator().next();
 
         for (ServerRoute.ServerJsonKey info : hubs) {
             if (last == null) {
@@ -91,7 +91,8 @@ public class Linker extends BungeeModule {
             }
         }
 
-        return createServerInfo(last);
+        String formatted = last.getName().toLowerCase().replaceAll(" ", "-");
+        return proxy.getServerInfo(formatted);
     }
 
     /** Is the selected player a VIP */
