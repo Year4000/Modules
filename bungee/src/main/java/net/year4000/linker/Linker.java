@@ -13,6 +13,7 @@ import net.year4000.utilities.sdk.API;
 
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,6 +72,7 @@ public class Linker extends BungeeModule {
         return proxy.constructServerInfo(server.getName(), address, motd, restricted);
     }
 
+    /** Get a hub that a player can connect to */
     public ServerInfo getHub() {
         List<ServerRoute.ServerJsonKey> hubs = servers.values().stream()
             .filter(info -> info.getGroup().getName().toLowerCase().contains("hub"))
@@ -78,9 +80,11 @@ public class Linker extends BungeeModule {
             .collect(Collectors.toList());
 
         ServerRoute.ServerJsonKey last = servers.values().iterator().next();
+        boolean toggle = true;
 
         for (ServerRoute.ServerJsonKey info : hubs) {
-            if (last == null) {
+            if (toggle) {
+                toggle = false;
                 last = info;
             }
 
