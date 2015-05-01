@@ -3,19 +3,16 @@ package net.year4000.linker;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LinkerListener implements Listener {
-    private List<ProxiedPlayer> login = new ArrayList<>();
 
     @EventHandler
     public void onServerSwith(ServerSwitchEvent event) {
@@ -60,32 +57,10 @@ public class LinkerListener implements Listener {
         }
     }
 
-    /** When player is allowed to connect to a server add them to the list. */
+    /** When player is allowed to connect to the server connect to hub. */
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
-        login.add(event.getPlayer());
-    }
-
-    /**
-     * After they can connect, check is the sever login is a first join and send them
-     * to the lowest online hub server.
-     */
-    @EventHandler
-    public void onServerConnect(ServerConnectEvent event) {
-        if (login.contains(event.getPlayer())) {
-
-            ServerInfo server = Linker.instance.getHub();
-            Linker.log(server.toString());
-
-            if (server != null) {
-                event.setTarget(server);
-            }
-            else {
-                Linker.log("Their could be no online hub servers!");
-            }
-
-            login.remove(event.getPlayer());
-        }
+        event.getPlayer().setReconnectServer(Linker.instance.getHub());
     }
 
     /** Change the player count depending on the players in the servers */
