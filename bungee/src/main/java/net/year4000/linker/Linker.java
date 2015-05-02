@@ -44,6 +44,9 @@ public class Linker extends BungeeModule {
             throw new RuntimeException("Year4000 API key is null, this cant happen");
         }
 
+        // Register custom reconnect handler
+        proxy.setReconnectHandler(new LinkerReconnectHandler());
+
         registerCommand(LinkerCommands.class);
         proxy.getScheduler().schedule(DuckTape.get(), this::fetchAndUpdateServers, 0, 2, TimeUnit.SECONDS);
     }

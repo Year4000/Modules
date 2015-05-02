@@ -57,12 +57,6 @@ public class LinkerListener implements Listener {
         }
     }
 
-    /** When player is allowed to connect to the server connect to hub. */
-    @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
-        event.getPlayer().setReconnectServer(Linker.instance.getHub());
-    }
-
     /** Change the player count depending on the players in the servers */
     @EventHandler(priority = 0)
     public void onServerPing(ProxyPingEvent event) throws Exception {
