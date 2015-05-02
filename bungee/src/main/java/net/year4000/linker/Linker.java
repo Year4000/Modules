@@ -13,10 +13,7 @@ import net.year4000.utilities.sdk.API;
 
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -32,7 +29,7 @@ public class Linker extends BungeeModule {
     public static Linker instance;
     private static String API_KEY = System.getProperty("Y4K_KEY");
     public API api = new API(API_KEY);
-    public Map<String, ServerRoute.ServerJsonKey> servers;
+    public final Map<String, ServerRoute.ServerJsonKey> servers = new LinkedHashMap<>();
     private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta");
     private static Set<String> STAFF = ImmutableSet.of("omega");
 
@@ -56,13 +53,16 @@ public class Linker extends BungeeModule {
         Type type = new TypeToken<Map<String, ServerRoute.ServerJsonKey>>() {}.getType();
         api.getRouteAsync(ServerRoute.class, type, "servers", (data, error) -> {
             if (error == null) {
-                servers = data.getServersMap();
-                proxy.getServers().clear();
-                servers.forEach((key, value) -> {
-                    ServerInfo info = createServerInfo(value);
-                    proxy.getServers().put(key, info);
-                    debug("Server Found: " + info.toString());
-                });
+                synchronized (servers) {
+                    servers.clear();
+                    servers.putAll(data.getServersMap());
+                    proxy.getServers().clear();
+                    servers.forEach((key, value) -> {
+                        ServerInfo info = createServerInfo(value);
+                        proxy.getServers().put(info.getName(), info);
+                        debug("Server Found: " + info.toString());
+                    });
+                }
             }
         });
     }
@@ -98,8 +98,7 @@ public class Linker extends BungeeModule {
             }
         }
 
-        String formatted = last.getName().toLowerCase().replaceAll(" ", "-");
-        return proxy.getServerInfo(formatted);
+        return proxy.getServerInfo(last.getName());
     }
 
     /** Is the selected player a VIP */

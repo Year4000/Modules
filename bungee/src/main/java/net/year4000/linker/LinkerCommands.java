@@ -46,8 +46,7 @@ public class LinkerCommands {
 
             @Override
             public String format(ServerRoute.ServerJsonKey server, int index) {
-                String formatted = server.getName().toLowerCase().replaceAll(" ", "-");
-                InetSocketAddress info = proxy.getServers().get(formatted).getAddress();
+                InetSocketAddress info = proxy.getServers().get(server.getName()).getAddress();
 
                 boolean online = !(server.getStatus() == null || server.getStatus().getPlayers() == null);
                 String serverList = (online ? "&2" : "&c") + server.getName();
