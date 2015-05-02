@@ -44,7 +44,10 @@ public class Linker extends BungeeModule {
         // Register custom reconnect handler
         proxy.setReconnectHandler(new LinkerReconnectHandler());
 
+        // Register commands
         registerCommand(LinkerCommands.class);
+
+        // Keep bungee in sync with API
         proxy.getScheduler().schedule(DuckTape.get(), this::fetchAndUpdateServers, 0, 2, TimeUnit.SECONDS);
     }
 

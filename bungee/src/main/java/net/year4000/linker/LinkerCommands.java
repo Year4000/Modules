@@ -29,15 +29,14 @@ public class LinkerCommands {
         max = 1
     )
     public static void list(final CommandContext args, final CommandSender sender) throws CommandException {
-        new SimplePaginatedResult<ServerRoute.ServerJsonKey>("&b[&3Year4000&b]", MAX_PER_PAGE) {
+        new SimplePaginatedResult<ServerRoute.ServerJsonKey>("&3[&bYear4000&3]", MAX_PER_PAGE) {
             @Override
             public String formatHeader(int page, int maxPages) {
-                PlayerCountJson.Count networkCount = Linker.instance.api.getPlayerCount().getNetworkPlayerCount();
+                //PlayerCountJson.Count networkCount = Linker.instance.api.getPlayerCount().getNetworkPlayerCount();
                 String htop = String.format(
-                    "&7&m******&a %s &7(&a%s&8|&a%s&7) &2[page &a%s&2/&a%s&2] &7&m******",
+                    "&7&m******&a %s &7(&a%s&7) &2[page &a%s&2/&a%s&2] &7&m******",
                     header,
-                    networkCount.getOnline(),
-                    networkCount.getMax(),
+                    Linker.proxy.getOnlineCount(),
                     page,
                     maxPages
                 );
