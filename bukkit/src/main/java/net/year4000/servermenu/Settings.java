@@ -1,54 +1,51 @@
 package net.year4000.servermenu;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import net.year4000.servermenu.config.MenuBook;
-import net.year4000.utilities.config.Comment;
-import net.year4000.utilities.config.Config;
-import net.year4000.utilities.config.InvalidConfigurationException;
+import com.google.gson.annotations.SerializedName;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import net.year4000.utilities.configs.Config;
+import net.year4000.utilities.configs.ConfigURL;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-@Data
-@EqualsAndHashCode(callSuper = false)
-public class Settings extends Config {
+@ToString
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ConfigURL(value = "https://api.year4000.net/configs/menus", config = Settings.class)
+public class Settings extends Config<Settings> {
     private static Settings inst;
 
-    public Settings() {
-        try {
-            CONFIG_HEADER = new String[] {"Server Menu Settings"};
-            CONFIG_FILE = new File(ServerMenu.getInst().getDataFolder(), "config.yml");
-            init();
-        } catch (InvalidConfigurationException e) {
-            ServerMenu.log(e, true);
-        }
-    }
-
+    /** Get the instance of this object */
     public static Settings get() {
         if (inst == null) {
-            inst = new Settings();
+            Settings settings = new Settings();
+            inst = settings.getInstance(settings);
         }
 
         return inst;
     }
 
-    @Comment("The url to pull the locales from")
-    private String url = "https://raw.githubusercontent.com/Year4000/Locales/master/net/year4000/servermenu/locales/";
+    // Config Options
 
-    @Comment("The api server that we will grab the servers from")
-    private String serversApi = "https://api.year4000.net/servers";
+    /** The locale url */
+    private String locales;
+    /** The regions that are supported */
+    private String[] regions;
+    /** The menus that are views */
+    private Menu[] menus;
 
-    @Comment("The api server that we will grab the player count from")
-    private String playerCountApi = "https://api.year4000.net/player-count";
-
-    @Comment("Should the menus have a return to hub button.")
-    private boolean hub = false;
-
-    @Comment("The group for the hubse")
-    private String hubGroup = "us-hubs";
-
-    @Comment("The menus")
-    private List<MenuBook> menus = new ArrayList<>();
+    @Getter
+    @ToString
+    private static class Menu {
+        /** The name of this menu */
+        private String name;
+        /** The group suffix in combination with region */
+        @SerializedName("group_suffix")
+        private String groupSuffix;
+        /** The Minecraft material to use as an icon */
+        private String icon;
+        /** Is this view a MapNodes server group */
+        @SerializedName("map_nodes")
+        private boolean mapNodes;
+    }
 }
