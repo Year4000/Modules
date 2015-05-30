@@ -13,6 +13,10 @@ public enum Locales {
     SERVER_OFFLINE,
     SERVER_CLICK,
     SERVER_CONNECT,
+    SERVER_GENERATE_TITLE,
+    SERVER_GENERATE_DESCRIPTION,
+    SERVER_GENERATE_NORMAL,
+    SERVER_GENERATE_GENERATING,
     ;
 
     /** Translate the Locales enum to locale in the players language */
