@@ -36,7 +36,7 @@ public class Settings extends Config<Settings> {
 
     @Getter
     @ToString
-    private static class Menu {
+    public static class Menu {
         /** The name of this menu */
         private String name;
         /** The group suffix in combination with region */
