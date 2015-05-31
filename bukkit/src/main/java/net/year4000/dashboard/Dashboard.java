@@ -12,7 +12,7 @@ import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
-import net.year4000.servermenu.menus.APIManager;
+//import net.year4000.servermenu.menus.APIManager;
 import net.year4000.utilities.AbstractBadgeManager;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.BadgeManager;
@@ -103,7 +103,8 @@ public class Dashboard extends BukkitModule {
         SchedulerUtil.repeatAsync(() -> {
             if (Bukkit.getOnlinePlayers().size() > 0) {
                 try {
-                    int api = APIManager.getNetworkPlayerCount().getOnline();
+                    //int api = APIManager.getNetworkPlayerCount().getOnline();
+                    int api = 0;
 
                     if (size.get() != api) {
                         Bukkit.getOnlinePlayers().forEach(player -> {
@@ -140,7 +141,7 @@ public class Dashboard extends BukkitModule {
             SidebarManager sidebar = new SidebarManager();
 
             sidebar.addBlank();
-            sidebar.addLine("&6Online&7: &a" + size.get());
+            //sidebar.addLine("&6Online&7: &a" + size.get());
             sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
             sidebar.addLine("&6Credits&7: &a" + data.getCredits());
             sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
