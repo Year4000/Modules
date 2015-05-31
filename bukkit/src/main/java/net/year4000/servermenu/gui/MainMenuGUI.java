@@ -79,8 +79,8 @@ public class MainMenuGUI extends AbstractGUI {
 
     /** Create the inventory */
     private InventoryGUI create(int rows) {
-        //String spaces = " ";
-        //String title = regionFormatted + spaces + YEAR4000;
-        return new InventoryGUI(YEAR4000, rows);
+        String spaces = "             ";
+        String title = spaces + YEAR4000;
+        return new InventoryGUI(title, rows);
     }
 }
