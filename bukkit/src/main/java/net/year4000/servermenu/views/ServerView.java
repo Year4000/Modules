@@ -1,6 +1,7 @@
 package net.year4000.servermenu.views;
 
 import lombok.AllArgsConstructor;
+import net.year4000.hubitems.utils.Common;
 import net.year4000.servermenu.BungeeConnector;
 import net.year4000.servermenu.InventoryGUI;
 import net.year4000.servermenu.locales.Locales;
@@ -43,7 +44,14 @@ public class ServerView implements IconView {
 
     @Override
     public ItemStack make() {
+        boolean same = BungeeConnector.getCurrentServer().equals(serverName);
         ItemStack item = new ItemStack(MATERIAL, getCount(), (short) state.data);
+
+        // Add a glow to item
+        if (same) {
+            item = Common.addGlow(item);
+        }
+
         ItemMeta meta = item.getItemMeta();
 
         // Name
@@ -57,8 +65,15 @@ public class ServerView implements IconView {
             String max = String.valueOf(count.getOnline());
             lore.add(Locales.MENU_PLAYERS.translate(locale, online, max));
             lore.add(Locales.SERVER_ONLINE.translate(locale));
-            lore.add("");
-            lore.add(Locales.SERVER_CLICK.translate(locale));
+
+            // If the server is the server its on
+            if (!same) {
+                lore.add("");
+                lore.add(Locales.SERVER_CLICK.translate(locale));
+            }
+            else {
+                Common.addGlow(item);
+            }
         }
         else {
             lore.add(Locales.SERVER_OFFLINE.translate(locale));
