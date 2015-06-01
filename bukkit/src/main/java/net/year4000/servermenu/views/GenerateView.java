@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static net.year4000.utilities.MessageUtil.replaceColors;
+
 @AllArgsConstructor
 public class GenerateView implements IconView {
     protected static final Material MATERIAL = Material.GLOWSTONE;
@@ -41,7 +43,7 @@ public class GenerateView implements IconView {
         List<String> lore = new ArrayList<>();
 
         // Title
-        meta.setDisplayName(Locales.SERVER_GENERATE_TITLE.translate(locale));
+        meta.setDisplayName(replaceColors("&a&l" + Locales.SERVER_GENERATE_TITLE.translate(locale)));
         lore.add("");
 
         // Lore Description
@@ -49,7 +51,12 @@ public class GenerateView implements IconView {
             lore.add(Locales.SERVER_GENERATE_GENERATING.translate(locale));
         }
         else {
-            lore.add(Locales.SERVER_GENERATE_DESCRIPTION.translate(locale));
+            String description = Locales.SERVER_GENERATE_DESCRIPTION.translate(locale);
+            String[] descriptionLines = Commons.splitIntoLine(description, 30);
+            for (String descriptionLine : descriptionLines) {
+                lore.add(replaceColors(descriptionLine));
+            }
+
             lore.add("");
             lore.add(Locales.SERVER_GENERATE_NORMAL.translate(locale));
         }

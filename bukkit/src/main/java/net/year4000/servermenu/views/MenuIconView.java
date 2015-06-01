@@ -85,9 +85,7 @@ public class MenuIconView implements IconView {
                 lore.add(Locales.MENU_SERVERS.translate(locale, servers));
             }
 
-            if (emptyCount || emptyServer) {
-                lore.add("");
-            }
+            lore.add("");
 
             lore.add(Locales.MENU_CLICK_SUB.translate(locale));
         }
@@ -111,7 +109,7 @@ public class MenuIconView implements IconView {
             menu.get(0).openInventory(player);
         }
         else if (state == State.SUB_MENU) {
-            player.sendMessage(Locales.MENU_OPEN.translate(locale, name));
+            player.sendMessage(Locales.MENU_OPEN.translate(locale, "Main Menu"));
             ServerMenu.inst.getMenus().get(0).openInventory(player);
         }
     }
