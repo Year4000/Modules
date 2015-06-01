@@ -87,9 +87,9 @@ public class HubItems extends BukkitModule {
                 String lore = locale.get("gameservers.description");
                 put(0, makeServerMenuIcon(title, lore));
 
-                title = locale.get("hubs.name") + " &7(" + locale.get("action.right") + ")";
+                /*title = locale.get("hubs.name") + " &7(" + locale.get("action.right") + ")";
                 lore = locale.get("hubs.description");
-                put(1, makeServerMenuIcon(title, lore));
+                put(1, makeServerMenuIcon(title, lore));*/
 
                 NBT nbt = GSON.fromJson("{'display':{}}", NBT.class);
                 nbt.getDisplay().setName("&a&lPLAYER_NAME &7(" + locale.get("action.right") + ")");
