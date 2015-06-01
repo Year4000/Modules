@@ -3,7 +3,10 @@ package net.year4000.servermenu.views;
 import lombok.AllArgsConstructor;
 import net.year4000.servermenu.Commons;
 import net.year4000.servermenu.InventoryGUI;
+import net.year4000.servermenu.ServerMenu;
+import net.year4000.servermenu.gui.AbstractGUI;
 import net.year4000.servermenu.locales.Locales;
+import net.year4000.utilities.MessageUtil;
 import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static net.year4000.utilities.MessageUtil.replaceColors;
 

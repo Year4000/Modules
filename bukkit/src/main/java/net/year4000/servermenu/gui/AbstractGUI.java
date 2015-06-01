@@ -6,6 +6,7 @@ import net.year4000.servermenu.locales.MessageFactory;
 import net.year4000.servermenu.views.CloseView;
 import net.year4000.servermenu.views.IconView;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -36,6 +37,27 @@ public abstract class AbstractGUI implements Runnable {
         Locale english = new Locale(MessageFactory.DEFAULT_LOCALE);
         InventoryGUI gui = menus.getOrDefault(locale, menus.get(english));
         player.openInventory(gui.getInventory());
+    }
+
+    /** Process the action for the given IconView */
+    public void processAction(Player player, int row, int col) {
+        try {
+            Locale locale = new Locale(player.getLocale());
+            locale = last.containsKey(locale) ? locale : Locale.US;
+            IconView[][] views = last.get(locale);
+            IconView view = views[row][col];
+            view.action(locale, player, menus.get(locale));
+        }
+        catch (Exception e) {
+            ServerMenu.debug("AbstractGUI processAction(): ");
+            ServerMenu.debug(e, true);
+        }
+    }
+
+    /** Get the inventory for the specific locale or english by default */
+    public Inventory getInventory(Locale locale) {
+        locale = menus.containsKey(locale) ? locale : Locale.US;
+        return menus.get(locale).getInventory();
     }
 
     /** Handle the preProcess of the menu */

@@ -60,7 +60,7 @@ public class GenerateView implements IconView {
     }
 
     @Override
-    public void action(Player player, InventoryGUI gui, IconView view) {
+    public void action(Locale locale, Player player, InventoryGUI gui) {
         menu.setGenerating(true);
         // todo call the api node generate route
     }

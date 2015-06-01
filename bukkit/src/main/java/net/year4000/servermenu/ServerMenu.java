@@ -3,54 +3,75 @@ package net.year4000.servermenu;
 import lombok.Getter;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
-import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
-import net.year4000.servermenu.menus.MenuManager;
-import net.year4000.servermenu.message.Message;
-import net.year4000.utilities.Callback;
-import net.year4000.utilities.bukkit.ItemUtil;
-import net.year4000.utilities.bukkit.MessagingChannel;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import net.year4000.servermenu.gui.AbstractGUI;
+import net.year4000.servermenu.gui.MainMenuGUI;
+import net.year4000.servermenu.gui.MapNodesGUI;
+import net.year4000.servermenu.locales.MessageFactory;
+import net.year4000.utilities.MessageUtil;
+import net.year4000.utilities.sdk.API;
+import org.bukkit.Bukkit;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 @ModuleInfo(
     name = "ServerMenu",
-    version = "2.0",
+    version = "3.0",
     description = "The menu that lets you connect to the servers",
     authors = {"Year4000"}
 )
-@ModuleListeners({MenuListener.class, BungeeSender.class})
+@ModuleListeners({Listeners.class})
 public class ServerMenu extends BukkitModule {
-    @Getter
-    private static ServerMenu inst;
-    @Getter
-    private MessagingChannel connector;
+    public static final String MASTER_KEY = System.getenv("Y4K_KEY");
+    public static API api = new API(MASTER_KEY);
 
-    @Override
-    public void load() {
-        inst = this;
-    }
+    /** Make sure instance has loaded before one calls it */
+    public static ServerMenu inst;
+    /** The menu GUIs */
+    @Getter
+    private List<AbstractGUI> menus = new ArrayList<>();
+    private TaskProcessor<AbstractGUI> processing;
 
     @Override
     public void enable() {
-        // async thread that pull the data and updates the menus
-        SchedulerUtil.repeatAsync(new APIFetcher(), 2, TimeUnit.SECONDS);
+        inst = this;
+        Settings settings = Settings.get();
 
-        connector = MessagingChannel.get();
+        // Add the main gui
+        log("Loading: Main Menu GUI");
+        menus.add(new MainMenuGUI("us", settings.getMenus()));
+        // Add the sub menus
+        for (Settings.Menu menu : settings.getMenus()) {
+            log("Loading: " + menu.getName());
+            if (menu.isMapNodes()) {
+                menus.add(new MapNodesGUI(menu));
+            }
+            else {
+                // todo menus.add(new SubMenuGUI())
+            }
+        }
+
+        // Set up the processor
+        processing = new TaskProcessor<>(menus);
+        processing.setWait(() -> Bukkit.getOnlinePlayers().size() == 0);
+        processing.process();
     }
 
-    /** Generate the close button in the player's locale */
-    public static ItemStack closeButton(Player player) {
-        return closeButton(new Locale(player.getLocale()));
+    @Override
+    public void disable() {
+        processing.end();
     }
 
-    /** Generate the close button in the specified locale */
-    public static ItemStack closeButton(Locale locale) {
-        return ItemUtil.makeItem("redstone_block", "{'display':{'name':'" + new Message(locale.toString()).get("menu.close") + "'}}");
+    /** Get the collection of locales */
+    public Collection<Locale> getLocales() {
+        return MessageFactory.get().getLocales().keySet();
+    }
+
+    /** Format the region code */
+    public static String formatRegion(String region) {
+        return MessageUtil.replaceColors("&8[" + region.toUpperCase() + "]");
     }
 }

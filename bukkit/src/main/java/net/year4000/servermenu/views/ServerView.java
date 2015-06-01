@@ -105,8 +105,8 @@ public class ServerView implements IconView {
     }
 
     @Override
-    public void action(Player player, InventoryGUI gui, IconView view) {
-        ServerView serverView = (ServerView) view;
+    public void action(Locale locale, Player player, InventoryGUI gui) {
+        ServerView serverView = this;
         String server = serverView.serverName;
         player.sendMessage(Locales.SERVER_CONNECT.translate(player, server));
         new BungeeConnector(server).send(player);
