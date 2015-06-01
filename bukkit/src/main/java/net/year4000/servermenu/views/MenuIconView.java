@@ -30,6 +30,12 @@ public class MenuIconView implements IconView {
     @Override
     public ItemStack make() {
         ItemStack item = new ItemStack(material);
+
+        // Add glow is sub menu
+        if (state == State.SUB_MENU) {
+            item = Commons.addGlow(item);
+        }
+
         ItemMeta meta = item.getItemMeta();
 
         // Name
@@ -66,17 +72,16 @@ public class MenuIconView implements IconView {
         // What to show in submenu
         else if (state == State.SUB_MENU){
             // If count is empty do not show
-            // If count is empty do not show
-            if (emptyCount || emptyServer) {
-                lore.add("");
-            }
-
             if (emptyCount) {
                 lore.add(Locales.MENU_PLAYERS.translate(locale, count.getOnline(), count.getMax()));
             }
 
             if (emptyServer) {
                 lore.add(Locales.MENU_SERVERS.translate(locale, servers));
+            }
+
+            if (emptyCount || emptyServer) {
+                lore.add("");
             }
 
             lore.add(Locales.MENU_TOP_OPEN.translate(locale));
