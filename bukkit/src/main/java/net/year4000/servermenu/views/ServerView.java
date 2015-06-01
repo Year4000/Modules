@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static net.year4000.utilities.bukkit.MessageUtil.replaceColors;
 
@@ -21,7 +22,7 @@ public class ServerView implements IconView {
     protected static final String ID = "minecraft:stained_hardened_clay"; // todo for future conversion to sponge
 
     /** The locale code to translate the strings */
-    protected String locale;
+    protected Locale locale;
     /** This display name of the server */
     protected String serverName;
     /** The count of players on this server */
@@ -30,13 +31,13 @@ public class ServerView implements IconView {
     protected State state;
 
     /** The outside classes can create an instance of this object */
-    public ServerView(String locale, String serverName, PlayerCountJson.Count count, State state) {
+    public ServerView(Locale locale, String serverName, PlayerCountJson.Count count, State state) {
         this(locale, serverName, count);
         this.state = state;
     }
 
     /** Internal to allow subclasses to create the instance */
-    protected ServerView(String locale, String serverName, PlayerCountJson.Count count) {
+    protected ServerView(Locale locale, String serverName, PlayerCountJson.Count count) {
         this.locale = locale;
         this.serverName = serverName;
         this.count = count;
@@ -89,10 +90,11 @@ public class ServerView implements IconView {
         String[] parts = serverName.split(" ");
         int id = 1;
 
-        for (int i = parts.length; i >= 0; i--) {
+        for (int i = parts.length - 1; i >= 0; i--) {
             try {
                 String part = parts[i];
                 id = Integer.valueOf(part);
+                return id;
             }
             catch (NumberFormatException e) {
                 id = 0;
