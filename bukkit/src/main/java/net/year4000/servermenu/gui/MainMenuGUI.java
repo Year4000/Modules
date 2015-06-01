@@ -62,7 +62,7 @@ public class MainMenuGUI extends AbstractGUI {
                 Settings.Menu menu = menuViews[counter++];
                 // Menu Settings from Config
                 Material material = Material.valueOf(menu.getIcon().toUpperCase());
-                String name = MessageUtil.replaceColors("&6&l" + menu.getName());
+                String name = menu.getName();
                 String group = region + menu.getGroupSuffix();
                 String descriptionKey = "games." + menu.getName().toLowerCase().replaceAll(" ", "-") + ".description";
                 String description = new MessageFactory.Message(locale.toString()).get(descriptionKey);
