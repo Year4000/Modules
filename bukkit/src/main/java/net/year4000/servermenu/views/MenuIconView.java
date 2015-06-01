@@ -52,6 +52,7 @@ public class MenuIconView implements IconView {
 
         // What to show in top menu
         if (state == State.TOP_MENU) {
+            lore.add("");
             String[] descriptionLines = Commons.splitIntoLine(description, 30);
             for (String descriptionLine : descriptionLines) {
                 lore.add(replaceColors(descriptionLine));
@@ -71,7 +72,7 @@ public class MenuIconView implements IconView {
             }
 
             lore.add("");
-            lore.add(Locales.MENU_TOP_OPEN.translate(locale));
+            lore.add(Locales.MENU_CLICK.translate(locale));
         }
         // What to show in submenu
         else if (state == State.SUB_MENU){
@@ -88,7 +89,7 @@ public class MenuIconView implements IconView {
                 lore.add("");
             }
 
-            lore.add(Locales.MENU_TOP_OPEN.translate(locale));
+            lore.add(Locales.MENU_CLICK_SUB.translate(locale));
         }
 
         meta.setLore(lore);
@@ -97,12 +98,21 @@ public class MenuIconView implements IconView {
     }
 
     @Override
-    public void action(Player player, InventoryGUI gui, IconView view) {
+    public void action(Locale locale, Player player, InventoryGUI gui) {
         if (state == State.TOP_MENU) {
-            // todo open submenu
+            player.sendMessage(Locales.MENU_OPEN.translate(locale, name));
+            List<AbstractGUI> menu = ServerMenu.inst.getMenus().stream()
+                .filter(m -> {
+                    String title = m.getInventory(locale).getTitle();
+                    return MessageUtil.stripColors(title).equals(MessageUtil.stripColors(name));
+                })
+                .collect(Collectors.toList());
+
+            menu.get(0).openInventory(player);
         }
         else if (state == State.SUB_MENU) {
-            // todo open main menu
+            player.sendMessage(Locales.MENU_OPEN.translate(locale, name));
+            ServerMenu.inst.getMenus().get(0).openInventory(player);
         }
     }
 
