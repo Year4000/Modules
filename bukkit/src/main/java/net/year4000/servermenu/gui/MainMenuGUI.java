@@ -5,6 +5,7 @@ import net.year4000.servermenu.InventoryGUI;
 import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
 import net.year4000.servermenu.locales.MessageFactory;
+import net.year4000.servermenu.views.CloseView;
 import net.year4000.servermenu.views.IconView;
 import net.year4000.servermenu.views.MenuIconView;
 import net.year4000.utilities.MessageUtil;
@@ -41,7 +42,12 @@ public class MainMenuGUI extends AbstractGUI {
     /** Calls the route and store a copy of it for us */
     @Override
     public void run() {
-        playerCountRoute = ServerMenu.api.getPlayerCount();
+        try {
+            playerCountRoute = ServerMenu.api.getPlayerCount();
+        }
+        catch (Exception e) {
+            playerCountRoute = null;
+        }
 
         menus.forEach((locale, gui) -> {
             gui.setIcons(generate(locale));
@@ -56,7 +62,7 @@ public class MainMenuGUI extends AbstractGUI {
         MenuIconView.State state = MenuIconView.State.TOP_MENU;
 
         for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < InventoryGUI.COLS; x++) {
+            for (int x = 0; x < ((y == 0) ? InventoryGUI.COLS - 1 : InventoryGUI.COLS); x++) {
                 if (counter == menuViews.length) return views;
 
                 // Create the game icons
@@ -73,6 +79,8 @@ public class MainMenuGUI extends AbstractGUI {
                 views[y][x] = new MenuIconView(locale, material, name, group, description, count, servers, state);
             }
         }
+
+        views[0][8] = new CloseView(locale);
 
         return views;
     }
