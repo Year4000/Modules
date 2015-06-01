@@ -93,6 +93,7 @@ public class MapNodesGUI extends AbstractGUI {
         }
         // Generate playable servers that are sorted
         else {
+            generating = false;
             icons[0][0] = new MenuIconView(locale, icon, menu.getName(), "us"+ menu.getGroupSuffix(), description, null, servers.length, MenuIconView.State.SUB_MENU);
             icons[0][8] = new CloseView(locale);
 
