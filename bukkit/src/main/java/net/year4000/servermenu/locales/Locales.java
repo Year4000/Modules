@@ -8,8 +8,8 @@ public enum Locales {
     MENU_SERVERS,
     MENU_PLAYERS,
     MENU_CLICK,
-    MENU_SUB_OPEN,
-    MENU_TOP_OPEN,
+    MENU_CLICK_SUB,
+    MENU_OPEN,
     MENU_CLOSE,
 
     SERVER_ONLINE,
