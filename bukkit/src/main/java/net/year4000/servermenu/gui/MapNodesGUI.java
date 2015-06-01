@@ -2,7 +2,6 @@ package net.year4000.servermenu.gui;
 
 import com.google.common.base.Preconditions;
 import lombok.Setter;
-import net.year4000.servermenu.Commons;
 import net.year4000.servermenu.InventoryGUI;
 import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.Settings;
@@ -28,21 +27,27 @@ public class MapNodesGUI extends AbstractGUI {
     private boolean generating = false;
 
     /** Create this instance class with the display and group */
-    public MapNodesGUI(Settings.Menu menu, Collection<Locale> locales) {
+    public MapNodesGUI(Settings.Menu menu) {
         this.menu = Preconditions.checkNotNull(menu);
         String group = "us" + Preconditions.checkNotNull(menu.getGroupSuffix());
         this.url = URLBuilder.builder(API.BASE_URL)
             .addPath("servers")
             .addQuery("group", group);
 
-        // Create the locales for the menus
-        for (Locale locale : locales) {
-            // Generate with one row for the server generate
-            InventoryGUI inventoryGUI = new InventoryGUI(menu.getName(), ROWS);
-            menus.put(locale, inventoryGUI);
-        }
+        // Populate the menu
+        populateMenu(l -> menu.getName(), ROWS);
     }
 
+    @Override
+    public void preProcess() throws Exception {
+        try {
+            route = ServerMenu.api.getRoute(ServersRoute.class, API.SERVERS_TYPE, url);
+        }
+        catch (Exception e) {
+            // e.printStackTrace();
+            route = null;
+        }
+    }
 
     @Override
     public IconView[][] generate(Locale locale) {
@@ -110,21 +115,5 @@ public class MapNodesGUI extends AbstractGUI {
         }
 
         return icons;
-    }
-
-    @Override
-    public void run() {
-        try {
-            route = ServerMenu.api.getRoute(ServersRoute.class, API.SERVERS_TYPE, url);
-        }
-        catch (Exception e) {
-            // e.printStackTrace();
-            route = null;
-        }
-
-        menus.forEach((locale, gui) -> {
-            gui.setIcons(generate(locale));
-            gui.populate();
-        });
     }
 }

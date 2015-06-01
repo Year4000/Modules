@@ -13,7 +13,6 @@ import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
 import net.year4000.utilities.sdk.routes.players.PlayerCountRoute;
 import org.bukkit.Material;
 
-import java.util.Collection;
 import java.util.Locale;
 
 @ToString
@@ -26,33 +25,27 @@ public class MainMenuGUI extends AbstractGUI {
     private int rows;
 
     /** Set up the MainMenu */
-    public MainMenuGUI(String region, Settings.Menu[] menuViews, Collection<Locale> locales) {
+    public MainMenuGUI(String region, Settings.Menu[] menuViews) {
         this.menuViews = menuViews;
         this.region = region;
         this.regionFormatted = ServerMenu.formatRegion(region);
 
         // Generate the inventory locales
         rows = menuViews.length > 0 && menuViews.length < 9 ? 1 : (int) Math.ceil(menuViews.length / 9);
-        for (Locale locale : locales) {
-            InventoryGUI inventoryGUI = create(rows);
-            menus.put(locale, inventoryGUI);
-        }
+        String spaces = "             ";
+        String title = spaces + YEAR4000;
+        populateMenu(l -> title, rows);
     }
 
     /** Calls the route and store a copy of it for us */
     @Override
-    public void run() {
+    public void preProcess() throws Exception {
         try {
             playerCountRoute = ServerMenu.api.getPlayerCount();
         }
         catch (Exception e) {
             playerCountRoute = null;
         }
-
-        menus.forEach((locale, gui) -> {
-            gui.setIcons(generate(locale));
-            gui.populate();
-        });
     }
 
     @Override
@@ -83,12 +76,5 @@ public class MainMenuGUI extends AbstractGUI {
         views[0][8] = new CloseView(locale);
 
         return views;
-    }
-
-    /** Create the inventory */
-    private InventoryGUI create(int rows) {
-        String spaces = "             ";
-        String title = spaces + YEAR4000;
-        return new InventoryGUI(title, rows);
     }
 }
