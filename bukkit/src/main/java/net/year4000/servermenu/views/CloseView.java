@@ -27,9 +27,7 @@ public class CloseView implements IconView {
     }
 
     @Override
-    public void action(Player player, InventoryGUI gui, IconView view) {
-        if (view instanceof CloseView) {
-            player.closeInventory();
-        }
+    public void action(Locale locale, Player player, InventoryGUI gui) {
+        player.closeInventory();
     }
 }
