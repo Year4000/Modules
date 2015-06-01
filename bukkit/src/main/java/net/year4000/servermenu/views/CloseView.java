@@ -8,9 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Locale;
+
 @AllArgsConstructor
 public class CloseView implements IconView {
-    private String locale;
+    private Locale locale;
 
     @Override
     public ItemStack make() {
