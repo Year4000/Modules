@@ -30,6 +30,7 @@ public abstract class AbstractGUI implements Runnable {
         }
     }
 
+    /** Open the inventory that matches the player locale */
     public void openInventory(Player player) {
         Locale locale = new Locale(player.getLocale());
         Locale english = new Locale(MessageFactory.DEFAULT_LOCALE);
