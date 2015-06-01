@@ -1,10 +1,14 @@
 package net.year4000.servermenu.views;
 
+import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import net.year4000.servermenu.Commons;
 import net.year4000.servermenu.InventoryGUI;
+import net.year4000.servermenu.ServerMenu;
 import net.year4000.servermenu.gui.MapNodesGUI;
 import net.year4000.servermenu.locales.Locales;
+import net.year4000.utilities.sdk.HttpConnection;
+import net.year4000.utilities.sdk.HttpFetcher;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,8 +72,11 @@ public class GenerateView implements IconView {
 
     @Override
     public void action(Locale locale, Player player, InventoryGUI gui) {
-        menu.setGenerating(true);
-        // todo call the api node generate route
+        if (!menu.isGenerating()) {
+            String url = ServerMenu.api.api().addPath("nodes").addPath("generate").addPath(serverGroup).build();
+            HttpFetcher.post(url, null, JsonObject.class, (d, e) -> menu.setGenerating(true));
+            menu.setGenerating(true);
+        }
     }
 
     public enum Stage {

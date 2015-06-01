@@ -1,6 +1,7 @@
 package net.year4000.servermenu.gui;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import lombok.Setter;
 import net.year4000.servermenu.InventoryGUI;
 import net.year4000.servermenu.ServerMenu;
@@ -24,6 +25,7 @@ public class MapNodesGUI extends AbstractGUI {
     private ServersRoute route;
     private Settings.Menu menu;
     @Setter
+    @Getter
     private boolean generating = false;
 
     /** Create this instance class with the display and group */
