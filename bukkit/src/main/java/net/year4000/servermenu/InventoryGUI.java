@@ -49,11 +49,12 @@ public class InventoryGUI {
     /** Populate the inventory with the ItemView[][] and return the item inventory */
     public Inventory populate() {
         inventory.clear();
+        int counter = 0;
 
         for (IconView[] icon : icons) {
             for (int y = 0; y < COLS; y++) {
                 ItemStack item = icon[y] == null ? null : icon[y].make();
-                inventory.addItem(item == null ? ItemUtil.makeItem("air") : item);
+                inventory.setItem(counter++, item == null ? ItemUtil.makeItem("air") : item);
             }
         }
 
