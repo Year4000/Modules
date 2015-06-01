@@ -1,6 +1,7 @@
 package net.year4000.servermenu.views;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.year4000.servermenu.locales.Locales;
 import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
 import org.bukkit.inventory.ItemStack;
@@ -8,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static net.year4000.utilities.MessageUtil.replaceColors;
 
@@ -17,7 +19,7 @@ public class MapNodesView extends ServerView implements IconView {
     protected State state;
 
     /** Allow to create the instance of MapNodesView */
-    public MapNodesView(String locale, String server, String motd, PlayerCountJson.Count count, State state) {
+    public MapNodesView(Locale locale, String server, String motd, PlayerCountJson.Count count, State state) {
         super(locale, server, count);
         this.motd = motd;
         this.state = state;
@@ -29,16 +31,14 @@ public class MapNodesView extends ServerView implements IconView {
         ItemMeta meta = item.getItemMeta();
 
         // Name
-        meta.setDisplayName(replaceColors("&a&l" + serverName));
+        meta.setDisplayName(replaceColors("&b&l" + serverName));
 
         // Lore
         List<String> lore = new ArrayList<>();
 
         if (state != State.OFFLINE) {
             lore.add(replaceColors(motd));
-            String online = String.valueOf(count.getOnline());
-            String max = String.valueOf(count.getMax());
-            lore.add(Locales.MENU_PLAYERS.translate(locale, online, max));
+            lore.add(replaceColors("&a" + count.getOnline() + "&7/&6" + count.getMax()));
             lore.add(Locales.SERVER_ONLINE.translate(locale));
             lore.add("");
             lore.add(Locales.SERVER_CLICK.translate(locale));
@@ -54,13 +54,36 @@ public class MapNodesView extends ServerView implements IconView {
 
     @AllArgsConstructor
     public enum State {
-        WAITING(4, "yellow"),
-        STARTING(5, "green"),
-        PLAYING(5, "lime"),
-        ENDING(1, "orange"),
-        OFFLINE(14, "red"),;
+        WAITING(4, "yellow", 1),
+        STARTING(5, "green", 2),
+        PLAYING(5, "lime", 3),
+        ENDING(1, "orange", 4),
+        OFFLINE(14, "red", 5);
 
         private int data;
         private String color;
+        @Getter
+        private int sort;
+
+        /** Find the state of the current string */
+        public static State findState(String string) {
+            String find = string.toUpperCase();
+
+            if (find.contains(WAITING.name())) {
+                return WAITING;
+            }
+            else if (find.contains(STARTING.name())) {
+                return STARTING;
+            }
+            else if (find.contains(PLAYING.name())) {
+                return PLAYING;
+            }
+            else if (find.contains(ENDING.name())) {
+                return ENDING;
+            }
+            else {
+                return OFFLINE;
+            }
+        }
     }
 }
