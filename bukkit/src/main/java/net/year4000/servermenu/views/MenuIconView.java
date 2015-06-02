@@ -47,7 +47,7 @@ public class MenuIconView implements IconView {
 
         // Lore
         List<String> lore = new ArrayList<>();
-        boolean emptyCount = count != null;
+        boolean emptyCount = !(count == null || count.getMax() == 0 || count.getOnline() == 0);
         boolean emptyServer = servers > 0;
 
         // What to show in top menu
