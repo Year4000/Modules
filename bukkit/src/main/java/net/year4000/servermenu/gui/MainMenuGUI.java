@@ -17,7 +17,7 @@ import java.util.Locale;
 
 @ToString
 public class MainMenuGUI extends AbstractGUI {
-    private static String YEAR4000 = MessageUtil.replaceColors("&3[&bYear4000&3]");
+    private static String YEAR4000 = MessageUtil.replaceColors("&8[&7Year4000&8]");
     private PlayerCountRoute playerCountRoute;
     private String region;
     private String regionFormatted;
