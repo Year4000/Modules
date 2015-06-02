@@ -52,7 +52,6 @@ public class MenuIconView implements IconView {
 
         // What to show in top menu
         if (state == State.TOP_MENU) {
-            lore.add("");
             String[] descriptionLines = Commons.splitIntoLine(description, 30);
             for (String descriptionLine : descriptionLines) {
                 lore.add(replaceColors(descriptionLine));
