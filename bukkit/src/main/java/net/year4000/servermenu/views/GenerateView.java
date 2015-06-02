@@ -72,11 +72,18 @@ public class GenerateView implements IconView {
 
     @Override
     public void action(Locale locale, Player player, InventoryGUI gui) {
-        if (!menu.isGenerating()) {
-            String url = ServerMenu.api.api().addPath("nodes").addPath("generate").addPath(serverGroup).build();
-            HttpFetcher.post(url, null, JsonObject.class, (d, e) -> menu.setGenerating(true));
+        String url = ServerMenu.api.api().addPath("nodes").addPath("generate").addPath(serverGroup).build();
+        HttpFetcher.post(url, null, JsonObject.class, (d, e) -> {
             menu.setGenerating(true);
-        }
+
+            // Let the player know what happen in chat
+            if (e == null) {
+                player.sendMessage(Locales.SERVER_PLAYER_GENERATE.translate(player));
+            }
+            else {
+                player.sendMessage(Locales.SERVER_PLAYER_GENERATING.translate(player));
+            }
+        });
     }
 
     public enum Stage {

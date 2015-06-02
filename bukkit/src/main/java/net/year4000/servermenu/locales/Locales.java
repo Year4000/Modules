@@ -20,6 +20,8 @@ public enum Locales {
     SERVER_GENERATE_DESCRIPTION,
     SERVER_GENERATE_NORMAL,
     SERVER_GENERATE_GENERATING,
+    SERVER_PLAYER_GENERATE,
+    SERVER_PLAYER_GENERATING,
     ;
 
     /** Translate the Locales enum to locale in the players language */
