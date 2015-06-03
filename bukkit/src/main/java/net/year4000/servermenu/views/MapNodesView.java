@@ -1,5 +1,6 @@
 package net.year4000.servermenu.views;
 
+import com.google.common.base.Charsets;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.year4000.servermenu.locales.Locales;
@@ -21,7 +22,7 @@ public class MapNodesView extends ServerView implements IconView {
     /** Allow to create the instance of MapNodesView */
     public MapNodesView(Locale locale, String server, String motd, PlayerCountJson.Count count, State state) {
         super(locale, server, count);
-        this.motd = motd;
+        this.motd = new String(motd.getBytes(), Charsets.UTF_8);
         this.state = state;
     }
 
