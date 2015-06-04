@@ -68,7 +68,7 @@ public class Listeners implements Listener {
             }
         } catch (NullPointerException e) {
             // item is not proper
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 }
