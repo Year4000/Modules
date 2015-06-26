@@ -28,8 +28,7 @@ import java.util.Set;
     // Addons
     PlayerBadges.class,
     Emoji.class,
-    PlayerNotice.class,
-    Translator.class
+    PlayerNotice.class
 })
 public class Chat extends BukkitModule {
     public static final double CHAT_VERSION = 1.0;
