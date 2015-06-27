@@ -26,7 +26,7 @@ public class Listeners implements Listener {
         // If a player click inventory get their locale else return
         if (event.getWhoClicked() instanceof Player) {
             player = (Player) event.getWhoClicked();
-            locale = new Locale(player.getLocale());
+            locale = new Locale(player.spigot().getLocale());
         }
         else {
             return;

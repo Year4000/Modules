@@ -97,7 +97,7 @@ public final class SidebarManager {
         }
 
         team.setPrefix(prefix);
-        team.add(result);
+        team.addEntry(result);
         return result;
     }
 

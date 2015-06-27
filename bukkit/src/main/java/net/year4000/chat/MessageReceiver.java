@@ -1,14 +1,14 @@
 package net.year4000.chat;
 
 import lombok.Data;
-import net.minecraft.server.v1_7_R4.ChatSerializer;
-import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.year4000.chat.channel.Channel;
 import net.year4000.chat.events.MessageReceiveEvent;
 import net.year4000.chat.formatter.FormatterManager;
 import net.year4000.utilities.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -49,7 +49,7 @@ public class MessageReceiver {
             char color = message.charAt(0);
             String[] split = message.split(": " + color + "f", 2);
             String json = "{text:\"" + split[0] + ": \",extra:[{text:\"" + split[1] + "\",italic:true,hoverEvent:{action:show_text,value:{text:\"" + MessageUtil.replaceColors(new LocaleManager.Msg(p).get("translator.original")) + " " + event.getMessage().getMessage() + "\"}}}]}";
-            PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(json));
+            PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(json));
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
         }
         else {

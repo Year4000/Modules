@@ -1,6 +1,7 @@
 package net.year4000.hubitems.items.passive;
 
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.items.PassiveState;
@@ -8,7 +9,7 @@ import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.BadgeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -40,7 +41,7 @@ public class Auras extends FunItem {
     private void sendPacket(Player player, BadgeManager.Badges badge) {
         Vector loc = player.getLocation().toVector();
         String type = player.getLocation().getBlock().isLiquid() ? "bubble" : "mobSpell";
-        PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(type, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0.3F, 0.3F, 0.3F, badgeFromHex(badge), 3);
+        PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles(EnumParticle.valueOf(type.toUpperCase()), true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0.3F, 0.3F, 0.3F, badgeFromHex(badge), 3);
         // BELLOW CODE IS TEST CODE FOR HACKING THE modSpell COLOR
         //PacketPlayOutWorldParticles particles = new PacketPlayOutWorldParticles("instantSpell", (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0F, 0F, 0F, (float) badgeFromHex(badge), 3);
         //Effect e = Effect.POTION_BREAK;

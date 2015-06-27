@@ -33,7 +33,7 @@ public abstract class AbstractGUI implements Runnable {
 
     /** Open the inventory that matches the player locale */
     public void openInventory(Player player) {
-        Locale locale = new Locale(player.getLocale());
+        Locale locale = new Locale(player.spigot().getLocale());
         Locale english = new Locale(MessageFactory.DEFAULT_LOCALE);
         InventoryGUI gui = menus.getOrDefault(locale, menus.get(english));
         player.openInventory(gui.getInventory());
@@ -42,7 +42,7 @@ public abstract class AbstractGUI implements Runnable {
     /** Process the action for the given IconView */
     public void processAction(Player player, int row, int col) {
         try {
-            Locale locale = new Locale(player.getLocale());
+            Locale locale = new Locale(player.spigot().getLocale());
             locale = last.containsKey(locale) ? locale : Locale.US;
             IconView[][] views = last.get(locale);
             IconView view = views[row][col];

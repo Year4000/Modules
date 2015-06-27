@@ -26,7 +26,7 @@ public class ChatListener implements Listener, PluginMessageListener {
 
         message.setMeta(Chat.CHAT_FORMAT, Settings.get().getChatFormat());
         message.setMeta(Chat.PLAYER_COLORS, Chat.isVIP(player) ? "true" : "false");
-        message.setMeta(Chat.PLAYER_LOCALE, player.getLocale());
+        message.setMeta(Chat.PLAYER_LOCALE, player.spigot().getLocale());
         message.setMeta(Chat.PLAYER_DISPLAY, player.getDisplayName());
         message.setActorName(player.getName());
         message.setActorUUID(player.getUniqueId());

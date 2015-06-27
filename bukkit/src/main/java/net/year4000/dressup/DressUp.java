@@ -68,7 +68,7 @@ public class DressUp extends BukkitModule {
     }
 
     private static Locale getLocaleOrDefault(Player player) {
-        return new Locale(net.year4000.hubitems.messages.MessageManager.get().isLocale(player.getLocale()) ? player.getLocale() : net.year4000.hubitems.messages.Message.DEFAULT_LOCALE);
+        return new Locale(net.year4000.hubitems.messages.MessageManager.get().isLocale(player.spigot().getLocale()) ? player.spigot().getLocale() : net.year4000.hubitems.messages.Message.DEFAULT_LOCALE);
     }
 
     public static Inventory openHat(Player player) {

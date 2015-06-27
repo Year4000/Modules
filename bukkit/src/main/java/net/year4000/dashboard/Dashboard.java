@@ -7,21 +7,21 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import lombok.Setter;
-import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import net.year4000.ducktape.bukkit.module.BukkitModule;
 import net.year4000.ducktape.bukkit.module.ModuleListeners;
 import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.ducktape.module.ModuleInfo;
-//import net.year4000.servermenu.menus.APIManager;
 import net.year4000.utilities.AbstractBadgeManager;
 import net.year4000.utilities.ChatColor;
 import net.year4000.utilities.bukkit.BadgeManager;
 import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.MessagingChannel;
-import net.year4000.utilities.bukkit.bossbar.BossBar;
 import net.year4000.utilities.sdk.API;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,8 +30,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.spigotmc.ProtocolInjector;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -84,17 +84,7 @@ public class Dashboard extends BukkitModule {
         SchedulerUtil.repeatAsync(() -> {
             String header = getTabHeader();
             Bukkit.getOnlinePlayers().forEach(player -> {
-                if (isEight(player)) {
-                    setTabListHeadFoot(player, header, getTabFooter());
-                }
-                else {
-                    try {
-                        String ip = "&b" + IP.replaceAll("\\.", "&3.&b");
-                        BossBar.setMessage(player, header + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
-                    } catch (NullPointerException e) {
-                        Dashboard.debug(e, false);
-                    }
-                }
+                setTabListHeadFoot(player, header, getTabFooter());
 
                 player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(fcolor(ChatColor.BOLD, header));
             });
@@ -129,10 +119,6 @@ public class Dashboard extends BukkitModule {
         return MessageUtil.replaceColors(message.replaceAll(ChatColor.COLOR_CHAR + "([0-9a-fA-F])", "&$1" + color.toString()));
     }
 
-    public static boolean isEight(Player player) {
-        return ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion() >= 47;
-    }
-
     public static void createSidebar(Player player, Scoreboard scoreboard) {
         AbstractBadgeManager.Badges badge = manager.findBadge(player);
         String badgeName = badge.name().substring(0, 1) + badge.name().toLowerCase().substring(1);
@@ -161,12 +147,13 @@ public class Dashboard extends BukkitModule {
         String badge = manager.getBadge(player) + " " + color;
         team.setPrefix(MessageUtil.replaceColors(color));
         team.setSuffix(MessageUtil.replaceColors(split[1] + "&f"));
-        team.add(split[0]);
+        team.addEntry(split[0]);
 
         // Player settings
         player.setDisplayName(MessageUtil.replaceColors(color + player.getName() + "&f"));
-        player.setPlayerListName(split[0]);
-        player.setPlayerListDisplayName(MessageUtil.replaceColors(badge) + player.getName());
+        //player.setPlayerListName(split[0]);
+        //player.spigot().setPlayerListDisplayName(MessageUtil.replaceColors(badge) + player.getName());
+        player.setPlayerListName(MessageUtil.replaceColors(badge) + player.getName());
 
         return team;
     }
@@ -204,14 +191,20 @@ public class Dashboard extends BukkitModule {
 
     /** Set the tablist header and footer */
     public static void setTabListHeadFoot(Player player, String header, String footer) {
-        if (!isEight(player)) return;
-
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        Packet headFoot = new ProtocolInjector.PacketPlayOutPlayerListHeaderFooter(
-            sanitize(header),
-            sanitize(footer)
-        );
+        IChatBaseComponent headTitle = IChatBaseComponent.ChatSerializer.a(sanitize(net.year4000.utilities.MessageUtil.replaceColors(header)));
+        IChatBaseComponent footTitle = IChatBaseComponent.ChatSerializer.a(sanitize(net.year4000.utilities.MessageUtil.replaceColors(footer)));
+        PacketPlayOutPlayerListHeaderFooter headFoot = new PacketPlayOutPlayerListHeaderFooter();
+        try {
+            Field head = headFoot.getClass().getDeclaredField("a");
+            head.setAccessible(true);
+            head.set(headFoot, headTitle);
+            Field foot = headFoot.getClass().getDeclaredField("b");
+            foot.setAccessible(true);
+            foot.set(headFoot, footTitle);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {}
 
         craftPlayer.getHandle().playerConnection.sendPacket(headFoot);
     }
@@ -302,13 +295,7 @@ public class Dashboard extends BukkitModule {
             }, 1500, TimeUnit.MILLISECONDS);
 
             // Other
-            if (isEight(player)) {
-                setTabListHeadFoot(player, getTabHeader(), getTabFooter());
-            }
-            else {
-                String ip = "&b" + IP.replaceAll("\\.", "&3.&b");
-                BossBar.setMessage(player, getTabHeader() + MessageUtil.replaceColors(" &7- " + ip), 0.0001F);
-            }
+            setTabListHeadFoot(player, getTabHeader(), getTabFooter());
 
             // Get Server name
             if (server.equals(UNKNOWN)) {

@@ -34,12 +34,6 @@ public class MenuIconView implements IconView {
     @Override
     public ItemStack make() {
         ItemStack item = new ItemStack(material);
-
-        // Add glow is sub menu
-        if (state == State.SUB_MENU) {
-            item = Commons.addGlow(item);
-        }
-
         ItemMeta meta = item.getItemMeta();
 
         // Name

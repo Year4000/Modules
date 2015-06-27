@@ -2,27 +2,36 @@ package net.year4000.hubitems.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagList;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagList;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
+    /** All Possible Bytes */
+    private static final HashSet<Byte> BYTES;
+    static {
+        BYTES = new HashSet<>();
+        for (byte i = 0; i < Byte.MAX_VALUE; i++) {
+            BYTES.add(i);
+        }
+    }
+
     public static double manaConverter(float mana) {
         return ((double) mana * .10) * 1000;
     }
-
 
     public static String[] loreDescription(String string) {
         return splitIntoLine(string, 30);
@@ -56,7 +65,7 @@ public final class Common {
     }
 
     public static Location getLooking(Player player) {
-        Block block = player.getTargetBlock(null, 150);
+        Block block = player.getTargetBlock(BYTES, 150);
 
         while (block.getType() != Material.AIR) {
             block = block.getRelative(BlockFace.UP);
@@ -104,7 +113,7 @@ public final class Common {
     }
 
     public static ItemStack addGlow(ItemStack item) {
-        net.minecraft.server.v1_7_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
         NBTTagCompound tag = null;
         if (!nmsStack.hasTag()) {
             tag = new NBTTagCompound();
@@ -118,7 +127,7 @@ public final class Common {
     }
 
     public static ItemStack removeGlow(ItemStack item) {
-        net.minecraft.server.v1_7_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
         NBTTagCompound tag = null;
         if (!nmsStack.hasTag()) return item;
         tag = nmsStack.getTag();

@@ -1,7 +1,6 @@
 package net.year4000.chat.addons;
 
 import lombok.NonNull;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import net.year4000.chat.Chat;
 import net.year4000.chat.LocaleManager;
 import net.year4000.chat.events.MessageReceiveEvent;
@@ -9,6 +8,7 @@ import net.year4000.utilities.bukkit.MessageUtil;
 import net.year4000.utilities.bukkit.commands.Command;
 import net.year4000.utilities.bukkit.commands.CommandContext;
 import net.year4000.utilities.bukkit.commands.CommandException;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,7 +64,7 @@ public class Translator implements Listener {
     }
 
     private String translate(String message, Player player) {
-        return translator.getTranslation(message, player.getLocale().split("_")[0]);
+        return translator.getTranslation(message, player.spigot().getLocale().split("_")[0]);
     }
 
     @Command(
@@ -78,11 +78,11 @@ public class Translator implements Listener {
         Player p = (Player)sender;
         if (hasTranslatorEnabled(p)) {
             toNotTranslate.add(p.getName());
-            sender.sendMessage(MessageUtil.message(LocaleManager.get().getLocale(p.getLocale()).get("translator.disabled").toString()));
+            sender.sendMessage(MessageUtil.message(LocaleManager.get().getLocale(p.spigot().getLocale()).get("translator.disabled").toString()));
         }
         else {
             toNotTranslate.remove(p.getName());
-            sender.sendMessage(MessageUtil.message(LocaleManager.get().getLocale(p.getLocale()).get("translator.enabled").toString()));
+            sender.sendMessage(MessageUtil.message(LocaleManager.get().getLocale(p.spigot().getLocale()).get("translator.enabled").toString()));
         }
     }
 

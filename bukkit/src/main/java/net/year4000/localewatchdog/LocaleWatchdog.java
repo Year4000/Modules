@@ -31,7 +31,7 @@ public class LocaleWatchdog extends BukkitModule {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (lastLocales.containsKey(player)) {
                     String last = lastLocales.get(player);
-                    String current = player.getLocale();
+                    String current = player.spigot().getLocale();
                     if (!last.equalsIgnoreCase(current)) {
                         lastLocales.put(player, current);
                         Event change = new PlayerChangeLocaleEvent(player, last, current);
@@ -39,7 +39,7 @@ public class LocaleWatchdog extends BukkitModule {
                     }
                 }
                 else {
-                    lastLocales.put(player, player.getLocale());
+                    lastLocales.put(player, player.spigot().getLocale());
                 }
             }
         }

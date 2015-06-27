@@ -14,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFallEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -56,11 +55,6 @@ public class WorldBack extends BukkitModule {
         public void onStateChange(EntityExplodeEvent event) {
             event.blockList().forEach(this::filter);
             event.setYield(0);
-        }
-
-        @EventHandler(ignoreCancelled = true)
-        public void onStateChange(BlockFallEvent event) {
-            filter(event.getBlock());
         }
 
         @EventHandler(ignoreCancelled = true)

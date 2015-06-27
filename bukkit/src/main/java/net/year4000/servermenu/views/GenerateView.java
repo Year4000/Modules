@@ -38,11 +38,6 @@ public class GenerateView implements IconView {
     public ItemStack make() {
         ItemStack item = new ItemStack(Material.GLOWSTONE);
 
-        // Add Glow if generating
-        if (stage == Stage.GENERATING) {
-            item = Commons.addGlow(item);
-        }
-
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<>();
 
