@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
     name = "fireworkshow.name",
     icon = Material.FIREWORK,
     description = "fireworkshow.description",
+    permissionLocale = "icestaff.permission",
+    permission = {"mu", "pi", "sigma", "phi", "delta", "omega"},
     mana = 0.6F,
     action = Action.RIGHT
 )
