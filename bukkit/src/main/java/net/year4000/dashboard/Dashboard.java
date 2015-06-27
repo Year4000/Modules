@@ -86,7 +86,9 @@ public class Dashboard extends BukkitModule {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 setTabListHeadFoot(player, header, getTabFooter());
 
-                player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(fcolor(ChatColor.BOLD, header));
+                if (player.getScoreboard() != null && player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
+                    player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(fcolor(ChatColor.BOLD, header));
+                }
             });
         }, 1, TimeUnit.SECONDS);
 
@@ -130,7 +132,11 @@ public class Dashboard extends BukkitModule {
             //sidebar.addLine("&6Online&7: &a" + size.get());
             sidebar.addLine("&6Rank&7: " + manager.getBadge(player) + " " + badge.getColor() + badgeName);
             sidebar.addLine("&6Credits&7: &a" + data.getCredits());
-            sidebar.addLine("&6Web&7: &bwww&3.&byear4000&3.&bnet");
+            sidebar.addLine("&6Tokens&7: &a" + data.getRawResponse().get("tokens").getAsString());
+            sidebar.addLine("&6Level&7: &a" + data.getRawResponse().get("level").getAsString());
+            sidebar.addLine("&6Experience&7: &a" + data.getRawResponse().get("experience").getAsString());
+            sidebar.addBlank();
+            sidebar.addLine(" &bwww&3.&byear4000&3.&bnet ");
 
             sidebar.buildSidebar(scoreboard, fcolor(ChatColor.BOLD, getTabHeader()));
         });
