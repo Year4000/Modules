@@ -6,8 +6,8 @@ import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
-import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -51,7 +51,7 @@ public class TNTBow extends FunItem {
             tnts.put(entity.getEntityId(), player);
 
             entity.setVelocity(vector);
-            new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.CLOUD);
+            new Tracker(world, entity.getEntityId(), Effect.CLOUD);
         }
 
         event.setCancelled(true); // don't use the arrow in the inventory

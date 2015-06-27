@@ -4,8 +4,8 @@ import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
-import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -40,7 +40,7 @@ public class EggBow extends FunItem {
             Entity entity = world.spawnEntity(loc, EntityType.EGG);
 
             entity.setVelocity(vector);
-            new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.HEART);
+            new Tracker(world, entity.getEntityId(), Effect.HEART);
         }
 
         event.setCancelled(true); // don't use the arrow in the inventory

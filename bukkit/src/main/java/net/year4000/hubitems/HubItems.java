@@ -60,13 +60,12 @@ import java.util.concurrent.TimeUnit;
     NightVision.class,
     Speed.class,
     Flight.class,
-    Auras.class,
     Dress.class,
     // Items
     IceStaff.class,
     FireBallStaff.class,
     CorruptedStaff.class,
-    EnderBow.class,
+    /*EnderBow.class,*/
     EggBow.class,
     TNTBow.class,
     FireworkShow.class

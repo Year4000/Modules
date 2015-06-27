@@ -7,7 +7,6 @@ import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
 import net.year4000.hubitems.messages.Message;
-import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
 import net.year4000.worldback.WorldBackEvent;
 import org.bukkit.Bukkit;
@@ -46,7 +45,7 @@ public class CorruptedStaff extends FunItem {
         if (cost(event.getPlayer(), info.mana())) {
             WitherSkull entity = event.getPlayer().launchProjectile(WitherSkull.class);
             skulls.put(entity.getEntityId(), event.getPlayer());
-            new Tracker(event.getPlayer().getWorld(), entity.getEntityId(), ParticleUtil.Particles.LARGE_SMOKE);
+            new Tracker(event.getPlayer().getWorld(), entity.getEntityId(), Effect.LARGE_SMOKE);
         }
     }
 

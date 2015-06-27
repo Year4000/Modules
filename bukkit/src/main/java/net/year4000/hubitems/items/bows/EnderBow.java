@@ -4,11 +4,12 @@ import net.year4000.ducktape.bukkit.utils.SchedulerUtil;
 import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
-import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -44,10 +45,10 @@ public class EnderBow extends FunItem {
             World world = event.getEntity().getWorld();
             Vector vector = new Vector().copy(event.getProjectile().getVelocity());
             Location loc = event.getEntity().getLocation().clone().add(0, event.getEntity().getEyeHeight(), 0).add(0, 0.7, 0);
-            Entity entity = world.spawnEntity(loc, EntityType.ENDER_PEARL);
+            Entity entity = world.spawn(loc, EnderPearl.class);
 
             entity.setVelocity(vector);
-            new Tracker(world, entity.getEntityId(), ParticleUtil.Particles.PORTAL);
+            new Tracker(world, entity.getEntityId(), Effect.PORTAL);
             enderPearls.put( entity.getEntityId(), player);
         }
 

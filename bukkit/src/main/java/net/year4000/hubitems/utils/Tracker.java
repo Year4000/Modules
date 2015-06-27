@@ -1,5 +1,7 @@
 package net.year4000.hubitems.utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
@@ -13,9 +15,9 @@ public class Tracker {
     private static List<Reference<Tracker>> trackers = new CopyOnWriteArrayList<>();
     private World world;
     private int id;
-    private ParticleUtil.Particles particle;
+    private Effect particle;
 
-    public Tracker(World world, int id, ParticleUtil.Particles particle) {
+    public Tracker(World world, int id, Effect particle) {
         this.world = world;
         this.id = id;
         this.particle = particle;
@@ -36,7 +38,11 @@ public class Tracker {
                     continue;
                 }
 
-                shoot.forEach(e -> ParticleUtil.sendPackets(track.particle, e.getLocation()));
+                shoot.forEach(e -> {
+                    Bukkit.getOnlinePlayers().parallelStream().forEach(player -> {
+                        player.playEffect(e.getLocation(), track.particle, 0);
+                    });
+                });
             }
         }
     }

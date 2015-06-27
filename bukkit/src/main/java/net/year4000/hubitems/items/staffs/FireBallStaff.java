@@ -3,8 +3,8 @@ package net.year4000.hubitems.items.staffs;
 import net.year4000.hubitems.items.Action;
 import net.year4000.hubitems.items.FunItem;
 import net.year4000.hubitems.items.FunItemInfo;
-import net.year4000.hubitems.utils.ParticleUtil;
 import net.year4000.hubitems.utils.Tracker;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Fireball;
@@ -30,7 +30,7 @@ public class FireBallStaff extends FunItem {
         if (cost(player, info.mana())) {
             World world = player.getWorld();
             Fireball fireball = player.launchProjectile(Fireball.class);
-            new Tracker(world, fireball.getEntityId(), ParticleUtil.Particles.FLAME);
+            new Tracker(world, fireball.getEntityId(), Effect.FLAME);
         }
     }
 }

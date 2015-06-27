@@ -1,6 +1,5 @@
 package net.year4000.hubitems.items;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
 import net.year4000.hubitems.HubItems;
 import net.year4000.hubitems.ItemActor;
@@ -57,6 +56,7 @@ public class FunItemManager {
         Message locale = new Message(player);
         ItemStack stack = new ItemStack(item.icon());
         ItemMeta meta = stack.getItemMeta();
+        meta.spigot().setUnbreakable(true);
 
         meta.setDisplayName(MessageUtil.replaceColors("&a&l" + locale.get(item.name())));
         meta.setLore(new ArrayList<String>() {{
@@ -104,6 +104,7 @@ public class FunItemManager {
 
             if (!info.passive().isPassive()) {
                 ItemMeta meta = items[i].getItemMeta();
+                meta.spigot().setUnbreakable(true);
                 List<String> lore = meta.getLore();
 
                 if (ItemActor.get(player).getCurrentItem() == info) {
