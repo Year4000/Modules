@@ -1,5 +1,8 @@
-package net.year4000.announcer;
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
 
+package net.year4000.announcer;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;

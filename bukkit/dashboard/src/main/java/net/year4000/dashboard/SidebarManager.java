@@ -1,4 +1,9 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.dashboard;
+
 import com.google.common.base.Ascii;
 import com.google.common.base.Splitter;
 import net.year4000.utilities.ChatColor;

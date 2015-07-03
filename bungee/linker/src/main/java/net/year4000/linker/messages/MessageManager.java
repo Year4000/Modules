@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.linker.messages;
 
 import net.year4000.ducktape.bungee.DuckTape;

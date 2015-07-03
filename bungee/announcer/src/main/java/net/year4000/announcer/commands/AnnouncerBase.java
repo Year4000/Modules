@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Year4000. All Rights Reserved.
+ */
+
 package net.year4000.announcer.commands;
 
 import net.md_5.bungee.api.CommandSender;
