@@ -20,7 +20,7 @@
     </modules>
 
     <build>
-        <defaultGoal>install</defaultGoal>
+        <defaultGoal>clean install</defaultGoal>
         <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
