@@ -30,7 +30,7 @@ import java.util.Optional;
     authors = {"Year4000"}
 )
 public class Vote extends BungeeModule {
-    private static final HostAndPort HOST_AND_PORT = new HostAndPort("localhost", 6379);
+    private static final HostAndPort HOST_AND_PORT = new HostAndPort("internal.api.year4000.net", 6379);
     private static final String CHANNEL = "year4000.votifiter.vote";
     private ProxyServer proxy = ProxyServer.getInstance();
     private VoteSettings vote = VoteSettings.get();
