@@ -24,6 +24,7 @@
         <module>vanish</module>
         <module>viplogin</module>
         <module>worldback</module>
+        <module>mapjson</module>
     </modules>
 
     <build>
