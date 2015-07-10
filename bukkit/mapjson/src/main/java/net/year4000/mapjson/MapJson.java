@@ -115,7 +115,7 @@ public class MapJson extends BukkitModule {
         List<String> lines = Lists.newArrayList();
         int count = 0;
 
-        lines.add("'spawns': {");
+        lines.add("'spawns': [");
 
         for (LocationVector vector : locations) {
             count++;
@@ -123,7 +123,7 @@ public class MapJson extends BukkitModule {
             lines.add("    " + vector.toString() + comma);
         }
 
-        lines.add("}");
+        lines.add("]");
 
         write("locations", lines.toArray(new String[lines.size()]));
     }

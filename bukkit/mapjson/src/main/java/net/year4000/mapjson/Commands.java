@@ -71,7 +71,7 @@ public class Commands {
             player.sendMessage("&6Spawns json output&7.");
 
             int count = 0;
-            player.sendMessage(colorJson("'spawns': {"));
+            player.sendMessage(colorJson("'spawns': ["));
 
             for (LocationVector vector : spawns) {
                 count++;
@@ -79,7 +79,7 @@ public class Commands {
                 player.sendMessage(" " + colorJson(vector.toString() + comma));
             }
 
-            player.sendMessage(colorJson("}"));
+            player.sendMessage(colorJson("]"));
 
         }
         // Save to file
