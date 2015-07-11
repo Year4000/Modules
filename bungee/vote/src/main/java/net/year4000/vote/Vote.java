@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 )
 public class Vote extends BungeeModule {
     private static final HostAndPort HOST_AND_PORT = new HostAndPort("internal.api.year4000.net", 6379);
-    private static final String CHANNEL = "year4000.votifiter.vote";
+    private static final String CHANNEL = "year4000.votifier.vote";
     private ProxyServer proxy = ProxyServer.getInstance();
     private VoteSettings vote = VoteSettings.get();
     private JedisPool pool;
