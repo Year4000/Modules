@@ -12,6 +12,9 @@ import java.util.Locale;
 public enum VoteMessage{
     Y4K_VOTE_CHAT,
     Y4K_VOTE_CLICK,
+
+    Y4K_VOTE_RECIVED,
+    Y4K_VOTE_REWARDS
     ;
 
     /** Translate the Locales enum to locale in the players language */

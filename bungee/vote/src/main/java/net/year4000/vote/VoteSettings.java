@@ -15,6 +15,10 @@ import java.util.Optional;
 @ConfigURL(value = "https://api.year4000.net/configs/votes", config = VoteSettings.class)
 public class VoteSettings extends Config<VoteSettings> {
     private static VoteSettings inst;
+    
+    /** The rewards the player receives */
+    @Getter
+    private Map<String, String> rewards;
 
     /** The services that one can vote at */
     @Getter(AccessLevel.NONE)

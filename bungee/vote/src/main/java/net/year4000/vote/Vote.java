@@ -11,6 +11,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.ducktape.bungee.module.BungeeModule;
@@ -22,6 +23,7 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @ModuleInfo(
     name = "Vote",
@@ -75,11 +77,51 @@ public class Vote extends BungeeModule {
                 player.sendMessage(ChatMessageType.CHAT, message);
             });
 
+            // Message to voter
+            Optional<ProxiedPlayer> player = Optional.ofNullable(proxy.getPlayer(data.getUuid()));
+            player.ifPresent(user -> {
+                BaseComponent[] message = makeMessage(user, service.get());
+                user.sendMessage(ChatMessageType.CHAT, message);
+            });
+
             // Message to console
             CommandSender sender = proxy.getConsole();
             BaseComponent[] message = makeMessage(sender, data, service.get());
             debug("Vote: " + sender.getName() + " > " + Joiner.on(" ").join(message));
         }
+    }
+
+    /** Make messge for self */
+    private BaseComponent[] makeMessage(CommandSender player, VoteSettings.Service service) {
+        ComponentBuilder builder = new ComponentBuilder(VoteMessage.Y4K_VOTE_RECIVED.translate(player) + " ")
+            .color(ChatColor.DARK_AQUA)
+            .append(service.getName())
+            .color(ChatColor.AQUA)
+            .append(". ")
+            .color(ChatColor.DARK_AQUA)
+            .append(VoteMessage.Y4K_VOTE_REWARDS.translate(player) + " ")
+            .color(ChatColor.DARK_AQUA)
+            ;
+
+        AtomicInteger count = new AtomicInteger(1);
+        int size = vote.getRewards().size();
+        vote.getRewards().forEach((name, value) -> {
+            builder
+                .append(name + " ")
+                .color(ChatColor.DARK_GREEN)
+                .append(value)
+                .color(ChatColor.GREEN)
+                ;
+
+            if (count.getAndIncrement() != size) {
+                builder
+                    .append(", ")
+                    .color(ChatColor.DARK_GRAY)
+                ;
+            }
+        });
+
+        return builder.create();
     }
 
     /** The message to send to all the online players */
