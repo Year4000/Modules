@@ -95,29 +95,31 @@ public class Vote extends BungeeModule {
     /** Make messge for self */
     private BaseComponent[] makeMessage(CommandSender player, VoteSettings.Service service) {
         ComponentBuilder builder = new ComponentBuilder(VoteMessage.Y4K_VOTE_RECIVED.translate(player) + " ")
-            .color(ChatColor.DARK_AQUA)
-            .append(service.getName())
             .color(ChatColor.AQUA)
+            .append(service.getName())
+            .color(ChatColor.DARK_AQUA)
             .append(". ")
-            .color(ChatColor.DARK_AQUA)
-            .append(VoteMessage.Y4K_VOTE_REWARDS.translate(player) + " ")
-            .color(ChatColor.DARK_AQUA)
+            .color(ChatColor.AQUA)
+            .append(VoteMessage.Y4K_VOTE_REWARDS.translate(player))
+            .color(ChatColor.AQUA)
+            .append(": ")
+            .color(ChatColor.GRAY)
             ;
 
         AtomicInteger count = new AtomicInteger(1);
         int size = vote.getRewards().size();
         vote.getRewards().forEach((name, value) -> {
             builder
-                .append(name + " ")
+                .append(value + " ")
                 .color(ChatColor.DARK_GREEN)
-                .append(value)
+                .append(name)
                 .color(ChatColor.GREEN)
                 ;
 
             if (count.getAndIncrement() != size) {
                 builder
                     .append(", ")
-                    .color(ChatColor.DARK_GRAY)
+                    .color(ChatColor.GRAY)
                 ;
             }
         });
