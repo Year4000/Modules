@@ -23,6 +23,7 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @ModuleInfo(
@@ -78,7 +79,7 @@ public class Vote extends BungeeModule {
             });
 
             // Message to voter
-            Optional<ProxiedPlayer> player = Optional.ofNullable(proxy.getPlayer(data.getUuid()));
+            Optional<ProxiedPlayer> player = Optional.ofNullable(proxy.getPlayer(UUID.fromString(data.getUuid())));
             player.ifPresent(user -> {
                 BaseComponent[] message = makeMessage(user, service.get());
                 user.sendMessage(ChatMessageType.CHAT, message);
