@@ -137,11 +137,9 @@ public class Vote extends BungeeModule {
             .color(ChatColor.DARK_AQUA)
             .create();
 
-        BaseComponent[] chatPrefix = new ComponentBuilder("> ").color(ChatColor.DARK_GRAY).create();
         BaseComponent[] badge = TextComponent.fromLegacyText(badges.getBadge(data.getId()));
-        BaseComponent[] prefix = MessageUtil.merge(chatPrefix, badge);
 
-        return MessageUtil.merge(prefix, new ComponentBuilder(" " + data.getVote().getUsername())
+        return MessageUtil.merge(badge, new ComponentBuilder(" " + data.getVote().getUsername())
             .color(ChatColor.GREEN)
             .append(" " + VoteMessage.Y4K_VOTE_CHAT.translate(player) + " ")
             .color(ChatColor.GOLD)
