@@ -147,7 +147,6 @@ public class Dashboard extends BukkitModule {
     }
 
     public static Team createUpdateTeam(Player player, Scoreboard scoreboard) {
-        String[] split = split(player);
         String teamId = "tab:" + (BadgeManager.MAX_RANK - manager.findBadge(player).getRank()) + (chars(player.getName()) >> 4);
         Team team = scoreboard.getTeam(teamId) == null ? scoreboard.registerNewTeam(teamId) : scoreboard.getTeam(teamId);
 
@@ -156,21 +155,14 @@ public class Dashboard extends BukkitModule {
         String color = "&" + nameColors.get(player);
         String badge = manager.getBadge(player) + " " + color;
         team.setPrefix(MessageUtil.replaceColors(color));
-        team.setSuffix(MessageUtil.replaceColors(split[1] + "&f"));
-        team.addEntry(split[0]);
+        team.setSuffix("&f");
+        team.addEntry(player.getName());
 
         // Player settings
         player.setDisplayName(MessageUtil.replaceColors(color + player.getName() + "&f"));
-        //player.setPlayerListName(split[0]);
-        //player.spigot().setPlayerListDisplayName(MessageUtil.replaceColors(badge) + player.getName());
         player.setPlayerListName(MessageUtil.replaceColors(badge) + player.getName());
 
         return team;
-    }
-
-    public static String[] split(Player player) {
-        String name = player.getName();
-        return new String[] {name.substring(0, name.length() - 2), name.substring(name.length() - 2)};
     }
 
     public static String getTabFooter() {
