@@ -14,11 +14,11 @@ import java.util.*;
 public class PlayerRecord {
     private List<InfractionRecord> records = new LinkedList<>();
     private String message = "";
-    private String time = "";
+    private int time = -1;
 
     public boolean isBanned() {
         for (InfractionRecord r : records) {
-            if (r.getType() == 0) {
+            if (r.getType().equals("ban")) {
                 message = r.getMessage();
                 time = r.getTime();
                 return true;
@@ -33,7 +33,7 @@ public class PlayerRecord {
         Collections.reverse(list);
 
         for (InfractionRecord r : list) {
-            if (r.getType() == 1) {
+            if (r.getType().equals("lock")) {
                 message = r.getMessage();
                 time = r.getTime();
                 return new Date().before(new Date(time));

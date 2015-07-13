@@ -18,14 +18,14 @@ import net.year4000.ducktape.module.ModuleInfo;
 @ModuleListeners({JoinListener.class})
 public class Infractions extends BungeeModule {
     @Getter private static Infractions instance;
-    @Getter private static FileStorage storage;
+    @Getter private static APIStorage storage;
 
     public void load() {
         instance = this;
     }
 
     public void enable() {
-        storage = new FileStorage();
+        storage = new APIStorage();
 
         // Register Listeners
         new JoinListener();

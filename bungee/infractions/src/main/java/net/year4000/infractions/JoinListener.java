@@ -4,63 +4,48 @@
 
 package net.year4000.infractions;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
-import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
-import net.year4000.ducktape.bungee.DuckTape;
 import net.year4000.utilities.bungee.MessageUtil;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class JoinListener implements Listener {
     @EventHandler
-    public void onJoin(PostLoginEvent event) {
-        TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
+    public void login(PreLoginEvent event) {
+        try {
+            String id = checkNotNull(event.getConnection().getName());
+            Player record = Infractions.getStorage().getPlayer(id).get();
 
-        class CheckPlayer implements Runnable {
-            ScheduledTask task;
-            ProxiedPlayer player;
+            if (record.isBanned() || record.isLocked()) {
+                event.setCancelled(true);
+                Message locale = new Message(record.getLocale());
 
-            CheckPlayer(ProxiedPlayer player) {
-                Infractions.getStorage().saveUUID(player);
-                this.player = player;
-                task = scheduler.schedule(DuckTape.get(), this, 250, 250, TimeUnit.MILLISECONDS);
-            }
-
-            @Override
-            public void run() {
-                Player iplayer = new Player(player);
-
-                if (iplayer.isBanned() || iplayer.isLocked()) {
-                    if (player.getLocale() == null) return;
-
-                    Message locale = new Message(player);
-
-                    if (iplayer.isBanned()) {
-                        player.disconnect(createMessage(
-                            locale.get("login.banned"),
-                            player,
-                            iplayer.getLastMessage()
-                        ));
-                    } else if (iplayer.isLocked()) {
-                        String locked = String.format(locale.get("login.locked", iplayer.getTime()));
-                        player.disconnect(createMessage(locked, player, iplayer.getLastMessage()));
-                    }
+                if (record.isBanned()) {
+                    BaseComponent[] msg = createMessage(locale.get("login.banned"), record.getName(), record.getLastMessage());
+                    String message = TextComponent.toLegacyText(msg);
+                    //System.out.println(message);
+                    event.setCancelReason(message);
                 }
-
-                task.cancel();
+                else if (record.isLocked()) {
+                    String locked = String.format(locale.get("login.locked", record.getTime()));
+                    BaseComponent[] msg = createMessage(locked, record.getName(), record.getLastMessage());
+                    String message = TextComponent.toLegacyText(msg);
+                    //System.out.println(message);
+                    event.setCancelReason(message);
+                }
             }
         }
-
-        new CheckPlayer(event.getPlayer());
+        catch (NullPointerException e) {
+            event.setCancelled(true);
+            event.setCancelReason(MessageUtil.replaceColors("&6Error connecting to API&7..."));
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -70,8 +55,8 @@ public class JoinListener implements Listener {
      * @param message The message to show.
      * @return Disconnect message.
      */
-    private static BaseComponent[] createMessage(String type, ProxiedPlayer player, String message) {
-        String link = Config.get().getLink().replaceAll("%player%", player.getName());
+    private static BaseComponent[] createMessage(String type, String player, String message) {
+        String link = Settings.get().getLink().replaceAll("%player%", player);
         return MessageUtil.message(type + "\n" + message + "\n\n" + link);
     }
 }

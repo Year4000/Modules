@@ -14,6 +14,12 @@ public class Message extends BungeeLocale {
         localeManager = MessageManager.get();
     }
 
+    public Message(String locale) {
+        super(null);
+        this.locale = locale;
+        localeManager = MessageManager.get();
+    }
+
     public Message(CommandSender sender) {
         super(sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null);
         localeManager = MessageManager.get();
