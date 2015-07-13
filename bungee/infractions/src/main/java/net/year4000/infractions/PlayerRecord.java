@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -35,8 +36,8 @@ public class PlayerRecord {
         for (InfractionRecord r : list) {
             if (r.getType().equals("lock")) {
                 message = r.getMessage();
-                time = r.getTime();
-                return new Date().before(new Date(time));
+                time = r.getExpires();
+                return System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(time) < 0;
             }
         }
 

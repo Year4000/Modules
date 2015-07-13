@@ -53,7 +53,7 @@ public class Player {
 
         if (record != null) {
             banned = record.isBanned();
-            locked = banned || record.isLocked();
+            locked = record.isLocked();
             lastMessage = record.getMessage();
             time = record.getTime();
         }
@@ -70,7 +70,7 @@ public class Player {
     public boolean lock(ProxiedPlayer judge, String message, int secs) {
         if (isBanned()) return false;
         int time = (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-        int length = (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() + (secs * 1000));
+        int length = (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + secs;
 
         Infractions.getStorage().addRecord(uuid, new InfractionRecord("lock", judge, message, time, length));
         return true;

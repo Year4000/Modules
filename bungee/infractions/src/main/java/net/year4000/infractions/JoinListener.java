@@ -11,7 +11,8 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.utilities.bungee.MessageUtil;
 
-import java.util.UUID;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,7 +34,8 @@ public class JoinListener implements Listener {
                     event.setCancelReason(message);
                 }
                 else if (record.isLocked()) {
-                    String locked = String.format(locale.get("login.locked", record.getTime()));
+                    String date = new Date(TimeUnit.SECONDS.toMillis(record.getTime())).toString();
+                    String locked = String.format(locale.get("login.locked", date));
                     BaseComponent[] msg = createMessage(locked, record.getName(), record.getLastMessage());
                     String message = TextComponent.toLegacyText(msg);
                     //System.out.println(message);
