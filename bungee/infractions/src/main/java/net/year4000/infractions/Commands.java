@@ -61,7 +61,7 @@ public final class Commands {
 
         // Kick the player from the server
         final String finalMessage = message;
-        proxiedPlayer.ifPresent(proxied -> proxied.disconnect(createMessage(proxied, finalMessage)));
+        proxiedPlayer.ifPresent(proxied -> Infractions.getInstance().sendMessage(proxied, finalMessage));
 
         // Broadcast if not silent.
         if (!args.hasFlag('s')) {
@@ -125,7 +125,7 @@ public final class Commands {
 
         // Kick the player from the server
         final String finalMessage = message;
-        proxiedPlayer.ifPresent(proxied -> proxied.disconnect(createMessage(proxied, finalMessage)));
+        proxiedPlayer.ifPresent(proxied -> Infractions.getInstance().sendMessage(proxied, finalMessage));
 
         // Broadcast if not silent.
         if (!args.hasFlag('s')) {
@@ -172,22 +172,11 @@ public final class Commands {
         }
         // Kick the player from the server
         final String finalMessage = message;
-        proxiedPlayer.ifPresent(proxied -> proxied.disconnect(createMessage(proxied, finalMessage)));
+        proxiedPlayer.ifPresent(proxied -> Infractions.getInstance().sendMessage(proxied, finalMessage));
 
         // Broadcast if not silent.
         if (!args.hasFlag('s')) {
             MessageUtil.broadcast("&e" + args.getString(0) + " &6has been kicked: &e" + message);
         }
-    }
-
-    /**
-     * Create a disconnect message to tell the user their account can't login.
-     * @param player The player's name.
-     * @param message The message to show.
-     * @return Disconnect message.
-     */
-    private static BaseComponent[] createMessage(ProxiedPlayer player, String message) {
-        String link = Settings.get().getLink().replaceAll("%player%", player.getName());
-        return MessageUtil.message(message + "\n\n" + new Message(player).get("default.notice") + "\n" + link);
     }
 }
