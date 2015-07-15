@@ -6,7 +6,7 @@ package net.year4000.infractions;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.year4000.utilities.bungee.MessageUtil;
@@ -17,10 +17,10 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class JoinListener implements Listener {
-    @EventHandler
-    public void login(PreLoginEvent event) {
+    @EventHandler(priority = Byte.MAX_VALUE)
+    public void login(LoginEvent event) {
         try {
-            String id = checkNotNull(event.getConnection().getName());
+            String id = checkNotNull(event.getConnection().getUniqueId().toString());
             Player record = Infractions.getStorage().getPlayer(id).get();
 
             if (record.isBanned() || record.isLocked()) {
