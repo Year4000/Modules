@@ -18,6 +18,7 @@
         <module>serverlist</module>
         <module>welcome</module>
         <module>vote</module>
+        <module>party</module>
     </modules>
 
     <build>
