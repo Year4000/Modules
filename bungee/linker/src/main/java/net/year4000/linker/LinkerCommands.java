@@ -64,7 +64,8 @@ public class LinkerCommands {
                     );
 
                     // don't show motd if its y4k branded
-                    if (!MessageUtil.stripColors(server.getStatus().getDescription()).contains("[Y4K]")) {
+                    String msg = MessageUtil.replaceColors(server.getStatus().getDescription());
+                    if (!MessageUtil.stripColors(msg).contains("[Y4K]")) {
                         serverList += Ascii.truncate(server.getStatus().getDescription(), 42, "&7...");
                     }
                 }
