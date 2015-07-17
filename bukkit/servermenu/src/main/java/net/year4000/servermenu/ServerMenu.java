@@ -37,6 +37,7 @@ public class ServerMenu extends BukkitModule {
     /** The menu GUIs */
     @Getter
     private List<AbstractGUI> menus = new ArrayList<>();
+    @Getter
     private TaskProcessor<AbstractGUI> processing;
 
     @Override
