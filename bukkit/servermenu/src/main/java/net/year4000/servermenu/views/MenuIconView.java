@@ -28,6 +28,7 @@ import static net.year4000.utilities.MessageUtil.replaceColors;
 public class MenuIconView implements IconView {
     private Locale locale;
     private Material material;
+    private byte data;
     private String name;
     private String id;
     private String description;
@@ -38,6 +39,11 @@ public class MenuIconView implements IconView {
     @Override
     public ItemStack make() {
         ItemStack item = new ItemStack(material);
+
+        if (data > -1) {
+            item.setDurability(data);
+        }
+
         ItemMeta meta = item.getItemMeta();
 
         // Name

@@ -66,6 +66,7 @@ public class MainMenuGUI extends AbstractGUI {
                 Settings.Menu menu = menuViews[counter++];
                 // Menu Settings from Config
                 Material material = Material.valueOf(menu.getIcon().toUpperCase());
+                byte data = menu.getData();
                 String name = menu.getName();
                 String group = region + menu.getGroupSuffix();
                 String descriptionKey = "games." + menu.getName().toLowerCase().replaceAll(" ", "-") + ".description";
@@ -73,7 +74,7 @@ public class MainMenuGUI extends AbstractGUI {
                 // API stats
                 PlayerCountJson.Count count = playerCountRoute == null ? null : playerCountRoute.getGroupPlayerCount(group);
                 int servers = 0; // todo add this
-                views[y][x] = new MenuIconView(locale, material, name, group, description, count, servers, state);
+                views[y][x] = new MenuIconView(locale, material, data, name, group, description, count, servers, state);
             }
         }
 

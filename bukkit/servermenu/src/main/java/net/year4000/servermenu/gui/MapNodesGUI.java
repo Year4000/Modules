@@ -93,14 +93,14 @@ public class MapNodesGUI extends AbstractGUI {
         // Show generate server icon
         if (route == null || servers.length == 0) {
             GenerateView.Stage stage = generating ? GenerateView.Stage.GENERATING : GenerateView.Stage.NORMAL;
-            icons[0][0] = new MenuIconView(locale, icon, menu.getName(), "us"+ menu.getGroupSuffix(), description, null, servers.length, MenuIconView.State.SUB_MENU);
+            icons[0][0] = new MenuIconView(locale, icon, menu.getData(), menu.getName(), "us"+ menu.getGroupSuffix(), description, null, servers.length, MenuIconView.State.SUB_MENU);
             icons[0][8] = new CloseView(locale);
             icons[1][4] = new GenerateView(locale, this, "us" + menu.getGroupSuffix(), stage);
         }
         // Generate playable servers that are sorted
         else {
             generating = false;
-            icons[0][0] = new MenuIconView(locale, icon, menu.getName(), "us"+ menu.getGroupSuffix(), description, null, servers.length, MenuIconView.State.SUB_MENU);
+            icons[0][0] = new MenuIconView(locale, icon, menu.getData(), menu.getName(), "us"+ menu.getGroupSuffix(), description, null, servers.length, MenuIconView.State.SUB_MENU);
             icons[0][8] = new CloseView(locale);
 
             int counter = -1;

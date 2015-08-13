@@ -48,6 +48,8 @@ public class Settings extends Config<Settings> {
         private String groupSuffix;
         /** The Minecraft material to use as an icon */
         private String icon;
+        /** The data value of the icon */
+        private byte data = -1;
         /** Is this view a MapNodes server group */
         @SerializedName("map_nodes")
         private boolean mapNodes;
