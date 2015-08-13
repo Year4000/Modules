@@ -63,7 +63,8 @@ public class MapNodesView extends ServerView implements IconView {
         STARTING(5, "green", 2),
         PLAYING(5, "lime", 3),
         ENDING(1, "orange", 4),
-        OFFLINE(14, "red", 5);
+        ENDED(1, "orange", 5),
+        OFFLINE(14, "red", 6);
 
         private int data;
         private String color;
@@ -85,6 +86,9 @@ public class MapNodesView extends ServerView implements IconView {
             }
             else if (find.contains(ENDING.name())) {
                 return ENDING;
+            }
+            else if (find.contains(ENDED.name())) {
+                return ENDED;
             }
             else {
                 return OFFLINE;
