@@ -150,8 +150,7 @@ public class LinkerCommands {
     @Command(
         aliases = {"generate"},
         desc = "Generate a dynamic node from our cloud",
-        min = 1,
-        max = 1
+        min = 1
     )
     @CommandPermissions({"linker.generate", "omega", "delta", "tau"})
     public static void generate(final CommandContext args, CommandSender sender) throws CommandException {
