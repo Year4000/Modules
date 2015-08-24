@@ -5,16 +5,18 @@
 package net.year4000.linker;
 
 import com.google.common.base.Ascii;
+import com.google.gson.JsonObject;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.year4000.linker.messages.Message;
 import net.year4000.utilities.Pinger;
+import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.bungee.commands.*;
 import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
-import net.year4000.utilities.sdk.routes.players.PlayerCountJson;
+import net.year4000.utilities.sdk.HttpFetcher;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -143,6 +145,29 @@ public class LinkerCommands {
             player.sendMessage(MessageUtil.message(locale.get("server.connect", server.getName())));
             player.connect(server);
         }
+    }
+
+    @Command(
+        aliases = {"generate"},
+        desc = "Generate a dynamic node from our cloud",
+        min = 1,
+        max = 1
+    )
+    @CommandPermissions({"linker.generate", "omega", "delta", "tau"})
+    public static void generate(final CommandContext args, CommandSender sender) throws CommandException {
+        String node = args.getJoinedStrings(0).replace(" ", "-");
+
+        Message locale = new Message(sender);
+        sender.sendMessage(MessageUtil.message(locale.get("generate.generating", node)));
+        String url = Linker.instance.api.api().addPath("nodes").addPath("generate").addPath(node).toString();
+        HttpFetcher.post(url, null, JsonObject.class, (data, error) -> {
+            if (error == null) {
+                sender.sendMessage(MessageUtil.message(locale.get("generate.success", data.toString())));
+            }
+            else {
+                sender.sendMessage(MessageUtil.message(locale.get("generate.error", error.getMessage())));
+            }
+        });
     }
 
     @Command(

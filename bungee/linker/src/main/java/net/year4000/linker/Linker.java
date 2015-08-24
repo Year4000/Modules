@@ -35,7 +35,7 @@ public class Linker extends BungeeModule {
     public API api = new API(API_KEY);
     public final Map<String, ServerRoute.ServerJsonKey> servers = new LinkedHashMap<>();
     private static Set<String> VIPS = ImmutableSet.of("theta", "mu", "pi", "sigma", "phi", "delta");
-    private static Set<String> STAFF = ImmutableSet.of("omega");
+    private static Set<String> STAFF = ImmutableSet.of("omega", "tau");
 
     @Override
     public void enable() {
