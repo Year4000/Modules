@@ -12,6 +12,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.year4000.utilities.bungee.MessageUtil;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,7 +22,11 @@ public class JoinListener implements Listener {
     public void login(LoginEvent event) {
         try {
             String id = checkNotNull(event.getConnection().getUniqueId().toString());
-            Player record = Infractions.getStorage().getPlayer(id).get();
+            Optional<Player> player = Infractions.getStorage().getPlayer(id);
+
+            if (!player.isPresent()) return;
+
+            Player record = player.get();
 
             if (record.isBanned() || record.isLocked()) {
                 event.setCancelled(true);
