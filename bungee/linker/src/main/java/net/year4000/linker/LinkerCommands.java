@@ -10,9 +10,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.year4000.linker.messages.Message;
 import net.year4000.utilities.Pinger;
-import net.year4000.utilities.URLBuilder;
 import net.year4000.utilities.bungee.MessageUtil;
 import net.year4000.utilities.bungee.commands.*;
 import net.year4000.utilities.bungee.pagination.SimplePaginatedResult;
@@ -123,26 +121,25 @@ public class LinkerCommands {
         }
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(sender.getName());
-        Message locale = new Message(player);
 
         if (args.argsLength() == 0) {
-            player.sendMessage(MessageUtil.message(locale.get("server.on", player.getServer().getInfo().getName())));
-            player.sendMessage(MessageUtil.message(locale.get("server.use")));
+            player.sendMessage(Locales.SERVER_ON.get(player, player.getServer().getInfo().getName()));
+            player.sendMessage(Locales.SERVER_USE.get(player));
         }
         else {
             String serverName = args.getJoinedStrings(0);
             ServerInfo server = ProxyServer.getInstance().getServerInfo(serverName);
 
             if (server == null) {
-                throw new CommandException(locale.get("server.no_name", serverName));
+                throw new CommandException(Locales.SERVER_NO__NAME.get(serverName));
             }
 
             // If server starts with . must be VIP or higer to connect
             if (!server.canAccess(player) && !(Linker.isVIP(player) || Linker.isStaff(player))) {
-                throw new CommandException(locale.get("server.no_name", serverName));
+                throw new CommandException(Locales.SERVER_NO__NAME.get(serverName));
             }
 
-            player.sendMessage(MessageUtil.message(locale.get("server.connect", server.getName())));
+            player.sendMessage(Locales.SERVER_CONNECT.get(player, server.getName()));
             player.connect(server);
         }
     }
@@ -156,15 +153,14 @@ public class LinkerCommands {
     public static void generate(final CommandContext args, CommandSender sender) throws CommandException {
         String node = args.getJoinedStrings(0).replace(" ", "-");
 
-        Message locale = new Message(sender);
-        sender.sendMessage(MessageUtil.message(locale.get("generate.generating", node)));
-        String url = Linker.instance.api.api().addPath("nodes").addPath("generate").addPath(node).toString();
+        sender.sendMessage(Locales.GENERATE_GENERATING.get(sender, node));
+        String url = Linker.instance.api.api().addPath("nodes").addPath("generate").addPath(node).build();
         HttpFetcher.post(url, null, JsonObject.class, (data, error) -> {
             if (error == null) {
-                sender.sendMessage(MessageUtil.message(locale.get("generate.success", data.toString())));
+                sender.sendMessage(Locales.GENERATE_SUCCESS.get(sender, data.toString()));
             }
             else {
-                sender.sendMessage(MessageUtil.message(locale.get("generate.error", error.getMessage())));
+                sender.sendMessage(Locales.GENERATE_ERROR.get(sender, error.getMessage()));
             }
         });
     }
@@ -181,16 +177,15 @@ public class LinkerCommands {
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(sender.getName());
         ServerInfo lowest = Linker.instance.getHub();
-        Message locale = new Message(player);
 
         if (lowest == null) {
-            player.sendMessage(MessageUtil.message(locale.get("hub.none")));
+            player.sendMessage(Locales.HUB_NONE.get(player));
         }
         else if (player.getServer().getInfo().getName().toLowerCase().contains("hub")) {
-            player.sendMessage(MessageUtil.message(locale.get("hub.on")));
+            player.sendMessage(Locales.HUB_ON.get(player));
         }
         else {
-            player.sendMessage(MessageUtil.message(locale.get("server.connect", lowest.getName())));
+            player.sendMessage(Locales.SERVER_CONNECT.get(player, lowest.getName()));
             player.connect(lowest);
         }
     }
